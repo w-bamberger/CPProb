@@ -1,0 +1,98 @@
+/*
+ * random_variable.cpp
+ *
+ *  Created on: 27.05.2011
+ *      Author: wbam
+ */
+
+#include "discrete_random_variable.h"
+#include <tr1/random>
+#include <ostream>
+
+using namespace std;
+
+namespace vanet
+{
+
+  DiscreteRandomVariable::CharacteristicsTable DiscreteRandomVariable::characteristics_table_;
+  const string DiscreteRandomVariable::empty_string_;
+
+  void
+  DiscreteRandomVariable::assign_random_value(RandomNumberEngine& rng)
+  {
+    /// @todo Creating the variate every time from scratch is slow.
+    typedef std::tr1::uniform_int<std::size_t> Distribution;
+    Distribution distribution(0, characteristics_->second.size_ - 1);
+    std::tr1::variate_generator<RandomNumberEngine&, Distribution> variate(rng,
+        distribution);
+    value_ = variate();
+  }
+
+  bool
+  DiscreteRandomVariable::operator<(const DiscreteRandomVariable& var) const
+  {
+    /*
+     * The default value of characteristics, i.e. characteristics_table_.end(),
+     * is taken as the highest value. So the ordering of the random variable
+     * store objects is in order of the iterators of CharacteristicsTable.
+     * The sub-odering criterion, in case both iterators are the same,
+     * is the value_.
+     */
+    if (characteristics_ == characteristics_table_.end())
+      /*
+       * No element can be larger than characteristics.
+       * (value_ cannot be set.)
+       */
+      return false;
+
+    else if (var.characteristics_ == characteristics_table_.end())
+      /*
+       * characteristics must be different and thus smaller
+       * than var.characteristics.
+       */
+      return true;
+
+    else if (characteristics_ == var.characteristics_)
+      return value_ < var.value_;
+
+    else
+      return characteristics_->first < var.characteristics_->first;
+  }
+
+  DiscreteRandomVariable&
+  DiscreteRandomVariable::operator=(const DiscreteRandomVariable& var)
+  {
+    if (characteristics_ == characteristics_table_.end())
+      characteristics_ = var.characteristics_;
+
+    else if (characteristics_ != var.characteristics_)
+      throw invalid_argument(
+          "Assigned random variable " + var.characteristics_->first
+              + " to random variable " + characteristics_->first);
+
+    value_ = var.value_;
+    return *this;
+  }
+
+  ostream&
+  DiscreteRandomVariable::put_out(ostream& os) const
+  {
+    if (characteristics_ != characteristics_table_.end())
+      return os << characteristics_->first << ":" << value_;
+    else
+      return os << "(empty random variable)";
+  }
+
+  ostream&
+  DiscreteRandomVariable::put_out_characteristics_table(ostream& os) const
+  {
+    os << "Characteristics table:\n";
+    for (CharacteristicsTable::iterator it = characteristics_table_.begin();
+        it != characteristics_table_.end(); ++it)
+          {
+      os << it->first << ": " << it->second.size_ << "\n";
+    }
+  return os;
+}
+
+}
