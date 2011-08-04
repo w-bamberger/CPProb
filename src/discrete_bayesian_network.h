@@ -24,7 +24,9 @@ namespace vanet
     bool value_is_evidence;
 
     VertexProperties() :
-      distribution(random_variable, std::vector<const DiscreteRandomVariable*>()), value_is_evidence(false)
+        distribution(random_variable,
+            std::vector<const DiscreteRandomVariable*>()), value_is_evidence(
+            false)
     {
     }
 
@@ -33,22 +35,23 @@ namespace vanet
     {
       random_variable = other_vp.random_variable;
       distribution.clear();
-      ConditionalCategoricalDistribution::const_iterator other_it = other_vp.distribution.begin();
+      ConditionalCategoricalDistribution::const_iterator other_it =
+          other_vp.distribution.begin();
       ConditionalCategoricalDistribution::iterator my_it = distribution.begin();
       for (; other_it != other_vp.distribution.end(); ++other_it)
         {
 
-        }
-      std::copy(other_vp.distribution.begin(), other_vp.distribution.end(), std::inserter(distribution, distribution.begin()));
-      value_is_evidence = other_vp.value_is_evidence;
-      return *this;
-    }
+      }
+    std::copy(other_vp.distribution.begin(), other_vp.distribution.end(),
+        std::inserter(distribution, distribution.begin()));
+    value_is_evidence = other_vp.value_is_evidence;
+    return *this;
+  }
 
   };
 
-  typedef boost::adjacency_list<boost::vecS, boost::vecS,
-      boost::bidirectionalS, VertexProperties, boost::no_property>
-      DiscreteBayesianNetwork;
+  typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS,
+      VertexProperties, boost::no_property> DiscreteBayesianNetwork;
 
   std::ostream&
   operator<<(std::ostream& os, const DiscreteBayesianNetwork& bn);

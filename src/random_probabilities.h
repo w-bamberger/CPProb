@@ -68,20 +68,22 @@ namespace vanet
     at(const DiscreteRandomVariable& var) const
     {
       ProbabilityTable::const_iterator find_it = pt_.find(var);
-      if (find_it != pt_.end())
-        return find_it->second;
-      else
-        vanet_throw_out_of_range("RandomProbabilities: Unknown variable value " << var << ".");
+      if (find_it == pt_.end())
+        vanet_throw_out_of_range(
+            "RandomProbabilities: Unknown variable value " << var << ".");
+
+      return find_it->second;
     }
 
     float&
     at(const DiscreteRandomVariable& var)
     {
       ProbabilityTable::iterator find_it = pt_.find(var);
-      if (find_it != pt_.end())
-        return find_it->second;
-      else
-        vanet_throw_out_of_range("RandomProbabilities: Unknown variable value " << var << ".");
+      if (find_it == pt_.end())
+        vanet_throw_out_of_range(
+            "RandomProbabilities: Unknown variable value " << var << ".");
+
+      return find_it->second;
     }
 
     iterator

@@ -22,7 +22,7 @@ namespace vanet
   }
 
   NetworkError::NetworkError(const std::string& msg) :
-    msg_(msg)
+      msg_(msg)
   {
   }
 

@@ -120,14 +120,14 @@ namespace vanet
 
     BooleanRandomVariable burglary("Burglary", true);
     vertex_iterator burglary_it = bn.add_categorical(burglary);
-    CategoricalDistribution & burglary_d = get<CategoricalDistribution> (
+    CategoricalDistribution & burglary_d = get<CategoricalDistribution>(
         burglary_it->distribution());
     burglary_d.set(burglary, 0.001);
     burglary_d.set(burglary.observation(false), 0.999);
 
     BooleanRandomVariable earthquake("Earthquake", true);
     vertex_iterator earthquake_it = bn.add_categorical(earthquake);
-    CategoricalDistribution & earthquake_d = get<CategoricalDistribution> (
+    CategoricalDistribution & earthquake_d = get<CategoricalDistribution>(
         earthquake_it->distribution());
     earthquake_d.set(earthquake, 0.002);
     earthquake_d.set(earthquake.observation(false), 0.998);
@@ -170,7 +170,7 @@ namespace vanet
         list_of(alarm_it));
     john_calls_it->value_is_evidence(true);
     ConditionalCategoricalDistribution & john_calls_d = get<
-        ConditionalCategoricalDistribution> (john_calls_it->distribution());
+        ConditionalCategoricalDistribution>(john_calls_it->distribution());
     alarm.observation(true);
     john_calls_d.set(john_calls.observation(true), alarm, 0.9);
     john_calls_d.set(john_calls.observation(false), alarm, 0.1);
@@ -183,7 +183,7 @@ namespace vanet
         list_of(alarm_it));
     mary_calls_it->value_is_evidence(true);
     ConditionalCategoricalDistribution & mary_calls_d = get<
-        ConditionalCategoricalDistribution> (mary_calls_it->distribution());
+        ConditionalCategoricalDistribution>(mary_calls_it->distribution());
     alarm.observation(true);
     mary_calls_d.set(mary_calls.observation(true), alarm, 0.7);
     mary_calls_d.set(mary_calls.observation(false), alarm, 0.3);
@@ -244,7 +244,8 @@ namespace vanet
     RandomConditionalProbabilities wrapper_params(
         BooleanRandomVariable("Wrapper", true), bag);
     params_table.insert(
-        make_pair("Wrapper", bn.add_conditional_dirichlet(wrapper_params, 5.0)));
+        make_pair("Wrapper",
+            bn.add_conditional_dirichlet(wrapper_params, 5.0)));
     RandomConditionalProbabilities hole_params(
         BooleanRandomVariable("Hole", true), bag);
     params_table.insert(
@@ -255,48 +256,48 @@ namespace vanet
     CsvMapReader::Records full_data = reader.read_rows();
 
     // Fill the data in the net
-    for (CsvMapReader::Records::iterator r = full_data.begin(); r
-        != full_data.end(); ++r)
-      {
-        BooleanRandomVariable bag_evidence("Bag", r->operator[]("Bag"));
-        HybridBayesianNetwork::iterator bag_evidence_v = bn.add_categorical(
-            bag_evidence, bag_params_v);
-        bag_evidence_v->value_is_evidence(true);
-
-        for (CsvMapReader::NamedAttributes::iterator a = r->begin(); a
-            != r->end(); ++a)
+    for (CsvMapReader::Records::iterator r = full_data.begin();
+        r != full_data.end(); ++r)
           {
-            if (a->first != "Bag")
-              {
-                BooleanRandomVariable var(a->first, a->second);
-                HybridBayesianNetwork::iterator vertex =
-                    bn.add_conditional_categorical(var,
-                        list_of(bag_evidence_v), params_table[a->first]);
-                vertex->value_is_evidence(true);
-              }
+      BooleanRandomVariable bag_evidence("Bag", r->operator[]("Bag"));
+      HybridBayesianNetwork::iterator bag_evidence_v = bn.add_categorical(
+          bag_evidence, bag_params_v);
+      bag_evidence_v->value_is_evidence(true);
+
+      for (CsvMapReader::NamedAttributes::iterator a = r->begin();
+          a != r->end(); ++a)
+            {
+        if (a->first != "Bag")
+          {
+            BooleanRandomVariable var(a->first, a->second);
+            HybridBayesianNetwork::iterator vertex =
+                bn.add_conditional_categorical(var, list_of(bag_evidence_v),
+                    params_table[a->first]);
+            vertex->value_is_evidence(true);
           }
       }
-
-    return bn;
   }
 
-  DiscreteBayesianNetwork
-  GraphGenerator::gen_naive_bayes_trust_net()
-  {
-    DiscreteBayesianNetwork g;
+return bn;
+}
 
-    BooleanRandomVariable trust("Trust", true);
-    DiscreteBayesianNetwork::vertex_descriptor trust_v = add_vertex(g);
-    g[trust_v].random_variable = trust;
+DiscreteBayesianNetwork
+GraphGenerator::gen_naive_bayes_trust_net()
+{
+DiscreteBayesianNetwork g;
 
-    DiscreteBayesianNetwork::vertex_descriptor vehicle_v = add_vertex(g);
-    DiscreteBayesianNetwork::vertex_descriptor type_v = add_vertex(g);
+BooleanRandomVariable trust("Trust", true);
+DiscreteBayesianNetwork::vertex_descriptor trust_v = add_vertex(g);
+g[trust_v].random_variable = trust;
 
-    bool success;
-    success = add_edge(trust_v, vehicle_v, g).second;
-    success = add_edge(trust_v, type_v, g).second;
+DiscreteBayesianNetwork::vertex_descriptor vehicle_v = add_vertex(g);
+DiscreteBayesianNetwork::vertex_descriptor type_v = add_vertex(g);
 
-    return g;
-  }
+bool success;
+success = add_edge(trust_v, vehicle_v, g).second;
+success = add_edge(trust_v, type_v, g).second;
+
+return g;
+}
 
 }

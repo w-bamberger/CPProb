@@ -43,23 +43,23 @@ namespace vanet
 
         for (; i != result.end(); ++i, ++param)
           {
-            std::tr1::gamma_distribution<float> gd =
-                std::tr1::gamma_distribution<float>(param->second);
-            i->second = gd(rne);
-            sum += i->second;
-          }
-        for (i = result.begin(); i != result.end(); ++i)
-          i->second /= sum;
+          std::tr1::gamma_distribution<float> gd = std::tr1::gamma_distribution<
+              float>(param->second);
+          i->second = gd(rne);
+          sum += i->second;
+        }
+      for (i = result.begin(); i != result.end(); ++i)
+        i->second /= sum;
 
-        return result;
-      }
+      return result;
+    }
 
-    friend std::ostream&
-    operator<<(std::ostream& os, const DirichletDistribution& dd);
+  friend std::ostream&
+  operator<<(std::ostream& os, const DirichletDistribution& dd);
 
-  private:
+private:
 
-    Parameters parameters_;
+  Parameters parameters_;
 
   };
 

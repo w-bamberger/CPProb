@@ -90,53 +90,53 @@ namespace vanet
         ProbabilityTable::const_iterator it = pt_.begin();
         for (; it != pt_.end(); ++it)
           {
-            cum += it->second;
-            if (cum >= r)
-              return it->first;
-          }
-        --it;
-        return it->first;
-      }
-
-    float&
-    operator[](const key_type& r)
-    {
-      return pt_[r];
-    }
-
-    CategoricalDistribution&
-    operator=(const CategoricalDistribution& cd)
-    {
-      if (&pt_ != &cd.pt_)
-        {
-          pt_ = cd.pt_;
-          var_ = cd.var_;
+          cum += it->second;
+          if (cum >= r)
+            return it->first;
         }
-      return *this;
+      --it;
+      return it->first;
     }
 
-    virtual std::ostream&
-    put_out_references(std::ostream& os) const;
+  float&
+  operator[](const key_type& r)
+  {
+    return pt_[r];
+  }
 
-    void
-    set(const DiscreteRandomVariable& var, float probability)
-    {
-      pt_.set(var, probability);
-    }
+  CategoricalDistribution&
+  operator=(const CategoricalDistribution& cd)
+  {
+    if (&pt_ != &cd.pt_)
+      {
+        pt_ = cd.pt_;
+        var_ = cd.var_;
+      }
+    return *this;
+  }
 
-  protected:
+  virtual std::ostream&
+  put_out_references(std::ostream& os) const;
 
-    virtual std::ostream&
-    put_out(std::ostream& os) const;
+  void
+  set(const DiscreteRandomVariable& var, float probability)
+  {
+    pt_.set(var, probability);
+  }
 
-  private:
+protected:
 
-    bool is_pt_self_allocated;
-    ProbabilityTable& pt_;
-    DiscreteRandomVariable* var_;
+  virtual std::ostream&
+  put_out(std::ostream& os) const;
 
-    static RandomProbabilities&
-    make_parameters_from_other_cd(const CategoricalDistribution& cd);
+private:
+
+  bool is_pt_self_allocated;
+  ProbabilityTable& pt_;
+  DiscreteRandomVariable* var_;
+
+  static RandomProbabilities&
+  make_parameters_from_other_cd(const CategoricalDistribution& cd);
 
   };
 

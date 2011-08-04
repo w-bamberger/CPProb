@@ -90,14 +90,14 @@ namespace vanet
       const CharacteristicsTable::iterator characteristics_;
 
       Range(const CharacteristicsTable::iterator& characteristics) :
-        characteristics_(characteristics)
+          characteristics_(characteristics)
       {
       }
 
     };
 
     DiscreteRandomVariable() :
-      characteristics_(characteristics_table_.end()), value_(0)
+        characteristics_(characteristics_table_.end()), value_(0)
     {
     }
 
@@ -209,7 +209,7 @@ namespace vanet
     struct Characteristics
     {
       Characteristics(std::size_t size) :
-        size_(size)
+          size_(size)
       {
       }
 
@@ -224,7 +224,7 @@ namespace vanet
     DiscreteRandomVariable(
         const CharacteristicsTable::iterator& characteristics,
         std::size_t value) :
-      characteristics_(characteristics), value_(value)
+        characteristics_(characteristics), value_(value)
     {
     }
 

@@ -19,8 +19,8 @@ namespace vanet
 
   public:
 
-    DegenerateDistribution(RandomVariable& var)
-    : var_reference_(var)
+    DegenerateDistribution(RandomVariable& var) :
+        var_reference_(var)
     {
     }
 

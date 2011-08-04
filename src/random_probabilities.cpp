@@ -18,15 +18,15 @@ namespace vanet
   RandomProbabilities::Names RandomProbabilities::names_;
 
   RandomProbabilities::RandomProbabilities() :
-    name_(names_.insert("").first)
+      name_(names_.insert("").first)
   {
   }
 
   RandomProbabilities::RandomProbabilities(const DiscreteRandomVariable& var) :
-    name_(names_.insert("Probabilities" + var.name()).first)
+      name_(names_.insert("Probabilities" + var.name()).first)
   {
     DiscreteRandomVariable::Range range = var.value_range();
-    float p = 1.0f / static_cast<float> (range.size());
+    float p = 1.0f / static_cast<float>(range.size());
     for (DiscreteRandomVariable v = range.begin(); v != range.end(); ++v)
       pt_.insert(make_pair(v, p));
   }
@@ -47,19 +47,19 @@ namespace vanet
     float sum = 0.0;
     for (iterator i = pt_.begin(); i != pt_.end(); ++i)
       {
-        i->second = variate();
-        sum += i->second;
-      }
-    for (iterator i = pt_.begin(); i != pt_.end(); ++i)
-      i->second /= sum;
-  }
+      i->second = variate();
+      sum += i->second;
+    }
+  for (iterator i = pt_.begin(); i != pt_.end(); ++i)
+    i->second /= sum;
+}
 
-  std::ostream&
-  RandomProbabilities::put_out(std::ostream& os) const
-  {
-    os << *name_ << ":";
-    for_each(pt_.begin(), pt_.end(), StreamOut(os, ",", ""));
-    return os;
-  }
+std::ostream&
+RandomProbabilities::put_out(std::ostream& os) const
+{
+  os << *name_ << ":";
+  for_each(pt_.begin(), pt_.end(), StreamOut(os, ",", ""));
+  return os;
+}
 
 }

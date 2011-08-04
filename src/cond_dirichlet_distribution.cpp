@@ -17,26 +17,26 @@ namespace vanet
     for (CondDirichletDistribution::Distributions::const_iterator d_it =
         cdd.distributions_.begin(); d_it != cdd.distributions_.end(); ++d_it)
       {
-        os << "      Condition " << d_it->first << ", parameters "
-            << d_it->second << "\n";
+      os << "      Condition " << d_it->first << ", parameters " << d_it->second
+          << "\n";
 
-      }
-    return os;
-  }
+    }
+  return os;
+}
 
-  CondDirichletDistribution::CondDirichletDistribution(
-      const RandomConditionalProbabilities cpt, float alpha)
-  {
-    for (RandomConditionalProbabilities::const_iterator pt = cpt.begin(); pt
-        != cpt.end(); ++pt)
-      {
-        distributions_.insert(
-            make_pair(pt->first, DirichletDistribution(pt->second, alpha)));
-      }
+CondDirichletDistribution::CondDirichletDistribution(
+    const RandomConditionalProbabilities cpt, float alpha)
+{
+  for (RandomConditionalProbabilities::const_iterator pt = cpt.begin();
+      pt != cpt.end(); ++pt)
+        {
+    distributions_.insert(
+        make_pair(pt->first, DirichletDistribution(pt->second, alpha)));
   }
+}
 
-  CondDirichletDistribution::~CondDirichletDistribution()
-  {
-  }
+CondDirichletDistribution::~CondDirichletDistribution()
+{
+}
 
 }

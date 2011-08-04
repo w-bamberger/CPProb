@@ -54,106 +54,102 @@ namespace vanet
   DiscreteRandomVariable&
   DiscreteJointRandomVariable::operator++()
   {
-    for (set<DiscreteRandomVariable>::reverse_iterator it = variables_.rbegin(); it
-        != variables_.rend(); ++it)
-      {
-        if (*it != it->value_range().end())
+    for (set<DiscreteRandomVariable>::reverse_iterator it = variables_.rbegin();
+        it != variables_.rend(); ++it)
           {
-            DiscreteRandomVariable& var =
-                const_cast<DiscreteRandomVariable&> (*it);
-            ++var;
-          }
-        else
-          {
-            DiscreteRandomVariable& var =
-                const_cast<DiscreteRandomVariable&> (*it);
-            var = it->value_range().begin();
-          }
-      }
+      if (*it != it->value_range().end())
+        {
+          DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
+          ++var;
+        }
+      else
+        {
+          DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
+          var = it->value_range().begin();
+        }
+    }
 
-    update_random_variable();
-    return *this;
-  }
+  update_random_variable();
+  return *this;
+}
 
-  //----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
-  DiscreteRandomVariable&
-  DiscreteJointRandomVariable::operator++(int)
-  {
-    for (set<DiscreteRandomVariable>::reverse_iterator it = variables_.rbegin(); it
-        != variables_.rend(); ++it)
+DiscreteRandomVariable&
+DiscreteJointRandomVariable::operator++(int)
+{
+  for (set<DiscreteRandomVariable>::reverse_iterator it = variables_.rbegin();
+      it != variables_.rend(); ++it)
+        {
+    if (*it != it->value_range().end())
       {
-        if (*it != it->value_range().end())
-          {
-            DiscreteRandomVariable& var =
-                const_cast<DiscreteRandomVariable&> (*it);
-            ++var;
-          }
-        else
-          {
-            DiscreteRandomVariable& var =
-                const_cast<DiscreteRandomVariable&> (*it);
-            var = it->value_range().begin();
-          }
+        DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
+        ++var;
       }
-
-    update_random_variable();
-    return *this;
-  }
-
-  //----------------------------------------------------------------------------
-
-  ostream&
-  DiscreteJointRandomVariable::put_out(ostream& os) const
-  {
-    DiscreteRandomVariable::put_out(os);
-    os << " (";
-    for_each(variables_.begin(), variables_.end(), StreamOut(os, " ", " "));
-    return os << ")";
-  }
-
-  //----------------------------------------------------------------------------
-
-  void
-  DiscreteJointRandomVariable::set_up_characteristics(const string& name,
-      size_t size)
-  {
-    characteristics_ = characteristics_table_.find(name);
-    if (characteristics_ == characteristics_table_.end())
-      {
-        bool success;
-        tie(characteristics_, success) = characteristics_table_.insert(
-            make_pair(name, Characteristics(size)));
-        if (!success)
-          throw logic_error(
-              "JointRandomVariable: Could not register random variable " + name
-                  + ".");
-      }
-  }
-
-  //----------------------------------------------------------------------------
-
-  void
-  DiscreteJointRandomVariable::update_random_variable()
-  {
-    string new_name;
-    const string& old_name = characteristics_->first;
-    size_t new_size = 1;
-    value_ = 0;
-
-    for (set<DiscreteRandomVariable>::const_iterator it = variables_.begin(); it
-        != variables_.end(); ++it)
-      {
-        new_name += it->name();
-
-        value_ += new_size * it->value_;
-        new_size *= it->characteristics_->second.size_;
-      }
-
-    if (new_name != old_name)
-      set_up_characteristics(new_name, new_size);
     else
-      characteristics_->second.size_ = new_size;
+      {
+        DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
+        var = it->value_range().begin();
+      }
   }
+
+update_random_variable();
+return *this;
+}
+
+ //----------------------------------------------------------------------------
+
+ostream&
+DiscreteJointRandomVariable::put_out(ostream& os) const
+{
+DiscreteRandomVariable::put_out(os);
+os << " (";
+for_each(variables_.begin(), variables_.end(), StreamOut(os, " ", " "));
+return os << ")";
+}
+
+ //----------------------------------------------------------------------------
+
+void
+DiscreteJointRandomVariable::set_up_characteristics(const string& name,
+  size_t size)
+{
+characteristics_ = characteristics_table_.find(name);
+if (characteristics_ == characteristics_table_.end())
+  {
+    bool success;
+    tie(characteristics_, success) = characteristics_table_.insert(
+        make_pair(name, Characteristics(size)));
+    if (!success)
+      throw logic_error(
+          "JointRandomVariable: Could not register random variable " + name
+              + ".");
+  }
+}
+
+ //----------------------------------------------------------------------------
+
+void
+DiscreteJointRandomVariable::update_random_variable()
+{
+string new_name;
+const string& old_name = characteristics_->first;
+size_t new_size = 1;
+value_ = 0;
+
+for (set<DiscreteRandomVariable>::const_iterator it = variables_.begin();
+    it != variables_.end(); ++it)
+      {
+  new_name += it->name();
+
+  value_ += new_size * it->value_;
+  new_size *= it->characteristics_->second.size_;
+}
+
+if (new_name != old_name)
+set_up_characteristics(new_name, new_size);
+else
+characteristics_->second.size_ = new_size;
+}
 
 }

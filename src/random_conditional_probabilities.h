@@ -37,8 +37,7 @@ namespace vanet
   class RandomConditionalProbabilities : public RandomVariable
   {
 
-    typedef std::map<DiscreteRandomVariable, RandomProbabilities>
-        ConditionalProbabilityTable;
+    typedef std::map<DiscreteRandomVariable, RandomProbabilities> ConditionalProbabilityTable;
 
   public:
 

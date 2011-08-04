@@ -109,51 +109,50 @@ namespace vanet
         RandomProbabilities::const_iterator it = distribution.begin();
         for (; it != distribution.end(); ++it)
           {
-            cum += it->second;
-            if (cum >= r)
-              return it->first;
-          }
-        --it;
-        return it->first;
-      }
-
-    DiscreteRandomVariable
-    referenced_condition() const
-    {
-      return make_condition(condition_vars_);
+          cum += it->second;
+          if (cum >= r)
+            return it->first;
+        }
+      --it;
+      return it->first;
     }
 
-    virtual std::ostream&
-    put_out_references(std::ostream& os) const;
+  DiscreteRandomVariable
+  referenced_condition() const
+  {
+    return make_condition(condition_vars_);
+  }
 
-    void
-    set(const DiscreteRandomVariable& var,
-        const DiscreteRandomVariable& condition, float probability)
-    {
-      cpt_.set(var, condition, probability);
-    }
+  virtual std::ostream&
+  put_out_references(std::ostream& os) const;
 
-  protected:
+  void
+  set(const DiscreteRandomVariable& var,
+      const DiscreteRandomVariable& condition, float probability)
+  {
+    cpt_.set(var, condition, probability);
+  }
 
-    virtual std::ostream&
-    put_out(std::ostream& os) const;
+protected:
 
-  private:
+  virtual std::ostream&
+  put_out(std::ostream& os) const;
 
-    RandomConditionalProbabilities& cpt_;
-    std::vector<const DiscreteRandomVariable*> condition_vars_;
-    bool self_allocated_params_;
-    DiscreteRandomVariable& var_;
+private:
 
-    static DiscreteRandomVariable
-    make_condition(const ConditionReferences& conditions);
+  RandomConditionalProbabilities& cpt_;
+  std::vector<const DiscreteRandomVariable*> condition_vars_;
+  bool self_allocated_params_;
+  DiscreteRandomVariable& var_;
 
-    static RandomConditionalProbabilities&
-    make_parameters_from_other_ccd(
-        const ConditionalCategoricalDistribution& ccd);
+  static DiscreteRandomVariable
+  make_condition(const ConditionReferences& conditions);
 
-    ConditionalCategoricalDistribution&
-    operator=(const ConditionalCategoricalDistribution&);
+  static RandomConditionalProbabilities&
+  make_parameters_from_other_ccd(const ConditionalCategoricalDistribution& ccd);
+
+  ConditionalCategoricalDistribution&
+  operator=(const ConditionalCategoricalDistribution&);
 
   };
 

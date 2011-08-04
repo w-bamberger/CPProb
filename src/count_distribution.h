@@ -14,9 +14,9 @@
 namespace vanet
 {
 
-typedef std::map<DiscreteRandomVariable, std::size_t> CountDistribution;
-typedef std::map<std::pair<DiscreteRandomVariable, DiscreteRandomVariable>,
-    std::size_t> ConditionalCountDistribution;
+  typedef std::map<DiscreteRandomVariable, std::size_t> CountDistribution;
+  typedef std::map<std::pair<DiscreteRandomVariable, DiscreteRandomVariable>,
+  std::size_t> ConditionalCountDistribution;
 
 }
 

@@ -40,7 +40,7 @@ namespace vanet
     vector<string> header(headerTok.begin(), headerTok.end());
 
     cout << "CSV header: ";
-    copy(header.begin(), header.end(), ostream_iterator<string> (cout, " "));
+    copy(header.begin(), header.end(), ostream_iterator<string>(cout, " "));
     cout << endl;
 
     // Read the body
@@ -52,12 +52,12 @@ namespace vanet
         map<string, string> row;
         for (; bodyIt != bodyTok.end(); ++bodyIt, ++headerIt)
           {
-            row.insert(make_pair(*headerIt, *bodyIt));
-          }
-        rows.push_back(row);
-      }
+          row.insert(make_pair(*headerIt, *bodyIt));
+        }
+      rows.push_back(row);
+    }
 
-    return rows;
-  }
+  return rows;
+}
 
 }

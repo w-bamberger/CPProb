@@ -28,7 +28,7 @@ namespace vanet
     explicit
     StreamOut(std::ostream& os, const std::string& prefix = "",
         const std::string& postfix = "\n") :
-      os_(os), prefix_(prefix), postfix_(postfix)
+        os_(os), prefix_(prefix), postfix_(postfix)
     {
     }
 

@@ -19,8 +19,7 @@ namespace vanet
 
   public:
 
-    typedef std::map<DiscreteRandomVariable, DirichletDistribution>
-        Distributions;
+    typedef std::map<DiscreteRandomVariable, DirichletDistribution> Distributions;
     typedef DirichletDistribution::input_type input_type;
     typedef RandomConditionalProbabilities result_type;
 
@@ -37,7 +36,8 @@ namespace vanet
       if (find_it != distributions_.end())
         return find_it->second;
       else
-        throw std::runtime_error("CondDirichletDistribution: Unknown condition");
+        throw std::runtime_error(
+            "CondDirichletDistribution: Unknown condition");
     }
 
     DirichletDistribution&
@@ -47,7 +47,8 @@ namespace vanet
       if (find_it != distributions_.end())
         return find_it->second;
       else
-        throw std::runtime_error("CondDirichletDistribution: Unknown condition");
+        throw std::runtime_error(
+            "CondDirichletDistribution: Unknown condition");
     }
 
     template<class _RandomNumberEngine>
@@ -62,7 +63,7 @@ namespace vanet
         RandomConditionalProbabilities::iterator p = result.begin();
         Distributions::iterator d = distributions_.begin();
         for (; p != result.end(); ++p, ++d)
-            p->second = d->second.operator ()(rne);
+          p->second = d->second.operator ()(rne);
 
         return result;
       }

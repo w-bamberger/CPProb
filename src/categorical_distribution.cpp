@@ -11,25 +11,25 @@ namespace vanet
 {
 
   CategoricalDistribution::CategoricalDistribution() :
-    is_pt_self_allocated(true), pt_(*new RandomProbabilities()), var_(0)
+      is_pt_self_allocated(true), pt_(*new RandomProbabilities()), var_(0)
   {
   }
 
   CategoricalDistribution::CategoricalDistribution(
       const CategoricalDistribution& cd) :
-    is_pt_self_allocated(cd.is_pt_self_allocated),
-        pt_(make_parameters_from_other_cd(cd)), var_(cd.var_)
+      is_pt_self_allocated(cd.is_pt_self_allocated), pt_(
+          make_parameters_from_other_cd(cd)), var_(cd.var_)
   {
   }
 
   CategoricalDistribution::CategoricalDistribution(DiscreteRandomVariable& var) :
-    is_pt_self_allocated(true), pt_(*new RandomProbabilities(var)), var_(&var)
+      is_pt_self_allocated(true), pt_(*new RandomProbabilities(var)), var_(&var)
   {
   }
 
   CategoricalDistribution::CategoricalDistribution(DiscreteRandomVariable& var,
       RandomProbabilities& params) :
-    is_pt_self_allocated(false), pt_(params), var_(&var)
+      is_pt_self_allocated(false), pt_(params), var_(&var)
   {
   }
 
@@ -66,31 +66,31 @@ namespace vanet
     float sum = 0.0;
     for (iterator it = pt_.begin(); it != pt_.end(); ++it)
       {
-        sum += it->second;
-      }
-    // Divide
-    for (iterator it = pt_.begin(); it != pt_.end(); ++it)
-      {
-        it->second /= sum;
-      }
+      sum += it->second;
+    }
+  // Divide
+  for (iterator it = pt_.begin(); it != pt_.end(); ++it)
+    {
+    it->second /= sum;
   }
+}
 
-  std::ostream&
-  CategoricalDistribution::put_out(std::ostream& os) const
-  {
-    for (const_iterator p = pt_.begin(); p != pt_.end(); ++p)
-      os << " (" << p->first << "," << p->second << ") ";
-    return os;
-  }
+std::ostream&
+CategoricalDistribution::put_out(std::ostream& os) const
+{
+for (const_iterator p = pt_.begin(); p != pt_.end(); ++p)
+  os << " (" << p->first << "," << p->second << ") ";
+return os;
+}
 
-  std::ostream&
-  CategoricalDistribution::put_out_references(std::ostream& os) const
-  {
-    if (var_)
-      return os << *var_;
-    else
-      throw std::runtime_error(
-          "CategoricalDistribution: Cannot put out reference of not-referenced distribution.");
-  }
+std::ostream&
+CategoricalDistribution::put_out_references(std::ostream& os) const
+{
+if (var_)
+  return os << *var_;
+else
+  throw std::runtime_error(
+      "CategoricalDistribution: Cannot put out reference of not-referenced distribution.");
+}
 
 }

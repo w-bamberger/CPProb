@@ -18,21 +18,21 @@
 #ifdef VANET_DEBUG_MODE
 #include <debug/list>
 namespace vanet
-{
-  namespace cont
-  {
-    using namespace __gnu_debug;
-  }
-}
-#else
-#include <list>
-namespace vanet
   {
     namespace cont
       {
-        using namespace std;
+        using namespace __gnu_debug;
       }
   }
+#else
+#include <list>
+namespace vanet
+{
+  namespace cont
+  {
+    using namespace std;
+  }
+}
 #endif
 
 namespace vanet
@@ -139,8 +139,8 @@ namespace vanet
       VertexReferences parents_;
 
       Vertex(RandomVariable& var, const DistributionVariant& distribution) :
-        distribution_(distribution), random_variable_(var),
-            value_is_evidence_(false)
+          distribution_(distribution), random_variable_(var), value_is_evidence_(
+              false)
 
       {
       }
@@ -231,7 +231,7 @@ namespace vanet
   public:
 
     CompareVertexName(const std::string& name) :
-      name_(name)
+        name_(name)
     {
     }
 

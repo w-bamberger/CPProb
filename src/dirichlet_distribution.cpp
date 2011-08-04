@@ -17,7 +17,8 @@ namespace vanet
   DirichletDistribution::DirichletDistribution(const RandomProbabilities& var,
       float alpha)
   {
-    for (RandomProbabilities::const_iterator p = var.begin(); p != var.end(); ++p)
+    for (RandomProbabilities::const_iterator p = var.begin(); p != var.end();
+        ++p)
       parameters_.insert(make_pair(p->first, alpha));
   }
 

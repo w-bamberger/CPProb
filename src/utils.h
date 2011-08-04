@@ -25,7 +25,7 @@ namespace vanet
 
       ChainFunctors(const OuterOperator& outer_op,
           const InnerOperator& inner_op) :
-        outer_op_(outer_op), inner_op_(inner_op)
+          outer_op_(outer_op), inner_op_(inner_op)
       {
       }
 
@@ -46,7 +46,7 @@ namespace vanet
     inline ChainFunctors<OuterOperator, InnerOperator>
     chain_functors(const OuterOperator& outer_op, const InnerOperator& inner_op)
     {
-      return ChainFunctors<OuterOperator, InnerOperator> (outer_op, inner_op);
+      return ChainFunctors<OuterOperator, InnerOperator>(outer_op, inner_op);
     }
 
   template<typename _Iterator, typename _Tp>
