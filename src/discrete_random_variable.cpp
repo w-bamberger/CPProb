@@ -20,6 +20,10 @@ namespace vanet
   void
   DiscreteRandomVariable::assign_random_value(RandomNumberEngine& rng)
   {
+    vanet_check_debug(
+        characteristics_ != characteristics_table_.end(),
+        "DiscreteRandomVariable: Cannot compute random value for an empty random variable.");
+
     /// @todo Creating the variate every time from scratch is slow.
     typedef std::tr1::uniform_int<std::size_t> Distribution;
     Distribution distribution(0, characteristics_->second.size_ - 1);
@@ -62,14 +66,15 @@ namespace vanet
   DiscreteRandomVariable&
   DiscreteRandomVariable::operator=(const DiscreteRandomVariable& var)
   {
-    if (characteristics_ == characteristics_table_.end())
-      characteristics_ = var.characteristics_;
+    vanet_check_debug(var.characteristics_ != characteristics_table_.end(),
+        "DiscreteRandomVariable: Cannot assign from empty random variable.");
+    vanet_check_debug(
+        characteristics_ == characteristics_table_.end() || characteristics_ == var.characteristics_,
+        "DiscreteRandomVariable: Cannot assign random variable " //
+        + var.characteristics_->first + " to random variable "//
+        + characteristics_->first);
 
-    else if (characteristics_ != var.characteristics_)
-      throw invalid_argument(
-          "Assigned random variable " + var.characteristics_->first
-              + " to random variable " + characteristics_->first);
-
+    characteristics_ = var.characteristics_;
     value_ = var.value_;
     return *this;
   }
@@ -89,10 +94,10 @@ namespace vanet
     os << "Characteristics table:\n";
     for (CharacteristicsTable::iterator it = characteristics_table_.begin();
         it != characteristics_table_.end(); ++it)
-          {
+        {
       os << it->first << ": " << it->second.size_ << "\n";
     }
-  return os;
-}
+    return os;
+  }
 
 }

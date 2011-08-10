@@ -9,6 +9,7 @@
 #define DISCRETE_RANDOM_VARIABLE_H_
 
 #include "random_variable.h"
+#include "error.h"
 #include <tr1/type_traits>
 #include <iterator>
 #include <map>
@@ -66,20 +67,27 @@ namespace vanet
       bool
       empty() const
       {
-        return characteristics_->second.size_ == 0;
+        return characteristics_ == characteristics_table_.end()
+            || characteristics_->second.size_ == 0;
       }
 
       const_iterator
       end() const
       {
-        return DiscreteRandomVariable(characteristics_,
-            characteristics_->second.size_);
+        if (characteristics_ == characteristics_table_.end())
+          return DiscreteRandomVariable(characteristics_, 0);
+        else
+          return DiscreteRandomVariable(characteristics_,
+              characteristics_->second.size_);
       }
 
       std::size_t
       size() const
       {
-        return characteristics_->second.size_;
+        if (characteristics_ == characteristics_table_.end())
+          return 0;
+        else
+          return characteristics_->second.size_;
       }
 
     private:
@@ -118,76 +126,78 @@ namespace vanet
         return empty_string_;
     }
 
-    DiscreteRandomVariable&
+    virtual DiscreteRandomVariable&
     operator++()
     {
-      if (value_ < characteristics_->second.size_)
-        {
-          ++value_;
-          return *this;
-        }
-      else
-        {
-          throw std::out_of_range(
-              "RandomVariable: Cannot increase the value above the maximum.");
-        }
+      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+          "DiscreteRandomVariable: Cannot decrement an empty random variable.");
+      vanet_check_debug( value_ < characteristics_->second.size_,
+          "DiscreteRandomVariable: Cannot increment the value " << value_ //
+          << " of the variable " << name() << " above the maximum "//
+          << characteristics_->second.size_ << ".");
+
+      ++value_;
+      return *this;
     }
 
-    DiscreteRandomVariable&
+    virtual DiscreteRandomVariable&
     operator++(int)
     {
-      if (value_ < characteristics_->second.size_)
-        {
-          ++value_;
-          return *this;
-        }
-      else
-        {
-          throw std::out_of_range(
-              "RandomVariable: Cannot increase the value above the maximum.");
-        }
+      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+          "DiscreteRandomVariable: Cannot increment an empty random variable.");
+      vanet_check_debug( value_ < characteristics_->second.size_,
+          "DiscreteRandomVariable: Cannot increment the value " << value_ //
+          << " of the variable " << name() << " above the maximum "//
+          << characteristics_->second.size_ << ".");
+
+      ++value_;
+      return *this;
     }
 
     DiscreteRandomVariable&
     operator--()
     {
-      if (value_ > 0)
-        {
-          --value_;
-          return *this;
-        }
-      else
-        {
-          throw std::out_of_range(
-              "RandomVariable: Cannot decrease the value below 0.");
-        }
+      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+          "DiscreteRandomVariable: Cannot decrement an empty random variable.");
+      vanet_check_debug( value_ < characteristics_->second.size_,
+          "DiscreteRandomVariable: Cannot decrement the value " << value_ //
+          << " of the variable " << name() << " below 0.");
+
+      --value_;
+      return *this;
     }
 
     DiscreteRandomVariable&
     operator--(int)
     {
-      if (value_ > 0)
-        {
-          --value_;
-          return *this;
-        }
-      else
-        {
-          throw std::out_of_range(
-              "RandomVariable: Cannot decrease the value below 0.");
-        }
+      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+          "DiscreteRandomVariable: Cannot decrement an empty random variable.");
+      vanet_check_debug( value_ < characteristics_->second.size_,
+          "DiscreteRandomVariable: Cannot decrement the value " << value_ //
+          << " of the variable " << name() << " below 0.");
+
+      --value_;
+      return *this;
     }
 
     bool
     operator==(const DiscreteRandomVariable& i) const
     {
-      return value_ == i.value_ && characteristics_ == i.characteristics_;
+      if (characteristics_ == characteristics_table_.end()
+          || i.characteristics_ == characteristics_table_.end())
+        return characteristics_ == i.characteristics_;
+      else
+        return value_ == i.value_ && characteristics_ == i.characteristics_;
     }
 
     bool
     operator!=(const DiscreteRandomVariable& i) const
     {
-      return value_ != i.value_ || characteristics_ != i.characteristics_;
+      if (characteristics_ == characteristics_table_.end()
+          || i.characteristics_ == characteristics_table_.end())
+        return characteristics_ != i.characteristics_;
+      else
+        return value_ != i.value_ || characteristics_ != i.characteristics_;
     }
 
     virtual bool

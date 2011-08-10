@@ -27,19 +27,19 @@ namespace vanet
     virtual
     ~DiscreteJointRandomVariable();
 
-    virtual bool
+    bool
     contains(const DiscreteRandomVariable& var)
     {
       return variables_.find(var) != variables_.end();
     }
 
-    virtual void
+    void
     insert(const DiscreteRandomVariable& var);
 
-    DiscreteRandomVariable&
+    virtual DiscreteRandomVariable&
     operator++();
 
-    DiscreteRandomVariable&
+    virtual DiscreteRandomVariable&
     operator++(int);
 
     /// @todo Some more operators are missing here. The default implementation
@@ -52,7 +52,9 @@ namespace vanet
 
   private:
 
-    std::set<DiscreteRandomVariable> variables_;
+    typedef std::set<DiscreteRandomVariable> Variables;
+
+    Variables variables_;
 
     void
     set_up_characteristics(const std::string& name, std::size_t size);
