@@ -18,7 +18,7 @@ namespace vanet
   program_failed(const string& msg)
   {
     cerr << msg << endl;
-    exit(EXIT_FAILURE);
+    terminate();
   }
 
   NetworkError::NetworkError(const std::string& msg) :
