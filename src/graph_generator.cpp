@@ -29,90 +29,8 @@ namespace vanet
   {
   }
 
-  DiscreteBayesianNetwork
-  GraphGenerator::gen_alarm_net()
-  {
-    DiscreteBayesianNetwork g;
-    const DiscreteJointRandomVariable no_parents;
-
-    BooleanRandomVariable burglary("Burglary", true);
-    DiscreteBayesianNetwork::vertex_descriptor burglary_v = add_vertex(g);
-    g[burglary_v].random_variable = burglary;
-    ConditionalCategoricalDistribution& burglary_d = g[burglary_v].distribution;
-    burglary_d.set(burglary, no_parents, 0.001);
-    burglary_d.set(burglary.observation(false), no_parents, 0.999);
-
-    BooleanRandomVariable earthquake("Earthquake", true);
-    DiscreteBayesianNetwork::vertex_descriptor earthquake_v = add_vertex(g);
-    g[earthquake_v].random_variable = earthquake;
-    ConditionalCategoricalDistribution& earthquake_d =
-        g[earthquake_v].distribution;
-    earthquake_d.set(earthquake, no_parents, 0.002);
-    earthquake_d.set(earthquake.observation(false), no_parents, 0.998);
-
-    BooleanRandomVariable alarm("Alarm", true);
-    DiscreteBayesianNetwork::vertex_descriptor alarm_v = add_vertex(g);
-    g[alarm_v].random_variable = alarm;
-    ConditionalCategoricalDistribution& alarm_d = g[alarm_v].distribution;
-    burglary.observation(true);
-    earthquake.observation(true);
-    alarm_d.set(alarm.observation(true),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.95);
-    alarm_d.set(alarm.observation(false),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.05);
-    earthquake.observation(false);
-    alarm_d.set(alarm.observation(true),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.94);
-    alarm_d.set(alarm.observation(false),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.06);
-    burglary.observation(false);
-    earthquake.observation(true);
-    alarm_d.set(alarm.observation(true),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.29);
-    alarm_d.set(alarm.observation(false),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.71);
-    earthquake.observation(false);
-    alarm_d.set(alarm.observation(true),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.001);
-    alarm_d.set(alarm.observation(false),
-        DiscreteJointRandomVariable(burglary, earthquake), 0.999);
-
-    add_edge(burglary_v, alarm_v, g);
-    add_edge(earthquake_v, alarm_v, g);
-
-    BooleanRandomVariable john_calls("JohnCalls", true);
-    DiscreteBayesianNetwork::vertex_descriptor john_calls_v = add_vertex(g);
-    g[john_calls_v].random_variable = john_calls;
-    ConditionalCategoricalDistribution& john_calls_d =
-        g[john_calls_v].distribution;
-    alarm.observation(true);
-    john_calls_d.set(john_calls.observation(true), alarm, 0.9);
-    john_calls_d.set(john_calls.observation(false), alarm, 0.1);
-    alarm.observation(false);
-    john_calls_d.set(john_calls.observation(true), alarm, 0.05);
-    john_calls_d.set(john_calls.observation(false), alarm, 0.95);
-
-    add_edge(alarm_v, john_calls_v, g);
-
-    BooleanRandomVariable mary_calls("MaryCalls", true);
-    DiscreteBayesianNetwork::vertex_descriptor mary_calls_v = add_vertex(g);
-    g[mary_calls_v].random_variable = mary_calls;
-    ConditionalCategoricalDistribution& mary_calls_d =
-        g[mary_calls_v].distribution;
-    alarm.observation(true);
-    mary_calls_d.set(mary_calls.observation(true), alarm, 0.7);
-    mary_calls_d.set(mary_calls.observation(false), alarm, 0.3);
-    alarm.observation(false);
-    mary_calls_d.set(mary_calls.observation(true), alarm, 0.01);
-    mary_calls_d.set(mary_calls.observation(false), alarm, 0.99);
-
-    add_edge(alarm_v, mary_calls_v, g);
-
-    return g;
-  }
-
   HybridBayesianNetwork
-  GraphGenerator::gen_alarm_net_hybrid()
+  GraphGenerator::gen_alarm_net()
   {
     typedef HybridBayesianNetwork::iterator vertex_iterator;
     HybridBayesianNetwork bn;
@@ -258,7 +176,7 @@ namespace vanet
     // Fill the data in the net
     for (CsvMapReader::Records::iterator r = full_data.begin();
         r != full_data.end(); ++r)
-          {
+        {
       BooleanRandomVariable bag_evidence("Bag", r->operator[]("Bag"));
       HybridBayesianNetwork::iterator bag_evidence_v = bn.add_categorical(
           bag_evidence, bag_params_v);
@@ -266,38 +184,38 @@ namespace vanet
 
       for (CsvMapReader::NamedAttributes::iterator a = r->begin();
           a != r->end(); ++a)
-            {
-        if (a->first != "Bag")
           {
-            BooleanRandomVariable var(a->first, a->second);
-            HybridBayesianNetwork::iterator vertex =
-                bn.add_conditional_categorical(var, list_of(bag_evidence_v),
-                    params_table[a->first]);
-            vertex->value_is_evidence(true);
-          }
+        if (a->first != "Bag")
+        {
+          BooleanRandomVariable var(a->first, a->second);
+          HybridBayesianNetwork::iterator vertex =
+              bn.add_conditional_categorical(var, list_of(bag_evidence_v),
+                  params_table[a->first]);
+          vertex->value_is_evidence(true);
+        }
       }
+    }
+
+    return bn;
   }
 
-return bn;
-}
+  DiscreteBayesianNetwork
+  GraphGenerator::gen_naive_bayes_trust_net()
+  {
+    DiscreteBayesianNetwork g;
 
-DiscreteBayesianNetwork
-GraphGenerator::gen_naive_bayes_trust_net()
-{
-DiscreteBayesianNetwork g;
+    BooleanRandomVariable trust("Trust", true);
+    DiscreteBayesianNetwork::vertex_descriptor trust_v = add_vertex(g);
+    g[trust_v].random_variable = trust;
 
-BooleanRandomVariable trust("Trust", true);
-DiscreteBayesianNetwork::vertex_descriptor trust_v = add_vertex(g);
-g[trust_v].random_variable = trust;
+    DiscreteBayesianNetwork::vertex_descriptor vehicle_v = add_vertex(g);
+    DiscreteBayesianNetwork::vertex_descriptor type_v = add_vertex(g);
 
-DiscreteBayesianNetwork::vertex_descriptor vehicle_v = add_vertex(g);
-DiscreteBayesianNetwork::vertex_descriptor type_v = add_vertex(g);
+    bool success;
+    success = add_edge(trust_v, vehicle_v, g).second;
+    success = add_edge(trust_v, type_v, g).second;
 
-bool success;
-success = add_edge(trust_v, vehicle_v, g).second;
-success = add_edge(trust_v, type_v, g).second;
-
-return g;
-}
+    return g;
+  }
 
 }

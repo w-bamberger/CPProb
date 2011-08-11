@@ -23,11 +23,8 @@ namespace vanet
 
     ~GraphGenerator();
 
-    static DiscreteBayesianNetwork
-    gen_alarm_net();
-
     static HybridBayesianNetwork
-    gen_alarm_net_hybrid();
+    gen_alarm_net();
 
     static DiscreteBayesianNetwork
     gen_bag_net();
