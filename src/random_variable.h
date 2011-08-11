@@ -118,7 +118,7 @@ namespace vanet
   protected:
 
     /**
-     * Puts ou thte value of this random variable. This virtual method
+     * Puts out the value of this random variable. This virtual method
      * implements the output operation of
      * operator<<(std::ostream&,const RandomVariable&). Child classes
      * override this method to realise the output streaming. They put out their
