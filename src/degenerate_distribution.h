@@ -46,7 +46,7 @@ namespace vanet
     virtual std::ostream&
     put_out(std::ostream& os) const
     {
-      return os << "  Degenerate distribution\n";
+      return os << "      Degenerate distribution\n";
     }
 
   private:

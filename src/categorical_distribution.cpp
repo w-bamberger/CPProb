@@ -65,32 +65,34 @@ namespace vanet
     // Accumulate
     float sum = 0.0;
     for (iterator it = pt_.begin(); it != pt_.end(); ++it)
-      {
+    {
       sum += it->second;
     }
-  // Divide
-  for (iterator it = pt_.begin(); it != pt_.end(); ++it)
+    // Divide
+    for (iterator it = pt_.begin(); it != pt_.end(); ++it)
     {
-    it->second /= sum;
+      it->second /= sum;
+    }
   }
-}
 
-std::ostream&
-CategoricalDistribution::put_out(std::ostream& os) const
-{
-for (const_iterator p = pt_.begin(); p != pt_.end(); ++p)
-  os << " (" << p->first << "," << p->second << ") ";
-return os;
-}
+  std::ostream&
+  CategoricalDistribution::put_out(std::ostream& os) const
+  {
+    os << "     ";
+    for (const_iterator p = pt_.begin(); p != pt_.end(); ++p)
+      os << " (" << p->first << "," << p->second << ") ";
+    os << "\n";
+    return os;
+  }
 
-std::ostream&
-CategoricalDistribution::put_out_references(std::ostream& os) const
-{
-if (var_)
-  return os << *var_;
-else
-  throw std::runtime_error(
-      "CategoricalDistribution: Cannot put out reference of not-referenced distribution.");
-}
+  std::ostream&
+  CategoricalDistribution::put_out_references(std::ostream& os) const
+  {
+    if (var_)
+      return os << *var_;
+    else
+      throw std::runtime_error(
+          "CategoricalDistribution: Cannot put out reference of not-referenced distribution.");
+  }
 
 }
