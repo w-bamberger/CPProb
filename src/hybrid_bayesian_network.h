@@ -18,12 +18,12 @@
 #ifdef VANET_DEBUG_MODE
 #include <debug/list>
 namespace vanet
+{
+  namespace cont
   {
-    namespace cont
-      {
-        using namespace __gnu_debug;
-      }
+    using namespace __gnu_debug;
   }
+}
 #else
 #include <list>
 namespace vanet
@@ -196,17 +196,68 @@ namespace vanet
     const_iterator
     end() const;
 
+    /**
+     * Computes the probability distribution of the given vertex by enumeration.
+     * This algorithm only works with discrete distributions
+     * (CategoricalDistribution and ConditionalCategoricalDistribution). To
+     * allow continuous variables for fixed parents vertices, you must associate
+     * them with the DeltaDistribution.
+     *
+     * For such a discrete Bayesian network, the joint probability can be
+     * computed by enumerating all possible states. This is what this algorithm
+     * does.
+     *
+     * @par Requires:
+     * - The network consists only of random variables of the type
+     *   DiscreteRandomVariable or its sub-classes and of distributions of the
+     *   types CategoricalDistribution and ConditionalCategoricalDistribution.
+     *   The only exception is an evidence vertex without parents. Such a
+     *   vertex may use the DeltaDistribution.
+     *
+     * @par Ensures:
+     * - The distributions and the evidence flags are not modified, even in
+     *   case of an exception.
+     * - The random variable values of evidence vertices are not modified.
+     *   All other random variables are used by the algorithm and thus are
+     *   modified during execution.
+     *
+     * @param X_v vertex whose distribution should be computed
+     * @return the unconditional distribution of the variable of the vertex X_v
+     * @throw NetworkError The network does not conform to the requirements of
+     *     this algorithm.
+     * @throw std::bad_alloc Failed to allocate temporary memory.
+     */
+    CategoricalDistribution
+    enumerate(iterator X_v);
+
     CategoricalDistribution
     gibbs_sampling(const iterator& X_it, unsigned int burn_in_iterations,
         unsigned int collect_iterations);
 
   private:
 
-    class MarkovBlanket;
     class CategoricalMarkovBlanket;
     class DirichletMarkovBlanket;
+    class MarkovBlanket;
+    class ProbabilityVisitor;
 
     VertexList vertices_;
+
+    /**
+     * Computes recursively the joint probability of the network defined by
+     * the vertices between current and end. The algorithm enumerates all
+     * possibilities. It is a help function for #enumerate().
+     *
+     * This method may throw any exception. They are all caught in #enumerate()
+     * and transformed in appropriate exceptions.
+     *
+     * @param current For this vertex, the probability is computed.
+     * @param end If current == end, the recursion stops with 1.0.
+     * @return the joint probability of the network
+     * @throw Any
+     */
+    float
+    enumerate_all(iterator current, iterator end);
 
   };
 
