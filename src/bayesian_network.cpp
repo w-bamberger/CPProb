@@ -1,12 +1,12 @@
 /*
- * hybrid_bayesian_network.cpp
+ * bayesian_network.cpp
  *
  *  Created on: 07.07.2011
  *      Author: wbam
  */
 
 #include "error.h"
-#include "hybrid_bayesian_network.h"
+#include "bayesian_network.h"
 #include "io_utils.h"
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/get.hpp>
@@ -26,7 +26,7 @@ using namespace std::tr1;
 namespace vanet
 {
 
-  class HybridBayesianNetwork::MarkovBlanket
+  class BayesianNetwork::MarkovBlanket
   {
 
   public:
@@ -36,7 +36,7 @@ namespace vanet
 
   };
 
-  class HybridBayesianNetwork::CategoricalMarkovBlanket : public HybridBayesianNetwork::MarkovBlanket
+  class BayesianNetwork::CategoricalMarkovBlanket : public BayesianNetwork::MarkovBlanket
   {
 
     typedef cont::vector<BoundProbabilityDistribution*> Distributions;
@@ -119,12 +119,12 @@ namespace vanet
 
     };
 
-  class HybridBayesianNetwork::DirichletMarkovBlanket : public HybridBayesianNetwork::MarkovBlanket
+  class BayesianNetwork::DirichletMarkovBlanket : public BayesianNetwork::MarkovBlanket
   {
 
   public:
 
-    DirichletMarkovBlanket(const HybridBayesianNetwork::iterator& X_v) :
+    DirichletMarkovBlanket(const BayesianNetwork::iterator& X_v) :
         X_v_(X_v)
     {
 
@@ -137,7 +137,7 @@ namespace vanet
       {
         CondDirichletDistribution sample_distribution = boost::get<
             CondDirichletDistribution>(X_v_->distribution());
-        for (HybridBayesianNetwork::VertexReferences::const_iterator c =
+        for (BayesianNetwork::VertexReferences::const_iterator c =
             X_v_->children().begin(); c != X_v_->children().end(); ++c)
         {
           const DiscreteRandomVariable & c_var =
@@ -167,12 +167,11 @@ namespace vanet
 
   private:
 
-    HybridBayesianNetwork::iterator X_v_;
+    BayesianNetwork::iterator X_v_;
 
   };
 
-  class HybridBayesianNetwork::ProbabilityVisitor : public boost::static_visitor<
-      float>
+  class BayesianNetwork::ProbabilityVisitor : public boost::static_visitor<float>
   {
 
   public:
@@ -190,7 +189,7 @@ namespace vanet
 
   template<>
     float
-    HybridBayesianNetwork::ProbabilityVisitor::operator()(
+    BayesianNetwork::ProbabilityVisitor::operator()(
         const CategoricalDistribution& distribution) const
     {
       return distribution.at_references();
@@ -198,7 +197,7 @@ namespace vanet
 
   template<>
     float
-    HybridBayesianNetwork::ProbabilityVisitor::operator()(
+    BayesianNetwork::ProbabilityVisitor::operator()(
         const ConditionalCategoricalDistribution& distribution) const
     {
       return distribution.at_references();
@@ -206,14 +205,14 @@ namespace vanet
 
   template<>
     float
-    HybridBayesianNetwork::ProbabilityVisitor::operator()(
+    BayesianNetwork::ProbabilityVisitor::operator()(
         const DegenerateDistribution& distribution) const
     {
       return distribution.at_references();
     }
 
   ostream&
-  operator<<(ostream& os, const HybridBayesianNetwork& bn)
+  operator<<(ostream& os, const BayesianNetwork& bn)
   {
     bool is_large_network = bn.size() > 10;
 
@@ -222,8 +221,8 @@ namespace vanet
     else
       os << "Vertices of the Bayesian network:\n";
 
-    for (HybridBayesianNetwork::const_iterator vIt = bn.begin();
-        vIt != bn.end(); ++vIt)
+    for (BayesianNetwork::const_iterator vIt = bn.begin(); vIt != bn.end();
+        ++vIt)
         {
       if (vIt->value_is_evidence() && is_large_network)
         continue;
@@ -236,7 +235,7 @@ namespace vanet
         os << " with no evidence\n";
 
       os << "    Parents:";
-      for (HybridBayesianNetwork::VertexReferences::const_iterator p =
+      for (BayesianNetwork::VertexReferences::const_iterator p =
           vIt->parents().begin(); p != vIt->parents().end(); ++p)
         os << " " << (*p)->random_variable().name();
       os << "\n";
@@ -247,24 +246,23 @@ namespace vanet
     return os;
   }
 
-  HybridBayesianNetwork::HybridBayesianNetwork()
+  BayesianNetwork::BayesianNetwork()
   {
   }
 
-  HybridBayesianNetwork::HybridBayesianNetwork(
-      const HybridBayesianNetwork& other_hbn) :
+  BayesianNetwork::BayesianNetwork(const BayesianNetwork& other_hbn) :
       vertices_(other_hbn.vertices_)
   {
   }
 
-  HybridBayesianNetwork::~HybridBayesianNetwork()
+  BayesianNetwork::~BayesianNetwork()
   {
     for (iterator v = begin(); v != end(); ++v)
       delete &v->random_variable();
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_categorical(const DiscreteRandomVariable& var)
+  BayesianNetwork::iterator
+  BayesianNetwork::add_categorical(const DiscreteRandomVariable& var)
   {
     // Allocate the new memory
     DiscreteRandomVariable* new_var = new DiscreteRandomVariable(var);
@@ -274,17 +272,17 @@ namespace vanet
     return vertices_.insert(vertices_.end(), Vertex(*new_var, new_distribution));
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_categorical(const DiscreteRandomVariable& var,
+  BayesianNetwork::iterator
+  BayesianNetwork::add_categorical(const DiscreteRandomVariable& var,
       iterator params_vertex)
   {
     // First, convert everything that could fail.
     RandomVariable* params_rv = &params_vertex->random_variable();
     RandomProbabilities * params = dynamic_cast<RandomProbabilities*>(params_rv);
     if (!params)
-      throw runtime_error(
-          string("HybridBayesianNetwork: Cannot connect parameters of type")
-              + typeid(*params_rv).name() + " to CategoricalDistribution.");
+      vanet_throw_runtime_error(
+          "BayesianNetwork: Cannot connect parameters of type" //
+          << typeid(*params_rv).name() << " to CategoricalDistribution.");
 
     // Now it is save to allocate the new memory
     DiscreteRandomVariable* new_var = new DiscreteRandomVariable(var);
@@ -298,8 +296,8 @@ namespace vanet
     return new_vertex;
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_conditional_categorical(
+  BayesianNetwork::iterator
+  BayesianNetwork::add_conditional_categorical(
       const DiscreteRandomVariable& var,
       const VertexReferences& condition_vertices)
   {
@@ -312,10 +310,9 @@ namespace vanet
       if (DiscreteRandomVariable* c_drv = dynamic_cast<DiscreteRandomVariable*> (c_rv))
         condition_references.push_back(c_drv);
       else
-        throw runtime_error(
-            string("HybridBayesianNetwork: Cannot connect variable of type ")
-                + typeid(*c_rv).name()
-                + " to ConditionalCategoricalDistribution.");
+        vanet_throw_runtime_error(
+            "BayesianNetwork: Cannot connect variable of type " //
+            << typeid(*c_rv).name() << " to ConditionalCategoricalDistribution.");
     }
 
 // Now it is save to allocate the new memory
@@ -336,8 +333,8 @@ namespace vanet
     return new_vertex;
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_conditional_categorical(
+  BayesianNetwork::iterator
+  BayesianNetwork::add_conditional_categorical(
       const DiscreteRandomVariable& var,
       const VertexReferences& condition_vertices, iterator params_vertex)
   {
@@ -346,10 +343,10 @@ namespace vanet
     RandomConditionalProbabilities * params =
         dynamic_cast<RandomConditionalProbabilities*>(params_rv);
     if (!params)
-      throw runtime_error(
-          string("HybridBayesianNetwork: Cannot connect parameters of type")
-              + typeid(*params_rv).name()
-              + " to ConditionalCategoricalDistribution.");
+      vanet_throw_runtime_error(
+          "BayesianNetwork: Cannot connect parameters of type" //
+          << typeid(*params_rv).name()//
+          << " to ConditionalCategoricalDistribution.");
 
     cont::vector<const DiscreteRandomVariable*> condition_references;
     for (VertexReferences::const_iterator c_it = condition_vertices.begin();
@@ -359,10 +356,9 @@ namespace vanet
       if (DiscreteRandomVariable* c_drv = dynamic_cast<DiscreteRandomVariable*> (c_rv))
         condition_references.push_back(c_drv);
       else
-        throw runtime_error(
-            string("HybridBayesianNetwork: Cannot connect variable of type ")
-                + typeid(*c_rv).name()
-                + " to ConditionalCategoricalDistribution.");
+        vanet_throw_runtime_error(
+            "BayesianNetwork: Cannot connect variable of type " //
+            << typeid(*c_rv).name() << " to ConditionalCategoricalDistribution.");
     }
 
     // Now it is save to allocate the new memory
@@ -385,8 +381,8 @@ namespace vanet
     return new_vertex;
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_conditional_dirichlet(
+  BayesianNetwork::iterator
+  BayesianNetwork::add_conditional_dirichlet(
       const RandomConditionalProbabilities& var, float alpha)
   {
     RandomConditionalProbabilities* new_var =
@@ -395,8 +391,8 @@ namespace vanet
     return vertices_.insert(vertices_.end(), Vertex(*new_var, new_distribution));
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_constant(const RandomConditionalProbabilities& var)
+  BayesianNetwork::iterator
+  BayesianNetwork::add_constant(const RandomConditionalProbabilities& var)
   {
     RandomConditionalProbabilities* new_var =
         new RandomConditionalProbabilities(var);
@@ -404,49 +400,48 @@ namespace vanet
     return vertices_.insert(vertices_.end(), Vertex(*new_var, new_distribution));
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_constant(const RandomProbabilities& var)
+  BayesianNetwork::iterator
+  BayesianNetwork::add_constant(const RandomProbabilities& var)
   {
     RandomProbabilities* new_var = new RandomProbabilities(var);
     DegenerateDistribution new_distribution(*new_var);
     return vertices_.insert(vertices_.end(), Vertex(*new_var, new_distribution));
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_dirichlet(const RandomProbabilities& var,
-      float alpha)
+  BayesianNetwork::iterator
+  BayesianNetwork::add_dirichlet(const RandomProbabilities& var, float alpha)
   {
     RandomProbabilities* new_var = new RandomProbabilities(var);
     DirichletDistribution new_distribution(*new_var, alpha);
     return vertices_.insert(vertices_.end(), Vertex(*new_var, new_distribution));
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::begin()
+  BayesianNetwork::iterator
+  BayesianNetwork::begin()
   {
     return vertices_.begin();
   }
 
-  HybridBayesianNetwork::const_iterator
-  HybridBayesianNetwork::begin() const
+  BayesianNetwork::const_iterator
+  BayesianNetwork::begin() const
   {
     return vertices_.begin();
   }
 
-  HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::end()
+  BayesianNetwork::iterator
+  BayesianNetwork::end()
   {
     return vertices_.end();
   }
 
-  HybridBayesianNetwork::const_iterator
-  HybridBayesianNetwork::end() const
+  BayesianNetwork::const_iterator
+  BayesianNetwork::end() const
   {
     return vertices_.end();
   }
 
   CategoricalDistribution
-  HybridBayesianNetwork::enumerate(iterator X_v)
+  BayesianNetwork::enumerate(iterator X_v)
   {
     // The vertices must be sorted in topological order for this algorithm.
 
@@ -479,7 +474,7 @@ namespace vanet
         catch(const std::exception& e)
         {
           X_v->value_is_evidence(temp_evidence_flag);
-          vanet_throw_network_error("HybridBayesianNetwork: Could not enumerate the network. " //
+          vanet_throw_network_error("BayesianNetwork: Could not enumerate the network. " //
               << e.what());
         }
 
@@ -487,7 +482,7 @@ namespace vanet
   }
 
   float
-  HybridBayesianNetwork::enumerate_all(iterator current, iterator end)
+  BayesianNetwork::enumerate_all(iterator current, iterator end)
   {
     if (current == end)
       return 1.0;
@@ -521,7 +516,7 @@ namespace vanet
   }
 
   CategoricalDistribution
-  HybridBayesianNetwork::gibbs_sampling(const iterator& X_it,
+  BayesianNetwork::gibbs_sampling(const iterator& X_it,
       unsigned int burn_in_iterations, unsigned int collect_iterations)
   {
     CategoricalDistribution X_distribution;
@@ -529,7 +524,7 @@ namespace vanet
         dynamic_cast<DiscreteRandomVariable*>(&X_it->random_variable());if
 (    x == 0)
     throw runtime_error(
-    "HybridBayesianNetwork::gibbs_sampling: Unknown variable type.");
+    "BayesianNetwork::gibbs_sampling: Unknown variable type.");
 
 // Compile a list of the non-evidence variables
     typedef cont::list<pair<iterator, MarkovBlanket*> > NonEvidenceVertices;
@@ -554,7 +549,7 @@ namespace vanet
 
       else
         throw runtime_error(
-            "HybridBayesianNetwork: Unknown distribution type for Gibbs sampling.");
+            "BayesianNetwork: Unknown distribution type for Gibbs sampling.");
     }
 
 // Initialise non-evidence variables randomly
@@ -603,7 +598,7 @@ namespace vanet
   }
 
   void
-  HybridBayesianNetwork::learn()
+  BayesianNetwork::learn()
   {
     // Could be well parallelized and nicely realized with delayed visitation.
 
@@ -631,13 +626,13 @@ namespace vanet
     catch (const exception& e)
     {
       vanet_throw_network_error(
-          "HybridBayesianNetwork: Cannot learn the provided network because of an invalid structure: "
+          "BayesianNetwork: Cannot learn the provided network because of an invalid structure: "
           << e.what());
     }
   }
 
   void
-  HybridBayesianNetwork::learn_probabilities(iterator v)
+  BayesianNetwork::learn_probabilities(iterator v)
   {
     /* Clear the target variable. I use it for counters and normalize it
      * in the end. */
@@ -673,7 +668,7 @@ namespace vanet
       }
 
   void
-  HybridBayesianNetwork::learn_conditional_probabilities(iterator v)
+  BayesianNetwork::learn_conditional_probabilities(iterator v)
   {
     /* Clear the target variable. I use it for counters and normalize it
      * in the end. */

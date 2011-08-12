@@ -27,11 +27,11 @@ namespace vanet
   {
   }
 
-  HybridBayesianNetwork
+  BayesianNetwork
   GraphGenerator::gen_alarm_net()
   {
-    typedef HybridBayesianNetwork::iterator vertex_iterator;
-    HybridBayesianNetwork bn;
+    typedef BayesianNetwork::iterator vertex_iterator;
+    BayesianNetwork bn;
     const DiscreteJointRandomVariable no_parents;
 
     BooleanRandomVariable burglary("Burglary", true);
@@ -74,11 +74,11 @@ namespace vanet
         DiscreteJointRandomVariable(burglary, earthquake), 0.001);
     alarm_params.set(alarm.observation(false),
         DiscreteJointRandomVariable(burglary, earthquake), 0.999);
-    HybridBayesianNetwork::iterator alarm_params_it = bn.add_constant(
+    BayesianNetwork::iterator alarm_params_it = bn.add_constant(
         alarm_params);
     alarm_params_it->value_is_evidence(true);
 
-    HybridBayesianNetwork::iterator alarm_it = bn.add_conditional_categorical(
+    BayesianNetwork::iterator alarm_it = bn.add_conditional_categorical(
         alarm, list_of(burglary_it)(earthquake_it), alarm_params_it);
 
     BooleanRandomVariable john_calls("JohnCalls", true);
@@ -110,17 +110,17 @@ namespace vanet
     return bn;
   }
 
-  HybridBayesianNetwork
+  BayesianNetwork
   GraphGenerator::gen_bag_net(float alpha, size_t lines_of_evidence)
   {
-    const HybridBayesianNetwork::VertexReferences no_condition;
-    HybridBayesianNetwork bn;
+    const BayesianNetwork::VertexReferences no_condition;
+    BayesianNetwork bn;
 
     // Set up the parameter vertices
-    map<string, HybridBayesianNetwork::iterator> params_table;
+    map<string, BayesianNetwork::iterator> params_table;
     BooleanRandomVariable bag("Bag", true);
     RandomProbabilities bag_params(bag);
-    HybridBayesianNetwork::iterator bag_params_v = bn.add_dirichlet(bag_params,
+    BayesianNetwork::iterator bag_params_v = bn.add_dirichlet(bag_params,
         alpha);
     RandomConditionalProbabilities flavor_params(
         BooleanRandomVariable("Flavor", true), bag);
@@ -147,7 +147,7 @@ namespace vanet
     for (; r != full_data.end() && line != lines_of_evidence; ++r, ++line)
     {
       BooleanRandomVariable bag_evidence("Bag", r->operator[]("Bag"));
-      HybridBayesianNetwork::iterator bag_evidence_v = bn.add_categorical(
+      BayesianNetwork::iterator bag_evidence_v = bn.add_categorical(
           bag_evidence, bag_params_v);
       bag_evidence_v->value_is_evidence(true);
 
@@ -157,7 +157,7 @@ namespace vanet
         if (a->first != "Bag")
         {
           BooleanRandomVariable var(a->first, a->second);
-          HybridBayesianNetwork::iterator vertex =
+          BayesianNetwork::iterator vertex =
               bn.add_conditional_categorical(var, list_of(bag_evidence_v),
                   params_table[a->first]);
           vertex->value_is_evidence(true);

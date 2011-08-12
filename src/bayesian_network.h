@@ -1,12 +1,12 @@
 /*
- * hybrid_bayesian_network.h
+ * bayesian_network.h
  *
  *  Created on: 07.07.2011
  *      Author: wbam
  */
 
-#ifndef HYBRID_BAYESIAN_NETWORK_H_
-#define HYBRID_BAYESIAN_NETWORK_H_
+#ifndef BAYESIAN_NETWORK_H_
+#define BAYESIAN_NETWORK_H_
 
 #include "categorical_distribution.h"
 #include "conditional_categorical_distribution.h"
@@ -42,7 +42,7 @@ namespace vanet
   class CategoricalDistribution;
   class RandomConditionalProbabilities;
 
-  class HybridBayesianNetwork
+  class BayesianNetwork
   {
 
   public:
@@ -58,7 +58,7 @@ namespace vanet
 
     public:
 
-      typedef HybridBayesianNetwork::VertexReferences VertexReferences;
+      typedef BayesianNetwork::VertexReferences VertexReferences;
       typedef boost::variant< //
           CategoricalDistribution, //
           ConditionalCategoricalDistribution, //
@@ -129,7 +129,7 @@ namespace vanet
 
     private:
 
-      friend class HybridBayesianNetwork;
+      friend class BayesianNetwork;
 
       DistributionVariant distribution_;
       RandomVariable& random_variable_;
@@ -151,14 +151,14 @@ namespace vanet
     class CompareVertexName;
 
     friend std::ostream&
-    operator<<(std::ostream& os, const HybridBayesianNetwork& hbn);
+    operator<<(std::ostream& os, const BayesianNetwork& hbn);
 
-    HybridBayesianNetwork();
+    BayesianNetwork();
 
     /// @todo Copying does not work correctly yet.
-    HybridBayesianNetwork(const HybridBayesianNetwork& other_hbn);
+    BayesianNetwork(const BayesianNetwork& other_hbn);
 
-    ~HybridBayesianNetwork();
+    ~BayesianNetwork();
 
     iterator
     add_categorical(const DiscreteRandomVariable& var);
@@ -327,21 +327,21 @@ namespace vanet
     learn_conditional_probabilities(iterator v);
   };
 
-  class HybridBayesianNetwork::NameOfVertex : public std::unary_function<
-      const HybridBayesianNetwork::Vertex&, std::string&>
+  class BayesianNetwork::NameOfVertex : public std::unary_function<
+      const BayesianNetwork::Vertex&, std::string&>
   {
 
   public:
 
     const std::string&
-    operator()(const HybridBayesianNetwork::Vertex& vertex) const
+    operator()(const BayesianNetwork::Vertex& vertex) const
     {
       return vertex.random_variable().name();
     }
 
   };
 
-  class HybridBayesianNetwork::CompareVertexName : public std::unary_function<
+  class BayesianNetwork::CompareVertexName : public std::unary_function<
       bool, Vertex>
   {
 
@@ -366,4 +366,4 @@ namespace vanet
 
 }
 
-#endif /* HYBRID_BAYESIAN_NETWORK_H_ */
+#endif /* BAYESIAN_NETWORK_H_ */

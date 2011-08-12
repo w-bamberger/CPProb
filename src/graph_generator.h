@@ -8,7 +8,7 @@
 #ifndef GRAPH_GENERATOR_H_
 #define GRAPH_GENERATOR_H_
 
-#include "hybrid_bayesian_network.h"
+#include "bayesian_network.h"
 #include <numeric>
 
 namespace vanet
@@ -23,10 +23,10 @@ namespace vanet
 
     ~GraphGenerator();
 
-    static HybridBayesianNetwork
+    static BayesianNetwork
     gen_alarm_net();
 
-    static HybridBayesianNetwork
+    static BayesianNetwork
     gen_bag_net(float alpha, size_t line_of_evidence =
         std::numeric_limits<std::size_t>::max());
 

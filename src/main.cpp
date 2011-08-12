@@ -50,7 +50,7 @@ operator>>(std::istream& is, TestCase& tc)
 program_options::variables_map options_map;
 
 ostream&
-put_out_probability_variables(ostream& os, HybridBayesianNetwork& bn);
+put_out_probability_variables(ostream& os, BayesianNetwork& bn);
 
 void
 test_alarm_net();
@@ -109,9 +109,9 @@ main(int argc, char **argv)
 }
 
 ostream&
-put_out_probability_variables(ostream& os, HybridBayesianNetwork& bn)
+put_out_probability_variables(ostream& os, BayesianNetwork& bn)
 {
-  for (HybridBayesianNetwork::const_iterator v = bn.begin(); v != bn.end(); ++v)
+  for (BayesianNetwork::const_iterator v = bn.begin(); v != bn.end(); ++v)
   {
     if (!v->value_is_evidence())
     {
@@ -134,14 +134,14 @@ test_alarm_net()
   double duration;
   cout << "Generate the hybrid alarm network\n";
   boost::timer t;
-  HybridBayesianNetwork bn = GraphGenerator::gen_alarm_net();
+  BayesianNetwork bn = GraphGenerator::gen_alarm_net();
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n" << endl;
   if (options_map["with-debug-output"].as<bool>())
     cout << bn << endl;
 
-  HybridBayesianNetwork::iterator search_it = find_if(bn.begin(), bn.end(),
-      HybridBayesianNetwork::CompareVertexName("Burglary"));
+  BayesianNetwork::iterator search_it = find_if(bn.begin(), bn.end(),
+      BayesianNetwork::CompareVertexName("Burglary"));
 
   cout << "Run enumerate\n";
   t.restart();
@@ -177,7 +177,7 @@ test_bag_net()
   cout << "Generate the full hybrid bag network\n";
   double duration;
   boost::timer t;
-  HybridBayesianNetwork bn_map_full = GraphGenerator::gen_bag_net(5.0);
+  BayesianNetwork bn_map_full = GraphGenerator::gen_bag_net(5.0);
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n" << endl;
 
@@ -193,20 +193,20 @@ test_bag_net()
   cout << endl;
 
   cout << "Learn ML on full data\n";
-  HybridBayesianNetwork bn_ml_full = GraphGenerator::gen_bag_net(0.0);
+  BayesianNetwork bn_ml_full = GraphGenerator::gen_bag_net(0.0);
   bn_ml_full.learn();
   put_out_probability_variables(cout, bn_ml_full);
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
-  HybridBayesianNetwork bn_map_partial = GraphGenerator::gen_bag_net(5.0,
+  BayesianNetwork bn_map_partial = GraphGenerator::gen_bag_net(5.0,
       5);
   bn_map_partial.learn();
   put_out_probability_variables(cout, bn_map_partial);
   cout << endl;
 
   cout << "Learn ML on partial data\n";
-  HybridBayesianNetwork bn_ml_partial = GraphGenerator::gen_bag_net(0.0,
+  BayesianNetwork bn_ml_partial = GraphGenerator::gen_bag_net(0.0,
       5);
   bn_ml_partial.learn();
   put_out_probability_variables(cout, bn_ml_partial);
@@ -214,36 +214,36 @@ test_bag_net()
 
   cout << "Extend the network for Gibbs sampling\n";
 
-  HybridBayesianNetwork::iterator bag_params_v = find_if(bn_map_full.begin(),
+  BayesianNetwork::iterator bag_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
-      HybridBayesianNetwork::CompareVertexName("ProbabilitiesBag"));
+      BayesianNetwork::CompareVertexName("ProbabilitiesBag"));
 
   BooleanRandomVariable bag("Bag", true);
-  HybridBayesianNetwork::iterator bag_v = bn_map_full.add_categorical(bag,
+  BayesianNetwork::iterator bag_v = bn_map_full.add_categorical(bag,
       bag_params_v);
   bag_v->value_is_evidence(true);
 
-  HybridBayesianNetwork::iterator hole_params_v = find_if(bn_map_full.begin(),
+  BayesianNetwork::iterator hole_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
-      HybridBayesianNetwork::CompareVertexName("ProbabilitiesHoleBag"));
+      BayesianNetwork::CompareVertexName("ProbabilitiesHoleBag"));
   BooleanRandomVariable hole("Hole", true);
-  HybridBayesianNetwork::iterator hole_v =
+  BayesianNetwork::iterator hole_v =
       bn_map_full.add_conditional_categorical(hole, list_of(bag_v),
           hole_params_v);
 
-  HybridBayesianNetwork::iterator wrapper_params_v = find_if(
+  BayesianNetwork::iterator wrapper_params_v = find_if(
       bn_map_full.begin(), bn_map_full.end(),
-      HybridBayesianNetwork::CompareVertexName("ProbabilitiesWrapperBag"));
+      BayesianNetwork::CompareVertexName("ProbabilitiesWrapperBag"));
   BooleanRandomVariable wrapper("Wrapper", true);
-  HybridBayesianNetwork::iterator wrapper_v =
+  BayesianNetwork::iterator wrapper_v =
       bn_map_full.add_conditional_categorical(wrapper, list_of(bag_v),
           wrapper_params_v);
 
-  HybridBayesianNetwork::iterator flavor_params_v = find_if(bn_map_full.begin(),
+  BayesianNetwork::iterator flavor_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
-      HybridBayesianNetwork::CompareVertexName("ProbabilitiesFlavorBag"));
+      BayesianNetwork::CompareVertexName("ProbabilitiesFlavorBag"));
   BooleanRandomVariable flavor("Flavor", true);
-  HybridBayesianNetwork::iterator flavor_v =
+  BayesianNetwork::iterator flavor_v =
       bn_map_full.add_conditional_categorical(flavor, list_of(bag_v),
           flavor_params_v);
 
