@@ -1,12 +1,12 @@
 /*
- * graph_generator.h
+ * network_generator.h
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#ifndef GRAPH_GENERATOR_H_
-#define GRAPH_GENERATOR_H_
+#ifndef NETWORK_GENERATOR_H_
+#define NETWORK_GENERATOR_H_
 
 #include "bayesian_network.h"
 #include <numeric>
@@ -14,14 +14,14 @@
 namespace vanet
 {
 
-  class GraphGenerator
+  class NetworkGenerator
   {
 
   public:
 
-    GraphGenerator();
+    NetworkGenerator();
 
-    ~GraphGenerator();
+    ~NetworkGenerator();
 
     static BayesianNetwork
     gen_alarm_net();
@@ -34,4 +34,4 @@ namespace vanet
 
 }
 
-#endif /* GRAPH_GENERATOR_H_ */
+#endif /* NETWORK_GENERATOR_H_ */

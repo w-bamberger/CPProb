@@ -1,11 +1,11 @@
 /*
- * graph_generator.cpp
+ * network_generator.cpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#include "graph_generator.h"
+#include "network_generator.h"
 #include "boolean_random_variable.h"
 #include "csv_map_reader.h"
 #include "discrete_joint_random_variable.h"
@@ -19,16 +19,16 @@ using namespace std;
 namespace vanet
 {
 
-  GraphGenerator::GraphGenerator()
+  NetworkGenerator::NetworkGenerator()
   {
   }
 
-  GraphGenerator::~GraphGenerator()
+  NetworkGenerator::~NetworkGenerator()
   {
   }
 
   BayesianNetwork
-  GraphGenerator::gen_alarm_net()
+  NetworkGenerator::gen_alarm_net()
   {
     typedef BayesianNetwork::iterator vertex_iterator;
     BayesianNetwork bn;
@@ -111,7 +111,7 @@ namespace vanet
   }
 
   BayesianNetwork
-  GraphGenerator::gen_bag_net(float alpha, size_t lines_of_evidence)
+  NetworkGenerator::gen_bag_net(float alpha, size_t lines_of_evidence)
   {
     const BayesianNetwork::VertexReferences no_condition;
     BayesianNetwork bn;

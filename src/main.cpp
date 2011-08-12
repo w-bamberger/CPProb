@@ -7,7 +7,7 @@
 
 #include "boolean_random_variable.h"
 #include "discrete_joint_random_variable.h"
-#include "graph_generator.h"
+#include "network_generator.h"
 #include "io_utils.h"
 #include "utils.h"
 #include <boost/assign.hpp>
@@ -134,7 +134,7 @@ test_alarm_net()
   double duration;
   cout << "Generate the hybrid alarm network\n";
   boost::timer t;
-  BayesianNetwork bn = GraphGenerator::gen_alarm_net();
+  BayesianNetwork bn = NetworkGenerator::gen_alarm_net();
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n" << endl;
   if (options_map["with-debug-output"].as<bool>())
@@ -177,7 +177,7 @@ test_bag_net()
   cout << "Generate the full hybrid bag network\n";
   double duration;
   boost::timer t;
-  BayesianNetwork bn_map_full = GraphGenerator::gen_bag_net(5.0);
+  BayesianNetwork bn_map_full = NetworkGenerator::gen_bag_net(5.0);
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n" << endl;
 
@@ -193,20 +193,20 @@ test_bag_net()
   cout << endl;
 
   cout << "Learn ML on full data\n";
-  BayesianNetwork bn_ml_full = GraphGenerator::gen_bag_net(0.0);
+  BayesianNetwork bn_ml_full = NetworkGenerator::gen_bag_net(0.0);
   bn_ml_full.learn();
   put_out_probability_variables(cout, bn_ml_full);
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
-  BayesianNetwork bn_map_partial = GraphGenerator::gen_bag_net(5.0,
+  BayesianNetwork bn_map_partial = NetworkGenerator::gen_bag_net(5.0,
       5);
   bn_map_partial.learn();
   put_out_probability_variables(cout, bn_map_partial);
   cout << endl;
 
   cout << "Learn ML on partial data\n";
-  BayesianNetwork bn_ml_partial = GraphGenerator::gen_bag_net(0.0,
+  BayesianNetwork bn_ml_partial = NetworkGenerator::gen_bag_net(0.0,
       5);
   bn_ml_partial.learn();
   put_out_probability_variables(cout, bn_ml_partial);
