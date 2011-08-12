@@ -26,6 +26,12 @@ namespace vanet
 
     ~DirichletDistribution();
 
+    const Parameters&
+    parameters() const
+    {
+      return parameters_;
+    }
+
     Parameters&
     parameters()
     {
