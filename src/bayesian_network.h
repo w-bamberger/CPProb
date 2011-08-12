@@ -11,7 +11,6 @@
 #include "categorical_distribution.h"
 #include "conditional_categorical_distribution.h"
 #include "cond_dirichlet_distribution.h"
-#include "count_distribution.h"
 #include "degenerate_distribution.h"
 #include <boost/variant/variant.hpp>
 
