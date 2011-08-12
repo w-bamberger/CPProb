@@ -9,10 +9,8 @@
 #include "boolean_random_variable.h"
 #include "csv_map_reader.h"
 #include "discrete_joint_random_variable.h"
-#include "io_utils.h"
 #include <boost/assign.hpp>
 #include <boost/variant/get.hpp>
-#include <iostream>
 
 using namespace boost;
 using namespace boost::assign;
@@ -112,39 +110,8 @@ namespace vanet
     return bn;
   }
 
-  DiscreteBayesianNetwork
-  GraphGenerator::gen_bag_net()
-  {
-    DiscreteBayesianNetwork g;
-    const DiscreteJointRandomVariable no_parents;
-
-    BooleanRandomVariable bag("Bag", true);
-    DiscreteBayesianNetwork::vertex_descriptor bag_v = add_vertex(g);
-    g[bag_v].random_variable = bag;
-
-    BooleanRandomVariable flavor("Flavor", true);
-    DiscreteBayesianNetwork::vertex_descriptor flavor_v = add_vertex(g);
-    g[flavor_v].random_variable = flavor;
-
-    add_edge(bag_v, flavor_v, g);
-
-    BooleanRandomVariable wrapper("Wrapper", true);
-    DiscreteBayesianNetwork::vertex_descriptor wrapper_v = add_vertex(g);
-    g[wrapper_v].random_variable = wrapper;
-
-    add_edge(bag_v, wrapper_v, g);
-
-    BooleanRandomVariable hole("Hole", true);
-    DiscreteBayesianNetwork::vertex_descriptor hole_v = add_vertex(g);
-    g[hole_v].random_variable = hole;
-
-    add_edge(bag_v, hole_v, g);
-
-    return g;
-  }
-
   HybridBayesianNetwork
-  GraphGenerator::gen_bag_net_hybrid(float alpha, size_t lines_of_evidence)
+  GraphGenerator::gen_bag_net(float alpha, size_t lines_of_evidence)
   {
     const HybridBayesianNetwork::VertexReferences no_condition;
     HybridBayesianNetwork bn;
@@ -199,25 +166,6 @@ namespace vanet
     }
 
     return bn;
-  }
-
-  DiscreteBayesianNetwork
-  GraphGenerator::gen_naive_bayes_trust_net()
-  {
-    DiscreteBayesianNetwork g;
-
-    BooleanRandomVariable trust("Trust", true);
-    DiscreteBayesianNetwork::vertex_descriptor trust_v = add_vertex(g);
-    g[trust_v].random_variable = trust;
-
-    DiscreteBayesianNetwork::vertex_descriptor vehicle_v = add_vertex(g);
-    DiscreteBayesianNetwork::vertex_descriptor type_v = add_vertex(g);
-
-    bool success;
-    success = add_edge(trust_v, vehicle_v, g).second;
-    success = add_edge(trust_v, type_v, g).second;
-
-    return g;
   }
 
 }

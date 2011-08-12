@@ -5,9 +5,7 @@
  *      Author: wbam
  */
 
-#include "error.h"
 #include "boolean_random_variable.h"
-#include "csv_map_reader.h"
 #include "discrete_joint_random_variable.h"
 #include "graph_generator.h"
 #include "io_utils.h"
@@ -39,12 +37,10 @@ operator>>(std::istream& is, TestCase& tc)
   std::string value;
   is >> value;
 
-  if (value == "alarm_test")
+  if (value == "alarm-test")
     tc = alarm_test;
-  else if (value == "bag_test")
+  else if (value == "bag-test")
     tc = bag_test;
-  else if (value == "hybrid_bag_test")
-    tc = hybrid_bag_test;
   else
     vanet_throw_runtime_error("Wrong argument for test case: " << value << ".");
 
@@ -52,14 +48,6 @@ operator>>(std::istream& is, TestCase& tc)
 }
 
 program_options::variables_map options_map;
-
-vector<ConditionalCountDistribution>
-make_prior(const DiscreteBayesianNetwork& bn, size_t prior_count);
-
-void
-make_vertex_prior(DiscreteRandomVariable vertex_var,
-    const DiscreteRandomVariable& parents_var,
-    ConditionalCountDistribution& vertex_prior, size_t prior_count);
 
 ostream&
 put_out_probability_variables(ostream& os, HybridBayesianNetwork& bn);
@@ -69,9 +57,6 @@ test_alarm_net();
 
 void
 test_bag_net();
-
-void
-test_hybrid_bag_net();
 
 int
 main(int argc, char **argv)
@@ -113,10 +98,6 @@ main(int argc, char **argv)
     test_bag_net();
     break;
 
-  case hybrid_bag_test:
-    test_hybrid_bag_net();
-    break;
-
   default:
     vanet_throw_logic_error(
         "Invalid test found: " << options_map["test-case"].as<TestCase> () << ".");
@@ -125,50 +106,6 @@ main(int argc, char **argv)
   }
 
   return 0;
-}
-
-vector<ConditionalCountDistribution>
-make_prior(const DiscreteBayesianNetwork& bn, size_t prior_count)
-{
-  vector<ConditionalCountDistribution> prior(num_vertices(bn));
-
-  DiscreteBayesianNetwork::vertex_iterator vertex_it, vertex_end_it;
-  tie(vertex_it, vertex_end_it) = vertices(bn);
-  for (; vertex_it != vertex_end_it; ++vertex_it)
-  {
-
-    DiscreteRandomVariable::Range parents_range = parents_variable(bn,
-        *vertex_it).value_range();
-    if (parents_range.empty())
-    {
-      make_vertex_prior(bn[*vertex_it].random_variable, parents_range.begin(),
-          prior.at(*vertex_it), prior_count);
-    }
-    else
-    {
-      for (DiscreteRandomVariable parents_var = parents_range.begin();
-          parents_var != parents_range.end(); ++parents_var)
-          {
-        make_vertex_prior(bn[*vertex_it].random_variable, parents_var,
-            prior.at(*vertex_it), prior_count);
-      }
-    }
-  }
-
-  return prior;
-}
-
-void
-make_vertex_prior(DiscreteRandomVariable vertex_var,
-    const DiscreteRandomVariable& parents_var,
-    ConditionalCountDistribution& vertex_prior, size_t prior_count)
-{
-  DiscreteRandomVariable::Range vertex_range = vertex_var.value_range();
-  for (vertex_var = vertex_range.begin(); vertex_var != vertex_range.end();
-      ++vertex_var)
-      {
-    vertex_prior[make_pair(vertex_var, parents_var)] = prior_count;
-  }
 }
 
 ostream&
@@ -237,68 +174,10 @@ test_alarm_net()
 void
 test_bag_net()
 {
-  typedef map<string, string> NamedAttributes;
-  typedef vector<NamedAttributes> Records;
-
-  double duration;
-  timer t;
-
-  cout << "Generate the discrete bag network\n";
-  DiscreteBayesianNetwork bag_net = GraphGenerator::gen_bag_net();
-  duration = t.elapsed();
-  cout << "Duration: " << duration << "\n" << endl;
-  if (options_map["with-debug-output"].as<bool>())
-  {
-    cout << "Empty net\n";
-    cout << bag_net << endl;
-  }
-
-  CsvMapReader reader("bag.csv");
-  Records full_data = reader.read_rows();
-  vector<ConditionalCountDistribution> prior = make_prior(bag_net, 5);
-  cout << endl;
-
-  cout << "ML on full data\n";
-  t.restart();
-  learn_multinomial_ml(bag_net, full_data);
-  duration = t.elapsed();
-  cout << "Duration: " << duration << endl;
-  cout << bag_net << endl;
-
-  cout << "MAP on full data\n";
-  t.restart();
-  learn_multinomial_map(bag_net, full_data, prior);
-  duration = t.elapsed();
-  cout << "Duration: " << duration << endl;
-  cout << bag_net << endl;
-
-  Records partial_data(full_data.begin(), full_data.begin() + 5);
-
-  cout << "ML on partial data\n";
-  t.restart();
-  learn_multinomial_ml(bag_net, partial_data);
-  duration = t.elapsed();
-  cout << "Duration: " << duration << endl;
-  cout << bag_net << endl;
-
-  cout << "MAP on partial data\n";
-  t.restart();
-  learn_multinomial_map(bag_net, partial_data, prior);
-  duration = t.elapsed();
-  cout << "Duration: " << duration << endl;
-  cout << bag_net << endl;
-
-  cout << endl;
-  test_hybrid_bag_net();
-}
-
-void
-test_hybrid_bag_net()
-{
   cout << "Generate the full hybrid bag network\n";
   double duration;
   boost::timer t;
-  HybridBayesianNetwork bn_map_full = GraphGenerator::gen_bag_net_hybrid(5.0);
+  HybridBayesianNetwork bn_map_full = GraphGenerator::gen_bag_net(5.0);
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n" << endl;
 
@@ -314,20 +193,20 @@ test_hybrid_bag_net()
   cout << endl;
 
   cout << "Learn ML on full data\n";
-  HybridBayesianNetwork bn_ml_full = GraphGenerator::gen_bag_net_hybrid(0.0);
+  HybridBayesianNetwork bn_ml_full = GraphGenerator::gen_bag_net(0.0);
   bn_ml_full.learn();
   put_out_probability_variables(cout, bn_ml_full);
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
-  HybridBayesianNetwork bn_map_partial = GraphGenerator::gen_bag_net_hybrid(5.0,
+  HybridBayesianNetwork bn_map_partial = GraphGenerator::gen_bag_net(5.0,
       5);
   bn_map_partial.learn();
   put_out_probability_variables(cout, bn_map_partial);
   cout << endl;
 
   cout << "Learn ML on partial data\n";
-  HybridBayesianNetwork bn_ml_partial = GraphGenerator::gen_bag_net_hybrid(0.0,
+  HybridBayesianNetwork bn_ml_partial = GraphGenerator::gen_bag_net(0.0,
       5);
   bn_ml_partial.learn();
   put_out_probability_variables(cout, bn_ml_partial);
