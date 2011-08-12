@@ -516,15 +516,15 @@ namespace vanet
   }
 
   CategoricalDistribution
-  BayesianNetwork::gibbs_sampling(const iterator& X_it,
-      unsigned int burn_in_iterations, unsigned int collect_iterations)
+  BayesianNetwork::sample(const iterator& X_it, unsigned int burn_in_iterations,
+      unsigned int collect_iterations)
   {
     CategoricalDistribution X_distribution;
     DiscreteRandomVariable* x =
         dynamic_cast<DiscreteRandomVariable*>(&X_it->random_variable());if
 (    x == 0)
     throw runtime_error(
-    "BayesianNetwork::gibbs_sampling: Unknown variable type.");
+    "BayesianNetwork: Cannot sample vertex because of an unknown variable type.");
 
 // Compile a list of the non-evidence variables
     typedef cont::list<pair<iterator, MarkovBlanket*> > NonEvidenceVertices;

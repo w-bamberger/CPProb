@@ -143,12 +143,12 @@ test_alarm_net()
   BayesianNetwork::iterator search_it = find_if(bn.begin(), bn.end(),
       BayesianNetwork::CompareVertexName("Burglary"));
 
-  cout << "Run enumerate\n";
+  cout << "Enumerate\n";
   t.restart();
   CategoricalDistribution burglary_distribution = bn.enumerate(search_it);
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n";
-  cout << "Burglary distribution with enumerate:\n";
+  cout << "Burglary distribution with enumeration:\n";
   cout << burglary_distribution;
   cout << endl;
 
@@ -158,11 +158,10 @@ test_alarm_net()
       unsigned int>();
   unsigned int collect_iterations = options_map["collect-iterations"].as<
       unsigned int>();
-  cout << "Run gibbs_sampling with " << burn_in_iterations
-      << " burn in iterations and " << collect_iterations
-      << " collect iterations.\n";
+  cout << "Sample with " << burn_in_iterations << " burn in iterations and "
+      << collect_iterations << " collect iterations.\n";
   t.restart();
-  burglary_distribution = bn.gibbs_sampling(search_it, burn_in_iterations,
+  burglary_distribution = bn.sample(search_it, burn_in_iterations,
       collect_iterations);
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n";
@@ -199,20 +198,18 @@ test_bag_net()
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
-  BayesianNetwork bn_map_partial = NetworkGenerator::gen_bag_net(5.0,
-      5);
+  BayesianNetwork bn_map_partial = NetworkGenerator::gen_bag_net(5.0, 5);
   bn_map_partial.learn();
   put_out_probability_variables(cout, bn_map_partial);
   cout << endl;
 
   cout << "Learn ML on partial data\n";
-  BayesianNetwork bn_ml_partial = NetworkGenerator::gen_bag_net(0.0,
-      5);
+  BayesianNetwork bn_ml_partial = NetworkGenerator::gen_bag_net(0.0, 5);
   bn_ml_partial.learn();
   put_out_probability_variables(cout, bn_ml_partial);
   cout << endl;
 
-  cout << "Extend the network for Gibbs sampling\n";
+  cout << "Extend the network for sampling\n";
 
   BayesianNetwork::iterator bag_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
@@ -227,25 +224,22 @@ test_bag_net()
       bn_map_full.end(),
       BayesianNetwork::CompareVertexName("ProbabilitiesHoleBag"));
   BooleanRandomVariable hole("Hole", true);
-  BayesianNetwork::iterator hole_v =
-      bn_map_full.add_conditional_categorical(hole, list_of(bag_v),
-          hole_params_v);
+  BayesianNetwork::iterator hole_v = bn_map_full.add_conditional_categorical(
+      hole, list_of(bag_v), hole_params_v);
 
-  BayesianNetwork::iterator wrapper_params_v = find_if(
-      bn_map_full.begin(), bn_map_full.end(),
+  BayesianNetwork::iterator wrapper_params_v = find_if(bn_map_full.begin(),
+      bn_map_full.end(),
       BayesianNetwork::CompareVertexName("ProbabilitiesWrapperBag"));
   BooleanRandomVariable wrapper("Wrapper", true);
-  BayesianNetwork::iterator wrapper_v =
-      bn_map_full.add_conditional_categorical(wrapper, list_of(bag_v),
-          wrapper_params_v);
+  BayesianNetwork::iterator wrapper_v = bn_map_full.add_conditional_categorical(
+      wrapper, list_of(bag_v), wrapper_params_v);
 
   BayesianNetwork::iterator flavor_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
       BayesianNetwork::CompareVertexName("ProbabilitiesFlavorBag"));
   BooleanRandomVariable flavor("Flavor", true);
-  BayesianNetwork::iterator flavor_v =
-      bn_map_full.add_conditional_categorical(flavor, list_of(bag_v),
-          flavor_params_v);
+  BayesianNetwork::iterator flavor_v = bn_map_full.add_conditional_categorical(
+      flavor, list_of(bag_v), flavor_params_v);
 
   if (options_map["with-debug-output"].as<bool>())
     cout << bn_map_full << endl;
@@ -254,14 +248,12 @@ test_bag_net()
       unsigned int>();
   unsigned int collect_iterations = options_map["collect-iterations"].as<
       unsigned int>();
-  cout << "Run gibbs_sampling with " << burn_in_iterations
-      << " burn in iterations and " << collect_iterations
-      << " collect iterations.\n";
+  cout << "Sample with " << burn_in_iterations << " burn in iterations and "
+      << collect_iterations << " collect iterations.\n";
   t.restart();
-  CategoricalDistribution hole_d = bn_map_full.gibbs_sampling(flavor_v,
+  CategoricalDistribution hole_d = bn_map_full.sample(flavor_v,
       burn_in_iterations, collect_iterations);
   duration = t.elapsed();
   cout << "Computation duration: " << duration << "\n";
-  cout << "Predictive hole distribution with Gibbs sampling: " << hole_d
-      << endl;
+  cout << "Predictive hole distribution with sampling: " << hole_d << endl;
 }

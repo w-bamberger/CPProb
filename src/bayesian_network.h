@@ -233,7 +233,7 @@ namespace vanet
     enumerate(iterator X_v);
 
     CategoricalDistribution
-    gibbs_sampling(const iterator& X_it, unsigned int burn_in_iterations,
+    sample(const iterator& X_it, unsigned int burn_in_iterations,
         unsigned int collect_iterations);
 
     /**
@@ -340,8 +340,8 @@ namespace vanet
 
   };
 
-  class BayesianNetwork::CompareVertexName : public std::unary_function<
-      bool, Vertex>
+  class BayesianNetwork::CompareVertexName : public std::unary_function<bool,
+      Vertex>
   {
 
   public:
