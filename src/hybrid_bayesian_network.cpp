@@ -215,10 +215,19 @@ namespace vanet
   ostream&
   operator<<(ostream& os, const HybridBayesianNetwork& bn)
   {
-    os << "Vertices of the Bayesian network:\n";
-    for (HybridBayesianNetwork::VertexList::const_iterator vIt =
-        bn.vertices_.begin(); vIt != bn.vertices_.end(); ++vIt)
-    {
+    bool is_large_network = bn.size() > 10;
+
+    if (is_large_network)
+      os << "Non-evidence vertices of the Bayesian network:\n";
+    else
+      os << "Vertices of the Bayesian network:\n";
+
+    for (HybridBayesianNetwork::const_iterator vIt = bn.begin();
+        vIt != bn.end(); ++vIt)
+        {
+      if (vIt->value_is_evidence() && is_large_network)
+        continue;
+
       os << "  Vertex of variable " << vIt->random_variable().name();
       if (vIt->value_is_evidence())
         os << " with value " << vIt->random_variable() << "\n";
