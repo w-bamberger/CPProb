@@ -160,6 +160,8 @@ namespace vanet
      * - <tt>%name() == "Probabilities" + var.name()</tt>.
      * - The probability of every entry is <tt>1.0f / var.size()</tt>.
      *
+     * @param var The random variable for which an equally distributed
+     *     probability table should be created
      * @throw None
      */
     explicit
