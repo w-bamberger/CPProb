@@ -17,10 +17,13 @@ namespace vanet
   class CondDirichletDistribution
   {
 
+    typedef std::map<DiscreteRandomVariable, DirichletDistribution> Distributions;
+
   public:
 
-    typedef std::map<DiscreteRandomVariable, DirichletDistribution> Distributions;
+    typedef Distributions::const_iterator const_iterator;
     typedef DirichletDistribution::input_type input_type;
+    typedef Distributions::iterator iterator;
     typedef RandomConditionalProbabilities result_type;
 
     CondDirichletDistribution(const RandomConditionalProbabilities cpt,
@@ -49,6 +52,30 @@ namespace vanet
       else
         throw std::runtime_error(
             "CondDirichletDistribution: Unknown condition");
+    }
+
+    const_iterator
+    begin() const
+    {
+      return distributions_.begin();
+    }
+
+    iterator
+    begin()
+    {
+      return distributions_.begin();
+    }
+
+    const_iterator
+    end() const
+    {
+      return distributions_.end();
+    }
+
+    iterator
+    end()
+    {
+      return distributions_.end();
     }
 
     template<class _RandomNumberEngine>
