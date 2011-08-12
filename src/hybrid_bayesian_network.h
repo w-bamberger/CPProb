@@ -237,6 +237,41 @@ namespace vanet
     gibbs_sampling(const iterator& X_it, unsigned int burn_in_iterations,
         unsigned int collect_iterations);
 
+    /**
+     * Fills the values of parameter vertices from the data in the network.
+     * This method looks for the non-evidence vertices with random variables of
+     * the types RandomProbabilities or RandomConditionalProbabilities. It then
+     * tries to learn these probabilities from the values of the child vertices
+     * that are evidence. The method is maximum a posteriori learning if the
+     * parameters are associated with a DirichletDistribution or a
+     * CondDirichletDistribution as their prior. If such a prior is not found,
+     * maximum likelihood learning is used.
+     *
+     * @par Requires:
+     * - The vertices that should be learned must contain a random variable
+     *   of the class RandomProbabilities or RandomConditionalProbabilities.
+     *   In addition, the evidence flag of those vertices may not be set.
+     * - The evidence to learn from must be represented as child  of the
+     *   parameter vertices. (This is how Bayesian parameter learning is usually
+     *   represented in a Bayesian network.) These vertices must have the
+     *   evidence flag set. Otherwise they are ignored.
+     * - The evidence vertices for a RandomProbabilities parameter vertex must
+     *   contain a random variable of the class DiscreteRandomVariable. The
+     *   evidence vertices for a RandomConditionalProbabilities parameter vertex
+     *   must contain a random variable of the class DiscreteRandomVariable and
+     *   a distribution of the class ConditionalCategoricalDistribution.
+     *
+     * @par Ensures:
+     * - Every parameter vertex that can be learned (see requirements) contains
+     *   the probabilities learned by maximum likelihood or maximum a posteriori
+     *   learning.
+     * - All other values in the network remain unchanged.
+     *
+     * @throw NetworkError The network violates the requirements given above.
+     */
+    void
+    learn();
+
     std::size_t
     size() const
     {
@@ -263,11 +298,33 @@ namespace vanet
      * @param current For this vertex, the probability is computed.
      * @param end If current == end, the recursion stops with 1.0.
      * @return the joint probability of the network
-     * @throw Any
+     * @throw Any #enumerate() catches all exceptions and maps them
+     *     appropriately for its interface.
      */
     float
     enumerate_all(iterator current, iterator end);
 
+    /**
+     * Learns a parameter vertex of type RandomProbabilities. This is a helper
+     * function of #learn().
+     *
+     * @param v the parameter vertex to learn
+     * @throw Any #learn() catches all exceptions and maps them appropriately
+     *     for its interface.
+     */
+    void
+    learn_probabilities(iterator v);
+
+    /**
+     * Learns a parameter vertex of type RandomConditionalProbabilities. This is
+     * a helper function of #learn().
+     *
+     * @param v the parameter vertex to learn
+     * @throw Any #learn() catches all exceptions and maps them appropriately
+     *     for its interface.
+     */
+    void
+    learn_conditional_probabilities(iterator v);
   };
 
   class HybridBayesianNetwork::NameOfVertex : public std::unary_function<

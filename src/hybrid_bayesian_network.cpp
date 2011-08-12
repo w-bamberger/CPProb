@@ -413,7 +413,8 @@ namespace vanet
   }
 
   HybridBayesianNetwork::iterator
-  HybridBayesianNetwork::add_dirichlet(const RandomProbabilities& var, float alpha)
+  HybridBayesianNetwork::add_dirichlet(const RandomProbabilities& var,
+      float alpha)
   {
     RandomProbabilities* new_var = new RandomProbabilities(var);
     DirichletDistribution new_distribution(*new_var, alpha);
@@ -601,4 +602,116 @@ namespace vanet
     return X_distribution;
   }
 
-}
+  void
+  HybridBayesianNetwork::learn()
+  {
+    // Could be well parallelized and nicely realized with delayed visitation.
+
+    /* I may only throw NetworkError. All other errors (like casting error)
+     * are mapped to NetworkErrors with this try-catch block. */
+    try
+    {
+      for (iterator v = begin(); v != end(); ++v)
+      {
+        /* Learn only non-evidence vertices with random variables of a paramter
+         * type. */
+        if (!v->value_is_evidence())
+        {
+          if (dynamic_cast<RandomProbabilities*>(&v->random_variable()))learn_probabilities(v);
+
+          else if (dynamic_cast<RandomConditionalProbabilities*>(&v->random_variable()))
+          learn_conditional_probabilities(v);
+        }
+      }
+    }
+    catch (const NetworkError&)
+    {
+      throw;
+    }
+    catch (const exception& e)
+    {
+      vanet_throw_network_error(
+          "HybridBayesianNetwork: Cannot learn the provided network because of an invalid structure: "
+          << e.what());
+    }
+  }
+
+  void
+  HybridBayesianNetwork::learn_probabilities(iterator v)
+  {
+    /* Clear the target variable. I use it for counters and normalize it
+     * in the end. */
+    RandomProbabilities& probabilities =
+        dynamic_cast<RandomProbabilities&>(v->random_variable());probabilities
+        .clear();
+
+        /* See whether a Dirichlet prior is available. If so initialize
+         * the counters with the prior values. Without this pre-initialization,
+         * the remaining algorithm performs just maximum likelihood learning. */
+        DirichletDistribution * dirichlet_prior = get<DirichletDistribution>(
+            &v->distribution());
+        if (dirichlet_prior)
+        {
+          copy(dirichlet_prior->parameters().begin(),
+              dirichlet_prior->parameters().end(),
+              inserter(probabilities, probabilities.begin()));
+        }
+
+        /* Add the likelihood to the counters. */
+        for (VertexReferences::iterator child = v->children().begin();
+            child != v->children().end(); ++child)
+        {
+          if ((*child)->value_is_evidence())
+          {
+            DiscreteRandomVariable& child_value =
+            dynamic_cast<DiscreteRandomVariable&>((*child)->random_variable());probabilities[child_value] += 1.0;
+          }
+        }
+
+        /* Normalize the counters to probabilities. */
+        probabilities.normalize();
+      }
+
+  void
+  HybridBayesianNetwork::learn_conditional_probabilities(iterator v)
+  {
+    /* Clear the target variable. I use it for counters and normalize it
+     * in the end. */
+    RandomConditionalProbabilities& probabilities =
+        dynamic_cast<RandomConditionalProbabilities&>(v->random_variable());probabilities
+        .clear();
+
+        /* See whether a Dirichlet prior is available. If so initialize
+         * the counters with the prior values. Without this pre-initialization,
+         * the remaining algorithm performs just maximum likelihood learning. */
+        CondDirichletDistribution* prior = get<CondDirichletDistribution>(
+            &v->distribution());
+        if (prior)
+        {
+          for (CondDirichletDistribution::const_iterator d = prior->begin();
+              d != prior->end(); ++d)
+          {
+            RandomProbabilities& probs = probabilities[d->first];
+            copy(d->second.parameters().begin(), d->second.parameters().end(),
+                inserter(probs, probs.begin()));
+          }
+        }
+
+        /* Add the likelihood to the counters. */
+        for (VertexReferences::iterator child = v->children().begin();
+            child != v->children().end(); ++child)
+        {
+          if ((*child)->value_is_evidence())
+          {
+            DiscreteRandomVariable& child_value =
+            dynamic_cast<DiscreteRandomVariable&>((*child)->random_variable());ConditionalCategoricalDistribution& child_distribution = get<ConditionalCategoricalDistribution>((*child)->distribution());
+            DiscreteRandomVariable child_condition = child_distribution.referenced_condition();
+            probabilities[child_condition][child_value] += 1.0;
+          }
+        }
+
+        /* Normalize the counters to probabilities. */
+        probabilities.normalize();
+      }
+
+    }
