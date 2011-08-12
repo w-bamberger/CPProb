@@ -234,6 +234,12 @@ namespace vanet
     gibbs_sampling(const iterator& X_it, unsigned int burn_in_iterations,
         unsigned int collect_iterations);
 
+    std::size_t
+    size() const
+    {
+      return vertices_.size();
+    }
+
   private:
 
     class CategoricalMarkovBlanket;
