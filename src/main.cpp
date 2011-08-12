@@ -61,6 +61,9 @@ make_vertex_prior(DiscreteRandomVariable vertex_var,
     const DiscreteRandomVariable& parents_var,
     ConditionalCountDistribution& vertex_prior, size_t prior_count);
 
+ostream&
+put_out_probability_variables(ostream& os, HybridBayesianNetwork& bn);
+
 void
 test_alarm_net();
 
@@ -168,6 +171,26 @@ make_vertex_prior(DiscreteRandomVariable vertex_var,
   }
 }
 
+ostream&
+put_out_probability_variables(ostream& os, HybridBayesianNetwork& bn)
+{
+  for (HybridBayesianNetwork::const_iterator v = bn.begin(); v != bn.end(); ++v)
+  {
+    if (!v->value_is_evidence())
+    {
+      if (const RandomProbabilities* ps = dynamic_cast<const RandomProbabilities*>(&v->random_variable()))
+      {
+        os << *ps << "\n";
+      }
+      else if (const RandomConditionalProbabilities* cps = dynamic_cast<const RandomConditionalProbabilities*>(&v->random_variable()))
+      {
+        os << *cps << "\n";
+      }
+    }
+  }
+  return os;
+}
+
 void
 test_alarm_net()
 {
@@ -272,43 +295,81 @@ test_bag_net()
 void
 test_hybrid_bag_net()
 {
-  cout << "Generate the hybrid bag network\n";
+  cout << "Generate the full hybrid bag network\n";
   double duration;
   boost::timer t;
-  HybridBayesianNetwork bn = GraphGenerator::gen_bag_net_hybrid();
+  HybridBayesianNetwork bn_map_full = GraphGenerator::gen_bag_net_hybrid(5.0);
   duration = t.elapsed();
   cout << "Duration: " << duration << "\n" << endl;
 
-  HybridBayesianNetwork::iterator bag_params_v = find_if(bn.begin(), bn.end(),
+  if (options_map["with-debug-output"].as<bool>())
+    cout << bn_map_full << endl;
+
+  cout << "Learn MAP on full data\n";
+  t.restart();
+  bn_map_full.learn();
+  duration = t.elapsed();
+  cout << "Duration: " << duration << "\n";
+  put_out_probability_variables(cout, bn_map_full);
+  cout << endl;
+
+  cout << "Learn ML on full data\n";
+  HybridBayesianNetwork bn_ml_full = GraphGenerator::gen_bag_net_hybrid(0.0);
+  bn_ml_full.learn();
+  put_out_probability_variables(cout, bn_ml_full);
+  cout << endl;
+
+  cout << "Learn MAP on partial data\n";
+  HybridBayesianNetwork bn_map_partial = GraphGenerator::gen_bag_net_hybrid(5.0,
+      5);
+  bn_map_partial.learn();
+  put_out_probability_variables(cout, bn_map_partial);
+  cout << endl;
+
+  cout << "Learn ML on partial data\n";
+  HybridBayesianNetwork bn_ml_partial = GraphGenerator::gen_bag_net_hybrid(0.0,
+      5);
+  bn_ml_partial.learn();
+  put_out_probability_variables(cout, bn_ml_partial);
+  cout << endl;
+
+  cout << "Extend the network for Gibbs sampling\n";
+
+  HybridBayesianNetwork::iterator bag_params_v = find_if(bn_map_full.begin(),
+      bn_map_full.end(),
       HybridBayesianNetwork::CompareVertexName("ProbabilitiesBag"));
-  bag_params_v->value_is_evidence(true);
 
   BooleanRandomVariable bag("Bag", true);
-  HybridBayesianNetwork::iterator bag_v = bn.add_categorical(bag, bag_params_v);
+  HybridBayesianNetwork::iterator bag_v = bn_map_full.add_categorical(bag,
+      bag_params_v);
   bag_v->value_is_evidence(true);
 
-  HybridBayesianNetwork::iterator hole_params_v = find_if(bn.begin(), bn.end(),
+  HybridBayesianNetwork::iterator hole_params_v = find_if(bn_map_full.begin(),
+      bn_map_full.end(),
       HybridBayesianNetwork::CompareVertexName("ProbabilitiesHoleBag"));
   BooleanRandomVariable hole("Hole", true);
-  HybridBayesianNetwork::iterator hole_v = bn.add_conditional_categorical(hole,
-      list_of(bag_v), hole_params_v);
+  HybridBayesianNetwork::iterator hole_v =
+      bn_map_full.add_conditional_categorical(hole, list_of(bag_v),
+          hole_params_v);
 
-  HybridBayesianNetwork::iterator wrapper_params_v = find_if(bn.begin(),
-      bn.end(),
+  HybridBayesianNetwork::iterator wrapper_params_v = find_if(
+      bn_map_full.begin(), bn_map_full.end(),
       HybridBayesianNetwork::CompareVertexName("ProbabilitiesWrapperBag"));
   BooleanRandomVariable wrapper("Wrapper", true);
-  HybridBayesianNetwork::iterator wrapper_v = bn.add_conditional_categorical(
-      wrapper, list_of(bag_v), wrapper_params_v);
+  HybridBayesianNetwork::iterator wrapper_v =
+      bn_map_full.add_conditional_categorical(wrapper, list_of(bag_v),
+          wrapper_params_v);
 
-  HybridBayesianNetwork::iterator flavor_params_v = find_if(bn.begin(),
-      bn.end(),
+  HybridBayesianNetwork::iterator flavor_params_v = find_if(bn_map_full.begin(),
+      bn_map_full.end(),
       HybridBayesianNetwork::CompareVertexName("ProbabilitiesFlavorBag"));
   BooleanRandomVariable flavor("Flavor", true);
-  HybridBayesianNetwork::iterator flavor_v = bn.add_conditional_categorical(
-      flavor, list_of(bag_v), flavor_params_v);
+  HybridBayesianNetwork::iterator flavor_v =
+      bn_map_full.add_conditional_categorical(flavor, list_of(bag_v),
+          flavor_params_v);
 
-  //  if (options_map["with-debug-output"].as<bool> ())
-  //    cout << bn << endl;
+  if (options_map["with-debug-output"].as<bool>())
+    cout << bn_map_full << endl;
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();
@@ -318,7 +379,7 @@ test_hybrid_bag_net()
       << " burn in iterations and " << collect_iterations
       << " collect iterations.\n";
   t.restart();
-  CategoricalDistribution hole_d = bn.gibbs_sampling(flavor_v,
+  CategoricalDistribution hole_d = bn_map_full.gibbs_sampling(flavor_v,
       burn_in_iterations, collect_iterations);
   duration = t.elapsed();
   cout << "Computation duration: " << duration << "\n";

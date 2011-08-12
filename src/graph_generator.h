@@ -10,6 +10,7 @@
 
 #include "discrete_bayesian_network.h"
 #include "hybrid_bayesian_network.h"
+#include <numeric>
 
 namespace vanet
 {
@@ -30,7 +31,8 @@ namespace vanet
     gen_bag_net();
 
     static HybridBayesianNetwork
-    gen_bag_net_hybrid();
+    gen_bag_net_hybrid(float alpha, size_t line_of_evidence =
+        std::numeric_limits<std::size_t>::max());
 
     static DiscreteBayesianNetwork
     gen_naive_bayes_trust_net();

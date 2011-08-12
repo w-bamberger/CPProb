@@ -144,7 +144,7 @@ namespace vanet
   }
 
   HybridBayesianNetwork
-  GraphGenerator::gen_bag_net_hybrid()
+  GraphGenerator::gen_bag_net_hybrid(float alpha, size_t lines_of_evidence)
   {
     const HybridBayesianNetwork::VertexReferences no_condition;
     HybridBayesianNetwork bn;
@@ -153,30 +153,32 @@ namespace vanet
     map<string, HybridBayesianNetwork::iterator> params_table;
     BooleanRandomVariable bag("Bag", true);
     RandomProbabilities bag_params(bag);
-    HybridBayesianNetwork::iterator bag_params_v = bn.add_constant(bag_params);
-    bag_params_v->value_is_evidence(true);
+    HybridBayesianNetwork::iterator bag_params_v = bn.add_dirichlet(bag_params,
+        alpha);
     RandomConditionalProbabilities flavor_params(
         BooleanRandomVariable("Flavor", true), bag);
     params_table.insert(
-        make_pair("Flavor", bn.add_conditional_dirichlet(flavor_params, 5.0)));
+        make_pair("Flavor",
+            bn.add_conditional_dirichlet(flavor_params, alpha)));
     RandomConditionalProbabilities wrapper_params(
         BooleanRandomVariable("Wrapper", true), bag);
     params_table.insert(
         make_pair("Wrapper",
-            bn.add_conditional_dirichlet(wrapper_params, 5.0)));
+            bn.add_conditional_dirichlet(wrapper_params, alpha)));
     RandomConditionalProbabilities hole_params(
         BooleanRandomVariable("Hole", true), bag);
     params_table.insert(
-        make_pair("Hole", bn.add_conditional_dirichlet(hole_params, 5.0)));
+        make_pair("Hole", bn.add_conditional_dirichlet(hole_params, alpha)));
 
     // Read the data from the file
     CsvMapReader reader("bag.csv");
     CsvMapReader::Records full_data = reader.read_rows();
 
     // Fill the data in the net
-    for (CsvMapReader::Records::iterator r = full_data.begin();
-        r != full_data.end(); ++r)
-        {
+    size_t line = 0;
+    CsvMapReader::Records::iterator r = full_data.begin();
+    for (; r != full_data.end() && line != lines_of_evidence; ++r, ++line)
+    {
       BooleanRandomVariable bag_evidence("Bag", r->operator[]("Bag"));
       HybridBayesianNetwork::iterator bag_evidence_v = bn.add_categorical(
           bag_evidence, bag_params_v);
