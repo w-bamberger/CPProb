@@ -127,6 +127,19 @@ namespace vanet
     }
 
     void
+    normalize()
+    {
+      for (iterator p = begin(); p != end(); ++p)
+        p->second.normalize();
+    }
+
+    RandomProbabilities&
+    operator[](const DiscreteRandomVariable& condition)
+    {
+      return cpt_[condition];
+    }
+
+    void
     set(const DiscreteRandomVariable& var,
         const DiscreteRandomVariable& condition, float probability);
 

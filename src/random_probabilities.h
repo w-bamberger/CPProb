@@ -386,12 +386,21 @@ namespace vanet
       return pt_.insert(row);
     }
 
+    iterator
+    insert(iterator position, const value_type& row)
+    {
+      return pt_.insert(position, row);
+    }
+
     // Documented in the base class.
     virtual const std::string&
     name() const
     {
       return *name_;
     }
+
+    void
+    normalize();
 
     /**
      * Accesses the probability of the event @c var. If @c var is not part of

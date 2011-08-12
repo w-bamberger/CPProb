@@ -79,7 +79,10 @@ namespace vanet
     }
 
     void
-    normalize();
+    normalize()
+    {
+      pt_.normalize();
+    }
 
     template<class _RandomNumberGenerator>
       result_type

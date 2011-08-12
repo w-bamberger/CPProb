@@ -57,6 +57,22 @@ namespace vanet
       i->second /= sum;
   }
 
+  void
+  RandomProbabilities::normalize()
+  {
+    // Accumulate
+    float sum = 0.0;
+    for (iterator it = pt_.begin(); it != pt_.end(); ++it)
+    {
+      sum += it->second;
+    }
+    // Divide
+    for (iterator it = pt_.begin(); it != pt_.end(); ++it)
+    {
+      it->second /= sum;
+    }
+  }
+
   std::ostream&
   RandomProbabilities::put_out(std::ostream& os) const
   {
