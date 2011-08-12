@@ -413,6 +413,14 @@ namespace vanet
   }
 
   HybridBayesianNetwork::iterator
+  HybridBayesianNetwork::add_dirichlet(const RandomProbabilities& var, float alpha)
+  {
+    RandomProbabilities* new_var = new RandomProbabilities(var);
+    DirichletDistribution new_distribution(*new_var, alpha);
+    return vertices_.insert(vertices_.end(), Vertex(*new_var, new_distribution));
+  }
+
+  HybridBayesianNetwork::iterator
   HybridBayesianNetwork::begin()
   {
     return vertices_.begin();

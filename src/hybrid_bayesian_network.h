@@ -185,6 +185,9 @@ namespace vanet
     add_constant(const RandomProbabilities& var);
 
     iterator
+    add_dirichlet(const RandomProbabilities& var, float alpha);
+
+    iterator
     begin();
 
     const_iterator
