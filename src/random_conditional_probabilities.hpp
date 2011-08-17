@@ -1,14 +1,14 @@
 /*
- * random_probability.h
+ * random_probability.hpp
  *
  *  Created on: 08.07.2011
  *      Author: wbam
  */
 
-#ifndef RANDOM_PROBABILITY_H_
-#define RANDOM_PROBABILITY_H_
+#ifndef RANDOM_PROBABILITY_HPP_
+#define RANDOM_PROBABILITY_HPP_
 
-#include "random_probabilities.h"
+#include "random_probabilities.hpp"
 
 namespace vanet
 {
@@ -157,4 +157,4 @@ namespace vanet
 
 }
 
-#endif /* RANDOM_PROBABILITY_H_ */
+#endif /* RANDOM_PROBABILITY_HPP_ */

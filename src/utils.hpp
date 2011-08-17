@@ -1,12 +1,12 @@
 /*
- * utils.h
+ * utils.hpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef UTILS_HPP_
+#define UTILS_HPP_
 
 #include <algorithm>
 #include <numeric>
@@ -60,4 +60,4 @@ namespace vanet
 
 }
 
-#endif /* UTILS_H_ */
+#endif /* UTILS_HPP_ */

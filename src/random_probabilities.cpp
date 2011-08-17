@@ -5,8 +5,8 @@
  *      Author: wbam
  */
 
-#include "random_probabilities.h"
-#include "io_utils.h"
+#include "random_probabilities.hpp"
+#include "io_utils.hpp"
 #include <algorithm>
 
 using namespace std;

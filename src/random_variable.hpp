@@ -1,5 +1,5 @@
 /**
- * @file random_variable.h
+ * @file random_variable.hpp
  * Defines the base class for all random variables.
  *
  * @author Walter Bamberger
@@ -25,10 +25,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RANDOM_VARIABLE_H_
-#define RANDOM_VARIABLE_H_
+#ifndef RANDOM_VARIABLE_HPP_
+#define RANDOM_VARIABLE_HPP_
 
-#include "random_number_engine.h"
+#include "random_number_engine.hpp"
 #include <iosfwd>
 #include <string>
 
@@ -139,4 +139,4 @@ namespace vanet
 
 }
 
-#endif /* RANDOM_VARIABLE_H_ */
+#endif /* RANDOM_VARIABLE_HPP_ */

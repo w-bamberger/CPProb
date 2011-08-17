@@ -1,16 +1,16 @@
 /*
- * categorical_distribution.h
+ * categorical_distribution.hpp
  *
  *  Created on: 16.05.2011
  *      Author: wbam
  */
 
-#ifndef CATEGORICAL_DISTRIBUTION_H_
-#define CATEGORICAL_DISTRIBUTION_H_
+#ifndef CATEGORICAL_DISTRIBUTION_HPP_
+#define CATEGORICAL_DISTRIBUTION_HPP_
 
-#include "bound_probability_distribution.h"
-#include "discrete_random_variable.h"
-#include "random_probabilities.h"
+#include "bound_probability_distribution.hpp"
+#include "discrete_random_variable.hpp"
+#include "random_probabilities.hpp"
 
 namespace vanet
 {
@@ -145,4 +145,4 @@ private:
 
 }
 
-#endif /* CATEGORICAL_DISTRIBUTION_H_ */
+#endif /* CATEGORICAL_DISTRIBUTION_HPP_ */

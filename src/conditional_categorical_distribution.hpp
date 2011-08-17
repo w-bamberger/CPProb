@@ -1,15 +1,15 @@
 /*
- * conditional_probability_distribution.h
+ * conditional_probability_distribution.hpp
  *
  *  Created on: 24.05.2011
  *      Author: wbam
  */
 
-#ifndef CONDITIONAL_CATEGORICAL_DISTRIBUTION_H_
-#define CONDITIONAL_CATEGORICAL_DISTRIBUTION_H_
+#ifndef CONDITIONAL_CATEGORICAL_DISTRIBUTION_HPP_
+#define CONDITIONAL_CATEGORICAL_DISTRIBUTION_HPP_
 
-#include "bound_probability_distribution.h"
-#include "random_conditional_probabilities.h"
+#include "bound_probability_distribution.hpp"
+#include "random_conditional_probabilities.hpp"
 #include <vector>
 
 namespace vanet
@@ -158,4 +158,4 @@ private:
 
 }
 
-#endif /* CONDITIONAL_CATEGORICAL_DISTRIBUTION_H_ */
+#endif /* CONDITIONAL_CATEGORICAL_DISTRIBUTION_HPP_ */

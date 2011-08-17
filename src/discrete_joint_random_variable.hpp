@@ -1,14 +1,14 @@
 /*
- * joint_random_variable.h
+ * joint_random_variable.hpp
  *
  *  Created on: 24.05.2011
  *      Author: wbam
  */
 
-#ifndef DISCRETE_JOINT_RANDOM_VARIABLE_H_
-#define DISCRETE_JOINT_RANDOM_VARIABLE_H_
+#ifndef DISCRETE_JOINT_RANDOM_VARIABLE_HPP_
+#define DISCRETE_JOINT_RANDOM_VARIABLE_HPP_
 
-#include "discrete_random_variable.h"
+#include "discrete_random_variable.hpp"
 #include <set>
 
 namespace vanet
@@ -66,4 +66,4 @@ namespace vanet
 
 }
 
-#endif /* DISCRETE_JOINT_RANDOM_VARIABLE_H_ */
+#endif /* DISCRETE_JOINT_RANDOM_VARIABLE_HPP_ */

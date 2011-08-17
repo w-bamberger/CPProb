@@ -5,7 +5,7 @@
  *      Author: wbam
  */
 
-#include "cond_dirichlet_distribution.h"
+#include "cond_dirichlet_distribution.hpp"
 
 using namespace std;
 

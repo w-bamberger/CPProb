@@ -5,7 +5,7 @@
  *      Author: wbam
  */
 
-#include "discrete_random_variable.h"
+#include "discrete_random_variable.hpp"
 #include <tr1/random>
 #include <ostream>
 

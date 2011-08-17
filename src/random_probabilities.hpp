@@ -1,5 +1,5 @@
 /**
- * @file random_probabilities.h
+ * @file random_probabilities.hpp
  * Defines the class RandomProbabilities.
  *
  * @author Walter Bamberger
@@ -24,11 +24,11 @@
  * License along with CPProb.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef RANDOM_PROBABILITIES_H_
-#define RANDOM_PROBABILITIES_H_
+#ifndef RANDOM_PROBABILITIES_HPP_
+#define RANDOM_PROBABILITIES_HPP_
 
-#include "discrete_random_variable.h"
-#include "error.h"
+#include "discrete_random_variable.hpp"
+#include "error.hpp"
 #include <set>
 
 namespace vanet
@@ -494,4 +494,4 @@ namespace vanet
 
 }
 
-#endif /* RANDOM_PROBABILITIES_H_ */
+#endif /* RANDOM_PROBABILITIES_HPP_ */

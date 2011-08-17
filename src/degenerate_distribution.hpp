@@ -1,15 +1,15 @@
 /*
- * degenerate_distribution.h
+ * degenerate_distribution.hpp
  *
  *  Created on: 18.07.2011
  *      Author: wbam
  */
 
-#ifndef DEGENERATE_DISTRIBUTION_H_
-#define DEGENERATE_DISTRIBUTION_H_
+#ifndef DEGENERATE_DISTRIBUTION_HPP_
+#define DEGENERATE_DISTRIBUTION_HPP_
 
-#include "bound_probability_distribution.h"
-#include "random_variable.h"
+#include "bound_probability_distribution.hpp"
+#include "random_variable.hpp"
 
 namespace vanet
 {
@@ -57,4 +57,4 @@ namespace vanet
 
 }
 
-#endif /* DEGENERATE_DISTRIBUTION_H_ */
+#endif /* DEGENERATE_DISTRIBUTION_HPP_ */

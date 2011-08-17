@@ -1,15 +1,15 @@
 /*
- * cond_dirichlet_distribution.h
+ * cond_dirichlet_distribution.hpp
  *
  *  Created on: 25.07.2011
  *      Author: wbam
  */
 
-#ifndef COND_DIRICHLET_DISTRIBUTION_H_
-#define COND_DIRICHLET_DISTRIBUTION_H_
+#ifndef COND_DIRICHLET_DISTRIBUTION_HPP_
+#define COND_DIRICHLET_DISTRIBUTION_HPP_
 
-#include "dirichlet_distribution.h"
-#include "random_conditional_probabilities.h"
+#include "dirichlet_distribution.hpp"
+#include "random_conditional_probabilities.hpp"
 
 namespace vanet
 {
@@ -106,4 +106,4 @@ namespace vanet
 
 }
 
-#endif /* COND_DIRICHLET_DISTRIBUTION_H_ */
+#endif /* COND_DIRICHLET_DISTRIBUTION_HPP_ */

@@ -5,8 +5,8 @@
  *      Author: wbam
  */
 
-#include "dirichlet_distribution.h"
-#include "io_utils.h"
+#include "dirichlet_distribution.hpp"
+#include "io_utils.hpp"
 #include <algorithm>
 
 using namespace std;

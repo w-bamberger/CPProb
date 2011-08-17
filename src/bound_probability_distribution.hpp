@@ -1,12 +1,12 @@
 /*
- * bound_probability_distribution.h
+ * bound_probability_distribution.hpp
  *
  *  Created on: 12.07.2011
  *      Author: wbam
  */
 
-#ifndef BOUND_PROBABILITY_DISTRIBUTION_H_
-#define BOUND_PROBABILITY_DISTRIBUTION_H_
+#ifndef BOUND_PROBABILITY_DISTRIBUTION_HPP_
+#define BOUND_PROBABILITY_DISTRIBUTION_HPP_
 
 #include <iosfwd>
 
@@ -47,4 +47,4 @@ namespace vanet
 
 }
 
-#endif /* BOUND_PROBABILITY_DISTRIBUTION_H_ */
+#endif /* BOUND_PROBABILITY_DISTRIBUTION_HPP_ */

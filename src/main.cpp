@@ -5,11 +5,11 @@
  *      Author: wbam
  */
 
-#include "boolean_random_variable.h"
-#include "discrete_joint_random_variable.h"
-#include "network_generator.h"
-#include "io_utils.h"
-#include "utils.h"
+#include "boolean_random_variable.hpp"
+#include "discrete_joint_random_variable.hpp"
+#include "network_generator.hpp"
+#include "io_utils.hpp"
+#include "utils.hpp"
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>
 #include <boost/program_options.hpp>

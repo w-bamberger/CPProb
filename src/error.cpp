@@ -5,7 +5,7 @@
  *      Author: wbam
  */
 
-#include "error.h"
+#include "error.hpp"
 #include <cstdlib>
 #include <iostream>
 

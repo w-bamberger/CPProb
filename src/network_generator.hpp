@@ -1,14 +1,14 @@
 /*
- * network_generator.h
+ * network_generator.hpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#ifndef NETWORK_GENERATOR_H_
-#define NETWORK_GENERATOR_H_
+#ifndef NETWORK_GENERATOR_HPP_
+#define NETWORK_GENERATOR_HPP_
 
-#include "bayesian_network.h"
+#include "bayesian_network.hpp"
 #include <numeric>
 
 namespace vanet
@@ -34,4 +34,4 @@ namespace vanet
 
 }
 
-#endif /* NETWORK_GENERATOR_H_ */
+#endif /* NETWORK_GENERATOR_HPP_ */

@@ -1,12 +1,12 @@
 /*
- * csv_map_reader.h
+ * csv_map_reader.hpp
  *
  *  Created on: 06.06.2011
  *      Author: wbam
  */
 
-#ifndef CSV_MAP_READER_H_
-#define CSV_MAP_READER_H_
+#ifndef CSV_MAP_READER_HPP_
+#define CSV_MAP_READER_HPP_
 
 #include <fstream>
 #include <map>
@@ -39,4 +39,4 @@ namespace vanet
 
 }
 
-#endif /* CSV_MAP_READER_H_ */
+#endif /* CSV_MAP_READER_HPP_ */

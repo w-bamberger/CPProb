@@ -5,9 +5,9 @@
  *      Author: wbam
  */
 
-#include "error.h"
-#include "bayesian_network.h"
-#include "io_utils.h"
+#include "error.hpp"
+#include "bayesian_network.hpp"
+#include "io_utils.hpp"
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/get.hpp>
 #include <tr1/tuple>

@@ -1,17 +1,17 @@
 /*
- * bayesian_network.h
+ * bayesian_network.hpp
  *
  *  Created on: 07.07.2011
  *      Author: wbam
  */
 
-#ifndef BAYESIAN_NETWORK_H_
-#define BAYESIAN_NETWORK_H_
+#ifndef BAYESIAN_NETWORK_HPP_
+#define BAYESIAN_NETWORK_HPP_
 
-#include "categorical_distribution.h"
-#include "conditional_categorical_distribution.h"
-#include "cond_dirichlet_distribution.h"
-#include "degenerate_distribution.h"
+#include "categorical_distribution.hpp"
+#include "conditional_categorical_distribution.hpp"
+#include "cond_dirichlet_distribution.hpp"
+#include "degenerate_distribution.hpp"
 #include <boost/variant/variant.hpp>
 
 #ifdef VANET_DEBUG_MODE
@@ -365,4 +365,4 @@ namespace vanet
 
 }
 
-#endif /* BAYESIAN_NETWORK_H_ */
+#endif /* BAYESIAN_NETWORK_HPP_ */

@@ -5,9 +5,9 @@
  *      Author: wbam
  */
 
-#include "conditional_categorical_distribution.h"
-#include "discrete_joint_random_variable.h"
-#include "io_utils.h"
+#include "conditional_categorical_distribution.hpp"
+#include "discrete_joint_random_variable.hpp"
+#include "io_utils.hpp"
 #include <algorithm>
 
 namespace vanet

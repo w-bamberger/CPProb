@@ -5,7 +5,7 @@
  *      Author: wbam
  */
 
-#include "boolean_random_variable.h"
+#include "boolean_random_variable.hpp"
 #include <tr1/tuple>
 #include <iostream>
 #include <stdexcept>

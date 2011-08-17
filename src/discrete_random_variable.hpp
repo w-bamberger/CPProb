@@ -1,15 +1,15 @@
 /*
- * discrete_random_variable.h
+ * discrete_random_variable.hpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#ifndef DISCRETE_RANDOM_VARIABLE_H_
-#define DISCRETE_RANDOM_VARIABLE_H_
+#ifndef DISCRETE_RANDOM_VARIABLE_HPP_
+#define DISCRETE_RANDOM_VARIABLE_HPP_
 
-#include "random_variable.h"
-#include "error.h"
+#include "random_variable.hpp"
+#include "error.hpp"
 #include <tr1/type_traits>
 #include <iterator>
 #include <map>
@@ -252,4 +252,4 @@ namespace vanet
 
 }
 
-#endif /* DISCRETE_RANDOM_VARIABLE_H_ */
+#endif /* DISCRETE_RANDOM_VARIABLE_HPP_ */

@@ -5,8 +5,8 @@
  *      Author: wbam
  */
 
-#include "discrete_joint_random_variable.h"
-#include "io_utils.h"
+#include "discrete_joint_random_variable.hpp"
+#include "io_utils.hpp"
 #include <tr1/tuple>
 #include <algorithm>
 

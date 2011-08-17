@@ -5,8 +5,8 @@
  *      Author: wbam
  */
 
-#include "csv_map_reader.h"
-#include "error.h"
+#include "csv_map_reader.hpp"
+#include "error.hpp"
 #include <boost/tokenizer.hpp>
 #include <iostream>
 

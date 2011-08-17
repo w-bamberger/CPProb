@@ -1,12 +1,12 @@
 /*
- * random_number_engine.h
+ * random_number_engine.hpp
  *
  *  Created on: 11.07.2011
  *      Author: wbam
  */
 
-#ifndef RANDOM_NUMBER_ENGINE_H_
-#define RANDOM_NUMBER_ENGINE_H_
+#ifndef RANDOM_NUMBER_ENGINE_HPP_
+#define RANDOM_NUMBER_ENGINE_HPP_
 
 #include <tr1/random>
 
@@ -18,4 +18,4 @@ namespace vanet
 
 }
 
-#endif /* RANDOM_NUMBER_ENGINE_H_ */
+#endif /* RANDOM_NUMBER_ENGINE_HPP_ */

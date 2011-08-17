@@ -1,14 +1,14 @@
 /*
- * dirichlet_distribution.h
+ * dirichlet_distribution.hpp
  *
  *  Created on: 22.07.2011
  *      Author: wbam
  */
 
-#ifndef DIRICHLET_DISTRIBUTION_H_
-#define DIRICHLET_DISTRIBUTION_H_
+#ifndef DIRICHLET_DISTRIBUTION_HPP_
+#define DIRICHLET_DISTRIBUTION_HPP_
 
-#include "random_probabilities.h"
+#include "random_probabilities.hpp"
 
 namespace vanet
 {
@@ -71,4 +71,4 @@ private:
 
 }
 
-#endif /* DIRICHLET_DISTRIBUTION_H_ */
+#endif /* DIRICHLET_DISTRIBUTION_HPP_ */

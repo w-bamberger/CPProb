@@ -5,9 +5,9 @@
  *      Author: wbam
  */
 
-#include "random_conditional_probabilities.h"
-#include "categorical_distribution.h"
-#include "io_utils.h"
+#include "random_conditional_probabilities.hpp"
+#include "categorical_distribution.hpp"
+#include "io_utils.hpp"
 #include <tr1/random>
 #include <tr1/tuple>
 #include <algorithm>

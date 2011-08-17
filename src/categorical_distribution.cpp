@@ -5,7 +5,7 @@
  *      Author: wbam
  */
 
-#include "categorical_distribution.h"
+#include "categorical_distribution.hpp"
 
 namespace vanet
 {

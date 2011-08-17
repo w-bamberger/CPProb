@@ -1,14 +1,14 @@
 /*
- * boolean_random_variable.h
+ * boolean_random_variable.hpp
  *
  *  Created on: 24.05.2011
  *      Author: wbam
  */
 
-#ifndef BOOLEAN_RANDOM_VARIABLE_H_
-#define BOOLEAN_RANDOM_VARIABLE_H_
+#ifndef BOOLEAN_RANDOM_VARIABLE_HPP_
+#define BOOLEAN_RANDOM_VARIABLE_HPP_
 
-#include "discrete_random_variable.h"
+#include "discrete_random_variable.hpp"
 
 namespace vanet
 {
@@ -50,4 +50,4 @@ namespace vanet
   };
 }
 
-#endif /* BOOLEAN_RANDOM_VARIABLE_H_ */
+#endif /* BOOLEAN_RANDOM_VARIABLE_HPP_ */

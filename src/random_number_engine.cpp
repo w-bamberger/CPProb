@@ -5,7 +5,7 @@
  *      Author: wbam
  */
 
-#include "random_number_engine.h"
+#include "random_number_engine.hpp"
 
 namespace vanet
 {

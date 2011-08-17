@@ -1,12 +1,12 @@
 /*
- * error.h
+ * error.hpp
  *
  *  Created on: 28.07.2011
  *      Author: wbam
  */
 
-#ifndef ERROR_H_
-#define ERROR_H_
+#ifndef ERROR_HPP_
+#define ERROR_HPP_
 
 #include <sstream>
 #include <stdexcept>
@@ -73,4 +73,4 @@ namespace vanet
 #define vanet_check_debug(condition, msg) do {} while (false)
 #endif
 
-#endif /* ERROR_H_ */
+#endif /* ERROR_HPP_ */

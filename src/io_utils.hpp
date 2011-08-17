@@ -1,12 +1,12 @@
 /*
- * debug_algorithms.h
+ * debug_algorithms.hpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#ifndef IO_UTILS_H_
-#define IO_UTILS_H_
+#ifndef IO_UTILS_HPP_
+#define IO_UTILS_HPP_
 
 #include <ostream>
 
@@ -49,4 +49,4 @@ namespace vanet
 
 }
 
-#endif /* IO_UTILS_H_ */
+#endif /* IO_UTILS_HPP_ */

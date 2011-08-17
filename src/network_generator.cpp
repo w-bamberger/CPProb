@@ -5,10 +5,10 @@
  *      Author: wbam
  */
 
-#include "network_generator.h"
-#include "boolean_random_variable.h"
-#include "csv_map_reader.h"
-#include "discrete_joint_random_variable.h"
+#include "network_generator.hpp"
+#include "boolean_random_variable.hpp"
+#include "csv_map_reader.hpp"
+#include "discrete_joint_random_variable.hpp"
 #include <boost/assign.hpp>
 #include <boost/variant/get.hpp>
 
