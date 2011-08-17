@@ -6,7 +6,7 @@
  */
 
 #include "csv_map_reader.hpp"
-#include "error.hpp"
+#include "../src-lib/error.hpp"
 #include <boost/tokenizer.hpp>
 #include <iostream>
 

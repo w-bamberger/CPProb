@@ -8,7 +8,7 @@
 #ifndef NETWORK_GENERATOR_HPP_
 #define NETWORK_GENERATOR_HPP_
 
-#include "bayesian_network.hpp"
+#include "../src-lib/bayesian_network.hpp"
 #include <numeric>
 
 namespace vanet

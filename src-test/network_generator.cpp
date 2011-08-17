@@ -6,9 +6,9 @@
  */
 
 #include "network_generator.hpp"
-#include "boolean_random_variable.hpp"
 #include "csv_map_reader.hpp"
-#include "discrete_joint_random_variable.hpp"
+#include "../src-lib/boolean_random_variable.hpp"
+#include "../src-lib/discrete_joint_random_variable.hpp"
 #include <boost/assign.hpp>
 #include <boost/variant/get.hpp>
 
