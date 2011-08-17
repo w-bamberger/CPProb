@@ -55,7 +55,7 @@ namespace cpprob
  * Below you find a reference section. It contains a complete specification of
  * all scientific references used in the documentation of this class. A good
  * introduction to subjective logic is Jøsang, 2001. You should start with this
- * article to understand the concepts of this class. While this paper only deals
+ * article to understand the concepts of this class. While the paper only deals
  * with binomial opinions (<tt>size_ = 2</tt>), this class can handle
  * multinomial opinions as well. The mathematics of multinomial opinions is
  * described in the other papers of the reference section.
@@ -66,7 +66,7 @@ namespace cpprob
  * still elegant and easy to use. So for example, Opinion<2> is a binomial
  * opinion; such an opinion just describes the agreement and disagreement with
  * a given proposition. It is widely used, so it got the dedicated type
- * definition BinomialOpinion. (A binomial opinion is a cluster Dirichlet bba
+ * definition @ref BinaryOpinion. (A binomial opinion is a cluster Dirichlet bba
  * with two clusters.)
  *
  * @par References
@@ -96,14 +96,10 @@ template<std::size_t size_>
       static const float sizef_ = size_;
 
    public:
-      /// @name Types
-      /// @{
-
       typedef float* EvidenceIterator;
       typedef const float* ConstEvidenceIterator;
       typedef const float* ConstBaseRateIterator;
 
-      /// @}
       /// @name Construction
       /// @{
 
