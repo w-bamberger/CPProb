@@ -10,7 +10,7 @@
 
 #include "random_probabilities.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   class DirichletDistribution

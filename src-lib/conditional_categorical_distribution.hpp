@@ -12,7 +12,7 @@
 #include "random_conditional_probabilities.hpp"
 #include <vector>
 
-namespace vanet
+namespace cpprob
 {
 
   class ConditionalCategoricalDistribution : public BoundProbabilityDistribution

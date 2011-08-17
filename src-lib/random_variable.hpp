@@ -32,7 +32,7 @@
 #include <iosfwd>
 #include <string>
 
-namespace vanet
+namespace cpprob
 {
 
   /**
@@ -70,7 +70,7 @@ namespace vanet
      * number generators. From these engine, non-uniform number generators can
      * be derived. Here the engine must be of the type defined in the project
      * header random_number_engine.h. It is best to use the global variable
-     * vanet::random_number_engine. In the future, this argument will
+     * cpprob::random_number_engine. In the future, this argument will
      * be removed.
      *
      * @todo Remove rne argument in favor of the global variable.

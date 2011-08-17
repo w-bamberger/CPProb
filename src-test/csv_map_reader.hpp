@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace vanet
+namespace cpprob
 {
 
   class CsvMapReader

@@ -13,7 +13,7 @@
 using namespace boost;
 using namespace std;
 
-namespace vanet
+namespace cpprob
 {
 
   CsvMapReader::CsvMapReader(const string& file_name)
@@ -21,7 +21,7 @@ namespace vanet
     is.exceptions(ifstream::badbit);
     is.open(file_name.c_str());
     if (!is)
-      vanet_throw_runtime_error("Could not open the file " << file_name << ".");
+      cpprob_throw_runtime_error("Could not open the file " << file_name << ".");
   }
 
   CsvMapReader::~CsvMapReader()

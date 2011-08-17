@@ -31,7 +31,7 @@
 #include "error.hpp"
 #include <set>
 
-namespace vanet
+namespace cpprob
 {
 
   class RandomProbabilities;
@@ -50,7 +50,7 @@ namespace std
      * to true.
      */
     template<>
-      struct is_floating_point<vanet::RandomProbabilities> : public integral_constant<
+      struct is_floating_point<cpprob::RandomProbabilities> : public integral_constant<
           bool, true>
       {
       };
@@ -58,7 +58,7 @@ namespace std
   }
 }
 
-namespace vanet
+namespace cpprob
 {
 
   /**
@@ -198,7 +198,7 @@ namespace vanet
     {
       ProbabilityTable::const_iterator find_it = pt_.find(var);
       if (find_it == pt_.end())
-        vanet_throw_out_of_range(
+        cpprob_throw_out_of_range(
             "RandomProbabilities: Unknown variable value " << var << ".");
 
       return find_it->second;
@@ -223,7 +223,7 @@ namespace vanet
     {
       ProbabilityTable::iterator find_it = pt_.find(var);
       if (find_it == pt_.end())
-        vanet_throw_out_of_range(
+        cpprob_throw_out_of_range(
             "RandomProbabilities: Unknown variable value " << var << ".");
 
       return find_it->second;
@@ -379,10 +379,10 @@ namespace vanet
     std::pair<iterator, bool>
     insert(const value_type& row)
     {
-      vanet_check_debug( row.second >= 0.0f,
+      cpprob_check_debug( row.second >= 0.0f,
           "RandomProbability: Probability " << row.second << //
           " not inserted. A probability must be greater than 0.");
-      vanet_check_debug( row.second <= 1.0f,
+      cpprob_check_debug( row.second <= 1.0f,
           "RandomProbability: Probability " << row.second << //
           " not inserted. A probability must be smaller than 1.");
       return pt_.insert(row);
@@ -452,10 +452,10 @@ namespace vanet
     void
     set(const DiscreteRandomVariable& var, float probability)
     {
-      vanet_check_debug( probability >= 0.0f,
+      cpprob_check_debug( probability >= 0.0f,
           "RandomProbability: Probability " << probability << //
           " not set. A probability must be greater than 0.");
-      vanet_check_debug( probability <= 1.0f,
+      cpprob_check_debug( probability <= 1.0f,
           "RandomProbability: Probability " << probability << //
           " not set. A probability must be smaller than 1.");
       pt_[var] = probability;

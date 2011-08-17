@@ -10,7 +10,7 @@
 #include "io_utils.hpp"
 #include <algorithm>
 
-namespace vanet
+namespace cpprob
 {
 
   ConditionalCategoricalDistribution::ConditionalCategoricalDistribution(

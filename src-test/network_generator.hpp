@@ -11,7 +11,7 @@
 #include "../src-lib/bayesian_network.hpp"
 #include <numeric>
 
-namespace vanet
+namespace cpprob
 {
 
   class NetworkGenerator

@@ -23,7 +23,7 @@
 using namespace std;
 using namespace std::tr1;
 
-namespace vanet
+namespace cpprob
 {
 
   class BayesianNetwork::MarkovBlanket
@@ -47,7 +47,7 @@ namespace vanet
         sampling_variate_(random_number_engine, CategoricalDistribution())
     {
       x_ = dynamic_cast<DiscreteRandomVariable*>(&X_v->random_variable());if (x_ == 0)
-        vanet_throw_network_error(
+        cpprob_throw_network_error(
             "CategoricalMarkovBlanket is assigned to non-discrete random variable "
             << X_v->random_variable().name() << " of type "
             << typeid(X_v->random_variable()).name());
@@ -110,7 +110,7 @@ namespace vanet
         {
         }
         else
-        vanet_throw_runtime_error(
+        cpprob_throw_runtime_error(
             "CategoricalMarkovBlanket: Cannot use distribution of type "
             << distribution.type().name() << ".");
 
@@ -154,13 +154,13 @@ namespace vanet
       }
       catch (const bad_cast& bc)
       {
-        vanet_throw_network_error(
+        cpprob_throw_network_error(
             "DirichletMarkovBlanket: Can only process "
             "random variables of type RandomConditionalProbabilities. " << bc.what());
       }
       catch (const boost::bad_get& bg)
       {
-        vanet_throw_network_error(
+        cpprob_throw_network_error(
             "DirichletMarkovBlanket: Cannot use distribution of type " << X_v_->distribution().type().name() << "; it should be of type CondDirichletDistribution.");
       }
     }
@@ -180,7 +180,7 @@ namespace vanet
       float
       operator()(const T& distribution) const
       {
-        vanet_throw_network_error(
+        cpprob_throw_network_error(
             "Cannot request a probability from a distribution of type " //
             << typeid(T).name() << ".");
       }
@@ -280,7 +280,7 @@ namespace vanet
     RandomVariable* params_rv = &params_vertex->random_variable();
     RandomProbabilities * params = dynamic_cast<RandomProbabilities*>(params_rv);
     if (!params)
-      vanet_throw_runtime_error(
+      cpprob_throw_runtime_error(
           "BayesianNetwork: Cannot connect parameters of type" //
           << typeid(*params_rv).name() << " to CategoricalDistribution.");
 
@@ -310,7 +310,7 @@ namespace vanet
       if (DiscreteRandomVariable* c_drv = dynamic_cast<DiscreteRandomVariable*> (c_rv))
         condition_references.push_back(c_drv);
       else
-        vanet_throw_runtime_error(
+        cpprob_throw_runtime_error(
             "BayesianNetwork: Cannot connect variable of type " //
             << typeid(*c_rv).name() << " to ConditionalCategoricalDistribution.");
     }
@@ -343,7 +343,7 @@ namespace vanet
     RandomConditionalProbabilities * params =
         dynamic_cast<RandomConditionalProbabilities*>(params_rv);
     if (!params)
-      vanet_throw_runtime_error(
+      cpprob_throw_runtime_error(
           "BayesianNetwork: Cannot connect parameters of type" //
           << typeid(*params_rv).name()//
           << " to ConditionalCategoricalDistribution.");
@@ -356,7 +356,7 @@ namespace vanet
       if (DiscreteRandomVariable* c_drv = dynamic_cast<DiscreteRandomVariable*> (c_rv))
         condition_references.push_back(c_drv);
       else
-        vanet_throw_runtime_error(
+        cpprob_throw_runtime_error(
             "BayesianNetwork: Cannot connect variable of type " //
             << typeid(*c_rv).name() << " to ConditionalCategoricalDistribution.");
     }
@@ -474,7 +474,7 @@ namespace vanet
         catch(const std::exception& e)
         {
           X_v->value_is_evidence(temp_evidence_flag);
-          vanet_throw_network_error("BayesianNetwork: Could not enumerate the network. " //
+          cpprob_throw_network_error("BayesianNetwork: Could not enumerate the network. " //
               << e.what());
         }
 
@@ -625,7 +625,7 @@ namespace vanet
     }
     catch (const exception& e)
     {
-      vanet_throw_network_error(
+      cpprob_throw_network_error(
           "BayesianNetwork: Cannot learn the provided network because of an invalid structure: "
           << e.what());
     }

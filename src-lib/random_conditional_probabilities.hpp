@@ -10,7 +10,7 @@
 
 #include "random_probabilities.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   class RandomConditionalProbabilities;
@@ -23,7 +23,7 @@ namespace std
   {
 
     template<>
-      struct is_floating_point<vanet::RandomConditionalProbabilities> : public integral_constant<
+      struct is_floating_point<cpprob::RandomConditionalProbabilities> : public integral_constant<
           bool, true>
       {
       };
@@ -31,7 +31,7 @@ namespace std
   }
 }
 
-namespace vanet
+namespace cpprob
 {
 
   class RandomConditionalProbabilities : public RandomVariable

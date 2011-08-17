@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace vanet
+namespace cpprob
 {
   std::ostream&
   operator<<(std::ostream& os, const CondDirichletDistribution& cdd)

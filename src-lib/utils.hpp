@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <numeric>
 
-namespace vanet
+namespace cpprob
 {
 
   template<class OuterOperator, class InnerOperator>

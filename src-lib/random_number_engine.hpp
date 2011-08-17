@@ -10,7 +10,7 @@
 
 #include <tr1/random>
 
-namespace vanet
+namespace cpprob
 {
 
   typedef std::tr1::mt19937 RandomNumberEngine;

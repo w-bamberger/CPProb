@@ -15,7 +15,7 @@
 #include <map>
 #include <stdexcept>
 
-namespace vanet
+namespace cpprob
 {
 
   class DiscreteRandomVariable;
@@ -29,7 +29,7 @@ namespace std
   {
 
     template<>
-      struct is_integral<vanet::DiscreteRandomVariable> : public integral_constant<
+      struct is_integral<cpprob::DiscreteRandomVariable> : public integral_constant<
           bool, true>
       {
       };
@@ -37,7 +37,7 @@ namespace std
   }
 }
 
-namespace vanet
+namespace cpprob
 {
 
   class DiscreteRandomVariable : public RandomVariable, public std::iterator<
@@ -129,9 +129,9 @@ namespace vanet
     virtual DiscreteRandomVariable&
     operator++()
     {
-      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
           "DiscreteRandomVariable: Cannot decrement an empty random variable.");
-      vanet_check_debug( value_ < characteristics_->second.size_,
+      cpprob_check_debug( value_ < characteristics_->second.size_,
           "DiscreteRandomVariable: Cannot increment the value " << value_ //
           << " of the variable " << name() << " above the maximum "//
           << characteristics_->second.size_ << ".");
@@ -143,9 +143,9 @@ namespace vanet
     virtual DiscreteRandomVariable&
     operator++(int)
     {
-      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
           "DiscreteRandomVariable: Cannot increment an empty random variable.");
-      vanet_check_debug( value_ < characteristics_->second.size_,
+      cpprob_check_debug( value_ < characteristics_->second.size_,
           "DiscreteRandomVariable: Cannot increment the value " << value_ //
           << " of the variable " << name() << " above the maximum "//
           << characteristics_->second.size_ << ".");
@@ -157,9 +157,9 @@ namespace vanet
     DiscreteRandomVariable&
     operator--()
     {
-      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
           "DiscreteRandomVariable: Cannot decrement an empty random variable.");
-      vanet_check_debug( value_ < characteristics_->second.size_,
+      cpprob_check_debug( value_ < characteristics_->second.size_,
           "DiscreteRandomVariable: Cannot decrement the value " << value_ //
           << " of the variable " << name() << " below 0.");
 
@@ -170,9 +170,9 @@ namespace vanet
     DiscreteRandomVariable&
     operator--(int)
     {
-      vanet_check_debug(characteristics_ != characteristics_table_.end(),
+      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
           "DiscreteRandomVariable: Cannot decrement an empty random variable.");
-      vanet_check_debug( value_ < characteristics_->second.size_,
+      cpprob_check_debug( value_ < characteristics_->second.size_,
           "DiscreteRandomVariable: Cannot decrement the value " << value_ //
           << " of the variable " << name() << " below 0.");
 

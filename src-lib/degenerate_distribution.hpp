@@ -11,7 +11,7 @@
 #include "bound_probability_distribution.hpp"
 #include "random_variable.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   class DegenerateDistribution : public BoundProbabilityDistribution

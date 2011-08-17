@@ -11,7 +11,7 @@
 #include <sstream>
 #include <stdexcept>
 
-namespace vanet
+namespace cpprob
 {
 
   void
@@ -39,38 +39,38 @@ namespace vanet
 
 }
 
-#define vanet_throw(msg, exception_name) \
+#define cpprob_throw(msg, exception_name) \
    do { \
         std::ostringstream oss; \
         oss << msg; \
         throw exception_name(oss.str().c_str()); \
    } while (false)
 
-#define vanet_throw_logic_error(msg) \
-    vanet_throw(msg, std::logic_error)
+#define cpprob_throw_logic_error(msg) \
+    cpprob_throw(msg, std::logic_error)
 
-#define vanet_throw_network_error(msg) \
-    vanet_throw(msg, vanet::NetworkError)
+#define cpprob_throw_network_error(msg) \
+    cpprob_throw(msg, cpprob::NetworkError)
 
-#define vanet_throw_out_of_range(msg) \
-    vanet_throw(msg, std::out_of_range)
+#define cpprob_throw_out_of_range(msg) \
+    cpprob_throw(msg, std::out_of_range)
 
-#define vanet_throw_runtime_error(msg) \
-    vanet_throw(msg, std::runtime_error)
+#define cpprob_throw_runtime_error(msg) \
+    cpprob_throw(msg, std::runtime_error)
 
 #ifdef VANET_DEBUG_MODE
-#define vanet_check_debug(condition, msg) \
+#define cpprob_check_debug(condition, msg) \
    do { \
       if (!(condition)) \
       { \
          std::ostringstream oss; \
          oss << "Assertion `" #condition "` failed in " << __FILE__ \
             << " at line " << __LINE__ << ": " << msg; \
-         vanet::program_failed(oss.str()); \
+         cpprob::program_failed(oss.str()); \
       } \
    } while (false)
 #else
-#define vanet_check_debug(condition, msg) do {} while (false)
+#define cpprob_check_debug(condition, msg) do {} while (false)
 #endif
 
 #endif /* ERROR_HPP_ */

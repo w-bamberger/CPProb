@@ -16,7 +16,7 @@
 
 #ifdef VANET_DEBUG_MODE
 #include <debug/list>
-namespace vanet
+namespace cpprob
 {
   namespace cont
   {
@@ -25,7 +25,7 @@ namespace vanet
 }
 #else
 #include <list>
-namespace vanet
+namespace cpprob
 {
   namespace cont
   {
@@ -34,7 +34,7 @@ namespace vanet
 }
 #endif
 
-namespace vanet
+namespace cpprob
 {
 
   class BoundProbabilityDistribution;

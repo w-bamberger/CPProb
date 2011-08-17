@@ -10,7 +10,7 @@
 
 #include "discrete_random_variable.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   class BooleanRandomVariable : public DiscreteRandomVariable

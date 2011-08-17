@@ -12,7 +12,7 @@
 using namespace std;
 using namespace std::tr1;
 
-namespace vanet
+namespace cpprob
 {
 
   RandomProbabilities::Names RandomProbabilities::names_;

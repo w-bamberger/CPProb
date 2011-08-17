@@ -12,7 +12,7 @@
 #include "discrete_random_variable.hpp"
 #include "random_probabilities.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   class CategoricalDistribution : public BoundProbabilityDistribution

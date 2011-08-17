@@ -24,7 +24,7 @@ __libc_freeres(void);
 using namespace boost;
 using namespace boost::assign;
 using namespace std;
-using namespace vanet;
+using namespace cpprob;
 
 enum TestCase
 {
@@ -42,7 +42,7 @@ operator>>(std::istream& is, TestCase& tc)
   else if (value == "bag-test")
     tc = bag_test;
   else
-    vanet_throw_runtime_error("Wrong argument for test case: " << value << ".");
+    cpprob_throw_runtime_error("Wrong argument for test case: " << value << ".");
 
   return is;
 }
@@ -99,7 +99,7 @@ main(int argc, char **argv)
     break;
 
   default:
-    vanet_throw_logic_error(
+    cpprob_throw_logic_error(
         "Invalid test found: " << options_map["test-case"].as<TestCase> () << ".");
     break;
 

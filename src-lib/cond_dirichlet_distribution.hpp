@@ -11,7 +11,7 @@
 #include "dirichlet_distribution.hpp"
 #include "random_conditional_probabilities.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   class CondDirichletDistribution

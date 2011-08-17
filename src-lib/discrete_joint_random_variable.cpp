@@ -13,7 +13,7 @@
 using namespace std;
 using namespace std::tr1;
 
-namespace vanet
+namespace cpprob
 {
 
   DiscreteJointRandomVariable::DiscreteJointRandomVariable()
@@ -47,7 +47,7 @@ namespace vanet
   void
   DiscreteJointRandomVariable::insert(const DiscreteRandomVariable& var)
   {
-    vanet_check_debug( var.characteristics_ != characteristics_table_.end(),
+    cpprob_check_debug( var.characteristics_ != characteristics_table_.end(),
         "DiscreteJointRandomVariable: Cannot insert an empty random variable.");
     if (!variables_.insert(var).second)
       throw runtime_error(
@@ -146,7 +146,7 @@ namespace vanet
     for (Variables::const_iterator it = variables_.begin();
         it != variables_.end(); ++it)
         {
-      vanet_check_debug( it->characteristics_ != characteristics_table_.end(),
+      cpprob_check_debug( it->characteristics_ != characteristics_table_.end(),
           "DiscreteJointRandomVariable: Cannot join an empty random variable.");
 
       new_name += it->name();

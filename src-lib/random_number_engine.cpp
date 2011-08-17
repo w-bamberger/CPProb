@@ -7,7 +7,7 @@
 
 #include "random_number_engine.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   RandomNumberEngine random_number_engine;

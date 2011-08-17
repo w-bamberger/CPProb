@@ -7,7 +7,7 @@
 
 #include "categorical_distribution.hpp"
 
-namespace vanet
+namespace cpprob
 {
 
   CategoricalDistribution::CategoricalDistribution() :

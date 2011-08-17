@@ -11,7 +11,7 @@
 #include "discrete_random_variable.hpp"
 #include <set>
 
-namespace vanet
+namespace cpprob
 {
 
   class DiscreteJointRandomVariable : public DiscreteRandomVariable

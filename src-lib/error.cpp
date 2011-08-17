@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace vanet
+namespace cpprob
 {
 
   void

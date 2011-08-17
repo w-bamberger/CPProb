@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace vanet
+namespace cpprob
 {
 
   DiscreteRandomVariable::CharacteristicsTable DiscreteRandomVariable::characteristics_table_;
@@ -20,7 +20,7 @@ namespace vanet
   void
   DiscreteRandomVariable::assign_random_value(RandomNumberEngine& rng)
   {
-    vanet_check_debug(
+    cpprob_check_debug(
         characteristics_ != characteristics_table_.end(),
         "DiscreteRandomVariable: Cannot compute random value for an empty random variable.");
 
@@ -66,9 +66,9 @@ namespace vanet
   DiscreteRandomVariable&
   DiscreteRandomVariable::operator=(const DiscreteRandomVariable& var)
   {
-    vanet_check_debug(var.characteristics_ != characteristics_table_.end(),
+    cpprob_check_debug(var.characteristics_ != characteristics_table_.end(),
         "DiscreteRandomVariable: Cannot assign from empty random variable.");
-    vanet_check_debug(
+    cpprob_check_debug(
         characteristics_ == characteristics_table_.end() || characteristics_ == var.characteristics_,
         "DiscreteRandomVariable: Cannot assign random variable " //
         + var.characteristics_->first + " to random variable "//

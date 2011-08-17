@@ -10,7 +10,7 @@
 
 #include <ostream>
 
-namespace vanet
+namespace cpprob
 {
 
   template<class T1, class T2>

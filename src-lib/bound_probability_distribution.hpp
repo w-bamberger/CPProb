@@ -10,7 +10,7 @@
 
 #include <iosfwd>
 
-namespace vanet
+namespace cpprob
 {
 
   class BoundProbabilityDistribution

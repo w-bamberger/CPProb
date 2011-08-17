@@ -16,7 +16,7 @@ using namespace boost;
 using namespace boost::assign;
 using namespace std;
 
-namespace vanet
+namespace cpprob
 {
 
   NetworkGenerator::NetworkGenerator()
