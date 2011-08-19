@@ -37,10 +37,6 @@ namespace cpprob
 namespace cpprob
 {
 
-  class BoundProbabilityDistribution;
-  class CategoricalDistribution;
-  class RandomConditionalProbabilities;
-
   class BayesianNetwork
   {
 
@@ -280,6 +276,7 @@ namespace cpprob
   private:
 
     class CategoricalMarkovBlanket;
+    class ConditionalDirichletMarkovBlanket;
     class DirichletMarkovBlanket;
     class MarkovBlanket;
     class ProbabilityVisitor;

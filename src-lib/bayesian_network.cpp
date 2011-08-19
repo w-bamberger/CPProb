@@ -43,10 +43,10 @@ namespace cpprob
 
   public:
 
-    CategoricalMarkovBlanket(const iterator& X_v) :
-        sampling_variate_(random_number_engine, CategoricalDistribution())
+    CategoricalMarkovBlanket(const iterator& X_v)
+        : sampling_variate_(random_number_engine, CategoricalDistribution())
     {
-      x_ = dynamic_cast<DiscreteRandomVariable*>(&X_v->random_variable());if (x_ == 0)
+      x_ = dynamic_cast<DiscreteRandomVariable*>(&X_v->random_variable());if (x_==0)
         cpprob_throw_network_error(
             "CategoricalMarkovBlanket is assigned to non-discrete random variable "
             << X_v->random_variable().name() << " of type "
@@ -61,7 +61,7 @@ namespace cpprob
           distributions_.push_back(
               to_discrete_probability_distribution((*c)->distribution()));
         }
-    } 
+    }
 
       virtual void
       sample()
@@ -119,13 +119,13 @@ namespace cpprob
 
     };
 
-  class BayesianNetwork::DirichletMarkovBlanket : public BayesianNetwork::MarkovBlanket
+  class BayesianNetwork::ConditionalDirichletMarkovBlanket : public BayesianNetwork::MarkovBlanket
   {
 
   public:
 
-    DirichletMarkovBlanket(const BayesianNetwork::iterator& X_v) :
-        X_v_(X_v)
+    ConditionalDirichletMarkovBlanket(const BayesianNetwork::iterator& X_v)
+        : X_v_(X_v)
     {
 
     }
@@ -155,8 +155,60 @@ namespace cpprob
       catch (const bad_cast& bc)
       {
         cpprob_throw_network_error(
-            "DirichletMarkovBlanket: Can only process "
+            "ConditionalDirichletMarkovBlanket: Can only process "
             "random variables of type RandomConditionalProbabilities. " << bc.what());
+      }
+      catch (const boost::bad_get& bg)
+      {
+        cpprob_throw_network_error(
+            "ConditionalDirichletMarkovBlanket: Cannot use distribution of type "
+            << X_v_->distribution().type().name()
+            << "; it should be of type CondDirichletDistribution.");
+      }
+    }
+
+  private:
+
+    BayesianNetwork::iterator X_v_;
+
+  };
+
+  class BayesianNetwork::DirichletMarkovBlanket : public BayesianNetwork::MarkovBlanket
+  {
+
+  public:
+
+    DirichletMarkovBlanket(const BayesianNetwork::iterator& X_v)
+        : X_v_(X_v)
+    {
+
+    }
+
+    virtual void
+    sample()
+    {
+      try
+      {
+        DirichletDistribution sample_distribution = boost::get<
+            DirichletDistribution>(X_v_->distribution());
+        for (BayesianNetwork::VertexReferences::const_iterator c =
+            X_v_->children().begin(); c != X_v_->children().end(); ++c)
+        {
+          const DiscreteRandomVariable & c_var =
+              dynamic_cast<DiscreteRandomVariable&>((*c)->random_variable());
+              sample_distribution.parameters()[c_var] += 1.0;
+            }
+        RandomProbabilities & x =
+            dynamic_cast<RandomProbabilities&>(X_v_->random_variable());
+        variate_generator<RandomNumberEngine&, DirichletDistribution> sampling_variate_(
+            random_number_engine, sample_distribution);
+        x = sampling_variate_();
+      }
+      catch (const bad_cast& bc)
+      {
+        cpprob_throw_network_error(
+            "DirichletMarkovBlanket: Can only process "
+            "random variables of type RandomlProbabilities. " << bc.what());
       }
       catch (const boost::bad_get& bg)
       {
@@ -250,8 +302,8 @@ namespace cpprob
   {
   }
 
-  BayesianNetwork::BayesianNetwork(const BayesianNetwork& other_hbn) :
-      vertices_(other_hbn.vertices_)
+  BayesianNetwork::BayesianNetwork(const BayesianNetwork& other_hbn)
+      : vertices_(other_hbn.vertices_)
   {
   }
 
@@ -541,11 +593,14 @@ namespace cpprob
 
       else if (get<CondDirichletDistribution>(&v->distribution()) != 0)
         non_evidence_vertices.push_back(
-            make_pair(v, new DirichletMarkovBlanket(v)));
+            make_pair(v, new ConditionalDirichletMarkovBlanket(v)));
 
       else if (get<ConditionalCategoricalDistribution>(&v->distribution()) != 0)
         non_evidence_vertices.push_back(
             make_pair(v, new CategoricalMarkovBlanket(v)));
+
+      else if (get<DirichletDistribution>(&v->distribution()) != 0)
+        non_evidence_vertices.push_back(make_pair(v, new DirichletMarkovBlanket(v)));
 
       else
         throw runtime_error(
