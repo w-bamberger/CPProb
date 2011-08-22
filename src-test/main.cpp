@@ -42,7 +42,8 @@ operator>>(std::istream& is, TestCase& tc)
   else if (value == "bag-test")
     tc = bag_test;
   else
-    cpprob_throw_runtime_error("Wrong argument for test case: " << value << ".");
+    cpprob_throw_runtime_error(
+        "Wrong argument for test case: " << value << ".");
 
   return is;
 }
@@ -75,6 +76,9 @@ main(int argc, char **argv)
   ("with-debug-output",
       program_options::value<bool>()->default_value(false)->zero_tokens(),
       "print detailed information about the result of every step") //
+  ("test-mode",
+      program_options::value<bool>()->default_value(false)->zero_tokens(),
+      "reduce the output so it fits for automated testing with texttest") //
   ("test-case",
       program_options::value<TestCase>()->default_value(hybrid_bag_test),
       "Choose what to test");
@@ -136,7 +140,8 @@ test_alarm_net()
   boost::timer t;
   BayesianNetwork bn = NetworkGenerator::gen_alarm_net();
   duration = t.elapsed();
-  cout << "Duration: " << duration << "\n" << endl;
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n" << endl;
   if (options_map["with-debug-output"].as<bool>())
     cout << bn << endl;
 
@@ -147,7 +152,8 @@ test_alarm_net()
   t.restart();
   CategoricalDistribution burglary_distribution = bn.enumerate(search_it);
   duration = t.elapsed();
-  cout << "Duration: " << duration << "\n";
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
   cout << "Burglary distribution with enumeration:\n";
   cout << burglary_distribution;
   cout << endl;
@@ -164,7 +170,8 @@ test_alarm_net()
   burglary_distribution = bn.sample(search_it, burn_in_iterations,
       collect_iterations);
   duration = t.elapsed();
-  cout << "Duration: " << duration << "\n";
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
   cout << "Burglary distribution with Gibbs sampling:\n";
   cout << burglary_distribution;
   cout << endl;
@@ -178,7 +185,9 @@ test_bag_net()
   boost::timer t;
   BayesianNetwork bn_map_full = NetworkGenerator::gen_bag_net(5.0);
   duration = t.elapsed();
-  cout << "Duration: " << duration << "\n" << endl;
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
+  cout << endl;
 
   if (options_map["with-debug-output"].as<bool>())
     cout << bn_map_full << endl;
@@ -187,25 +196,38 @@ test_bag_net()
   t.restart();
   bn_map_full.learn();
   duration = t.elapsed();
-  cout << "Duration: " << duration << "\n";
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
   put_out_probability_variables(cout, bn_map_full);
   cout << endl;
 
   cout << "Learn ML on full data\n";
   BayesianNetwork bn_ml_full = NetworkGenerator::gen_bag_net(0.0);
+  t.restart();
   bn_ml_full.learn();
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
   put_out_probability_variables(cout, bn_ml_full);
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
   BayesianNetwork bn_map_partial = NetworkGenerator::gen_bag_net(5.0, 5);
+  t.restart();
   bn_map_partial.learn();
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
   put_out_probability_variables(cout, bn_map_partial);
   cout << endl;
 
   cout << "Learn ML on partial data\n";
   BayesianNetwork bn_ml_partial = NetworkGenerator::gen_bag_net(0.0, 5);
+  t.restart();
   bn_ml_partial.learn();
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
   put_out_probability_variables(cout, bn_ml_partial);
   cout << endl;
 
@@ -254,6 +276,7 @@ test_bag_net()
   CategoricalDistribution hole_d = bn_map_full.sample(flavor_v,
       burn_in_iterations, collect_iterations);
   duration = t.elapsed();
-  cout << "Computation duration: " << duration << "\n";
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
   cout << "Predictive hole distribution with sampling: " << hole_d << endl;
 }
