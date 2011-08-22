@@ -9,6 +9,7 @@
 #include "io_utils.hpp"
 #include <tr1/tuple>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 using namespace std::tr1;
@@ -121,16 +122,16 @@ namespace cpprob
   DiscreteJointRandomVariable::set_up_characteristics(const string& name,
       size_t size)
   {
-    characteristics_ = characteristics_table_.find(name);
-    if (characteristics_ == characteristics_table_.end())
+    characteristics_ = characteristics_table_.lower_bound(name);
+    if (characteristics_ == characteristics_table_.end()
+        || characteristics_->first != name)
     {
-      bool success;
-      tie(characteristics_, success) = characteristics_table_.insert(
-          make_pair(name, Characteristics(size)));
-      if (!success)
-        throw logic_error(
-            "JointRandomVariable: Could not register random variable " + name
-                + ".");
+      if (characteristics_ == characteristics_table_.begin())
+        characteristics_ = characteristics_table_.insert(
+            make_pair(name, Characteristics(size))).first;
+      else
+        characteristics_ = characteristics_table_.insert(--characteristics_,
+            make_pair(name, Characteristics(size)));
     }
   }
 

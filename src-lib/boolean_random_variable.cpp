@@ -58,17 +58,21 @@ namespace cpprob
   void
   BooleanRandomVariable::set_up_characteristics(const string& name)
   {
-    characteristics_ = characteristics_table_.find(name);
-    if (characteristics_ == characteristics_table_.end())
+    characteristics_ = characteristics_table_.lower_bound(name);
+    if (characteristics_ == characteristics_table_.end()
+        || characteristics_->first != name)
+    {
+      if (characteristics_ == characteristics_table_.begin())
       {
-        bool success;
-        tie(characteristics_, success) = characteristics_table_.insert(
-            make_pair(name, Characteristics(2)));
-        if (!success)
-          throw logic_error(
-              "BooleanRandomVariable: Could not register random variable "
-                  + name + ".");
+        characteristics_ = characteristics_table_.insert(
+            make_pair(name, Characteristics(2))).first;
       }
+      else
+      {
+        characteristics_ = characteristics_table_.insert(--characteristics_,
+            make_pair(name, Characteristics(2)));
+      }
+    }
   }
 
 }
