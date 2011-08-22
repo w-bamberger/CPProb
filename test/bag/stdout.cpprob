@@ -1,0 +1,58 @@
+Generate the full hybrid bag network
+CSV header: Bag Flavor Wrapper Hole 
+
+Learn MAP on full data
+ProbabilitiesBag:,(Bag:0 0.49604),(Bag:1 0.50396)
+ProbabilitiesFlavorBag:
+      ((Bag:0 :,(Flavor:0 0.185771),(Flavor:1 0.814229)))
+      ((Bag:1 :,(Flavor:0 0.692607),(Flavor:1 0.307393)))
+ProbabilitiesWrapperBag:
+      ((Bag:0 :,(Wrapper:0 0.245059),(Wrapper:1 0.754941)))
+      ((Bag:1 :,(Wrapper:0 0.663424),(Wrapper:1 0.336576)))
+ProbabilitiesHoleBag:
+      ((Bag:0 :,(Hole:0 0.197628),(Hole:1 0.802372)))
+      ((Bag:1 :,(Hole:0 0.700389),(Hole:1 0.299611)))
+
+Learn ML on full data
+CSV header: Bag Flavor Wrapper Hole 
+ProbabilitiesBag:,(Bag:0 0.496),(Bag:1 0.504)
+ProbabilitiesFlavorBag:
+      ((Bag:0 :,(Flavor:0 0.179435),(Flavor:1 0.820565)))
+      ((Bag:1 :,(Flavor:0 0.696429),(Flavor:1 0.303571)))
+ProbabilitiesWrapperBag:
+      ((Bag:0 :,(Wrapper:0 0.239919),(Wrapper:1 0.760081)))
+      ((Bag:1 :,(Wrapper:0 0.666667),(Wrapper:1 0.333333)))
+ProbabilitiesHoleBag:
+      ((Bag:0 :,(Hole:0 0.191532),(Hole:1 0.808468)))
+      ((Bag:1 :,(Hole:0 0.704365),(Hole:1 0.295635)))
+
+Learn MAP on partial data
+CSV header: Bag Flavor Wrapper Hole 
+ProbabilitiesBag:,(Bag:0 0.4),(Bag:1 0.6)
+ProbabilitiesFlavorBag:
+      ((Bag:0 :,(Flavor:0 0.454545),(Flavor:1 0.545455)))
+      ((Bag:1 :,(Flavor:0 0.571429),(Flavor:1 0.428571)))
+ProbabilitiesWrapperBag:
+      ((Bag:0 :,(Wrapper:0 0.454545),(Wrapper:1 0.545455)))
+      ((Bag:1 :,(Wrapper:0 0.5),(Wrapper:1 0.5)))
+ProbabilitiesHoleBag:
+      ((Bag:0 :,(Hole:0 0.545455),(Hole:1 0.454545)))
+      ((Bag:1 :,(Hole:0 0.642857),(Hole:1 0.357143)))
+
+Learn ML on partial data
+CSV header: Bag Flavor Wrapper Hole 
+ProbabilitiesBag:,(Bag:0 0.2),(Bag:1 0.8)
+ProbabilitiesFlavorBag:
+      ((Bag:0 :,(Flavor:0 0),(Flavor:1 1)))
+      ((Bag:1 :,(Flavor:0 0.75),(Flavor:1 0.25)))
+ProbabilitiesWrapperBag:
+      ((Bag:0 :,(Wrapper:0 0),(Wrapper:1 1)))
+      ((Bag:1 :,(Wrapper:0 0.5),(Wrapper:1 0.5)))
+ProbabilitiesHoleBag:
+      ((Bag:0 :,(Hole:0 1),(Hole:1 0)))
+      ((Bag:1 :,(Hole:0 1),(Hole:1 0)))
+
+Extend the network for sampling
+Sample with 200 burn in iterations and 800 collect iterations.
+Predictive hole distribution with sampling:       (Flavor:0,0.700179)  (Flavor:1,0.299821) 
+

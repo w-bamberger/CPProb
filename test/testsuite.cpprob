@@ -1,0 +1,5 @@
+# Testing inference in discrete Bayesian network with the alarm network.
+alarm
+
+# Testing MAP and ML learning and sampling in fully observed bag network.
+bag

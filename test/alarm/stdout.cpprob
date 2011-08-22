@@ -1,0 +1,9 @@
+Generate the hybrid alarm network
+Enumerate
+Burglary distribution with enumeration:
+      (Burglary:0,0.715828)  (Burglary:1,0.284172) 
+
+Sample with 200 burn in iterations and 800 collect iterations.
+Burglary distribution with Gibbs sampling:
+      (Burglary:0,0.73375)  (Burglary:1,0.26625) 
+
