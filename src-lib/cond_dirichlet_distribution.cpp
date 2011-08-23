@@ -17,8 +17,7 @@ namespace cpprob
     for (CondDirichletDistribution::Distributions::const_iterator d_it =
         cdd.distributions_.begin(); d_it != cdd.distributions_.end(); ++d_it)
       {
-      os << "      Condition " << d_it->first << ", parameters " << d_it->second
-          << "\n";
+      os << "      Condition " << d_it->first << ", parameters " << d_it->second;
 
     }
   return os;

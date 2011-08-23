@@ -31,7 +31,7 @@ namespace cpprob
   {
     for_each(dd.parameters_.begin(), dd.parameters_.end(),
         StreamOut(os, " ", ""));
-    return os;
+    return os << "\n";
   }
 
 }
