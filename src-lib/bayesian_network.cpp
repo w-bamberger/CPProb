@@ -578,8 +578,8 @@ namespace cpprob
     throw runtime_error(
     "BayesianNetwork: Cannot sample vertex because of an unknown variable type.");
 
-// Compile a list of the non-evidence variables
-    typedef cont::list<pair<iterator, MarkovBlanket*> > NonEvidenceVertices;
+// Compile a list of the non-evidence variables and initialize them
+    typedef cont::list<MarkovBlanket*> NonEvidenceVertices;
     NonEvidenceVertices non_evidence_vertices;
     NonEvidenceVertices::iterator vertex_it;
     for (iterator v = vertices_.begin(); v != vertices_.end(); ++v)
@@ -588,44 +588,34 @@ namespace cpprob
         continue;
 
       else if (get<CategoricalDistribution>(&v->distribution()) != 0)
-        non_evidence_vertices.push_back(
-            make_pair(v, new CategoricalMarkovBlanket(v)));
+        non_evidence_vertices.push_back(new CategoricalMarkovBlanket(v));
 
       else if (get<CondDirichletDistribution>(&v->distribution()) != 0)
-        non_evidence_vertices.push_back(
-            make_pair(v, new ConditionalDirichletMarkovBlanket(v)));
+        non_evidence_vertices.push_back(new ConditionalDirichletMarkovBlanket(v));
 
       else if (get<ConditionalCategoricalDistribution>(&v->distribution()) != 0)
-        non_evidence_vertices.push_back(
-            make_pair(v, new CategoricalMarkovBlanket(v)));
+        non_evidence_vertices.push_back(new CategoricalMarkovBlanket(v));
 
       else if (get<DirichletDistribution>(&v->distribution()) != 0)
-        non_evidence_vertices.push_back(make_pair(v, new DirichletMarkovBlanket(v)));
+        non_evidence_vertices.push_back(new DirichletMarkovBlanket(v));
 
       else
         throw runtime_error(
             "BayesianNetwork: Unknown distribution type for Gibbs sampling.");
-    }
 
-// Initialise non-evidence variables randomly
-    NonEvidenceVertices::iterator vertices_begin_it =
-        non_evidence_vertices.begin();
-    NonEvidenceVertices::iterator vertices_end_it = non_evidence_vertices.end();
-    for (vertex_it = vertices_begin_it; vertex_it != vertices_end_it;
-        ++vertex_it)
-        {
-      vertex_it->first->random_variable().assign_random_value(
-          random_number_engine);
+      v->random_variable().assign_random_value(random_number_engine);
     }
 
 // Burn in sampling
+    NonEvidenceVertices::iterator vertices_begin_it = non_evidence_vertices.begin();
+    NonEvidenceVertices::iterator vertices_end_it = non_evidence_vertices.end();
     for (unsigned int iteration = 0; iteration < burn_in_iterations;
         iteration++)
         {
       for (vertex_it = vertices_begin_it; vertex_it != vertices_end_it;
           ++vertex_it)
           {
-        vertex_it->second->sample();
+        (*vertex_it)->sample();
       }
     }
 
@@ -637,7 +627,7 @@ namespace cpprob
       for (vertex_it = vertices_begin_it; vertex_it != vertices_end_it;
           ++vertex_it)
           {
-        vertex_it->second->sample();
+        (*vertex_it)->sample();
         X_distribution[*x] += 1.0f;
       }
     }
@@ -647,7 +637,7 @@ namespace cpprob
 // Clean up
     for (vertex_it = vertices_begin_it; vertex_it != vertices_end_it;
         ++vertex_it)
-      delete vertex_it->second;
+      delete *vertex_it;
 
     return X_distribution;
   }
