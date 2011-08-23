@@ -141,7 +141,6 @@ namespace cpprob
      * because the probabilities of an empty table cannot sum up to one and
      * because the name of the random variable is undefined. For the use in
      * the class ProbabilityDistribution, this constructor is necessary though.
-     * For this reason, the constructor is marked as explicit.
      *
      * @par Ensures:
      * - <tt>%name() == ""</tt>.
