@@ -28,7 +28,7 @@ using namespace cpprob;
 
 enum TestCase
 {
-  alarm_test, bag_test, hybrid_bag_test
+  alarm_test, bag_test, latent_bag_test
 };
 
 std::istream&
@@ -41,6 +41,8 @@ operator>>(std::istream& is, TestCase& tc)
     tc = alarm_test;
   else if (value == "bag-test")
     tc = bag_test;
+  else if (value == "latent-bag-test")
+    tc = latent_bag_test;
   else
     cpprob_throw_runtime_error(
         "Wrong argument for test case: " << value << ".");
@@ -58,6 +60,9 @@ test_alarm_net();
 
 void
 test_bag_net();
+
+void
+test_latent_bag_net();
 
 int
 main(int argc, char **argv)
@@ -80,7 +85,7 @@ main(int argc, char **argv)
       program_options::value<bool>()->default_value(false)->zero_tokens(),
       "reduce the output so it fits for automated testing with texttest") //
   ("test-case",
-      program_options::value<TestCase>()->default_value(hybrid_bag_test),
+      program_options::value<TestCase>()->default_value(latent_bag_test),
       "Choose what to test");
   program_options::store(
       program_options::parse_command_line(argc, argv, options_desc),
@@ -100,6 +105,10 @@ main(int argc, char **argv)
 
   case bag_test:
     test_bag_net();
+    break;
+
+  case latent_bag_test:
+    test_latent_bag_net();
     break;
 
   default:
@@ -183,7 +192,7 @@ test_bag_net()
   cout << "Generate the full hybrid bag network\n";
   double duration;
   boost::timer t;
-  BayesianNetwork bn_map_full = NetworkGenerator::gen_bag_net(5.0);
+  BayesianNetwork bn_map_full = NetworkGenerator::gen_bag_net(5.0, true);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
@@ -202,7 +211,7 @@ test_bag_net()
   cout << endl;
 
   cout << "Learn ML on full data\n";
-  BayesianNetwork bn_ml_full = NetworkGenerator::gen_bag_net(0.0);
+  BayesianNetwork bn_ml_full = NetworkGenerator::gen_bag_net(0.0, true);
   t.restart();
   bn_ml_full.learn();
   duration = t.elapsed();
@@ -212,7 +221,7 @@ test_bag_net()
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
-  BayesianNetwork bn_map_partial = NetworkGenerator::gen_bag_net(5.0, 5);
+  BayesianNetwork bn_map_partial = NetworkGenerator::gen_bag_net(5.0, true, 5);
   t.restart();
   bn_map_partial.learn();
   duration = t.elapsed();
@@ -222,7 +231,7 @@ test_bag_net()
   cout << endl;
 
   cout << "Learn ML on partial data\n";
-  BayesianNetwork bn_ml_partial = NetworkGenerator::gen_bag_net(0.0, 5);
+  BayesianNetwork bn_ml_partial = NetworkGenerator::gen_bag_net(0.0, true, 5);
   t.restart();
   bn_ml_partial.learn();
   duration = t.elapsed();
@@ -273,10 +282,47 @@ test_bag_net()
   cout << "Sample with " << burn_in_iterations << " burn in iterations and "
       << collect_iterations << " collect iterations.\n";
   t.restart();
-  CategoricalDistribution hole_d = bn_map_full.sample(flavor_v,
+  CategoricalDistribution prediction = bn_map_full.sample(flavor_v,
       burn_in_iterations, collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive hole distribution with sampling: " << hole_d << endl;
+  cout << "Predictive distribution of " << prediction.begin()->first.name()
+      << " with sampling:" << prediction << endl;
+}
+
+void
+test_latent_bag_net()
+{
+  cout << "Generate the bag network with all data but no bag observations\n";
+  double duration;
+  boost::timer t;
+  BayesianNetwork bn = NetworkGenerator::gen_bag_net(5.0, false);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
+  cout << endl;
+
+  if (options_map["with-debug-output"].as<bool>())
+    cout << bn << endl;
+
+  BayesianNetwork::iterator bag_params_v = find_if(bn.begin(), bn.end(),
+      BayesianNetwork::CompareVertexName("ProbabilitiesBag"));
+
+  BooleanRandomVariable bag("Bag", true);
+  BayesianNetwork::iterator bag_v = bn.add_categorical(bag, bag_params_v);
+
+  unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
+      unsigned int>();
+  unsigned int collect_iterations = options_map["collect-iterations"].as<
+      unsigned int>();
+  cout << "Sample with " << burn_in_iterations << " burn in iterations and "
+      << collect_iterations << " collect iterations.\n";
+  t.restart();
+  CategoricalDistribution bag_d = bn.sample(bag_v, burn_in_iterations,
+      collect_iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
+  cout << "Predictive bag distribution with sampling:" << bag_d << endl;
 }

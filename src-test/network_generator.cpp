@@ -74,12 +74,11 @@ namespace cpprob
         DiscreteJointRandomVariable(burglary, earthquake), 0.001);
     alarm_params.set(alarm.observation(false),
         DiscreteJointRandomVariable(burglary, earthquake), 0.999);
-    BayesianNetwork::iterator alarm_params_it = bn.add_constant(
-        alarm_params);
+    BayesianNetwork::iterator alarm_params_it = bn.add_constant(alarm_params);
     alarm_params_it->value_is_evidence(true);
 
-    BayesianNetwork::iterator alarm_it = bn.add_conditional_categorical(
-        alarm, list_of(burglary_it)(earthquake_it), alarm_params_it);
+    BayesianNetwork::iterator alarm_it = bn.add_conditional_categorical(alarm,
+        list_of(burglary_it)(earthquake_it), alarm_params_it);
 
     BooleanRandomVariable john_calls("JohnCalls", true);
     vertex_iterator john_calls_it = bn.add_conditional_categorical(john_calls,
@@ -111,7 +110,8 @@ namespace cpprob
   }
 
   BayesianNetwork
-  NetworkGenerator::gen_bag_net(float alpha, size_t lines_of_evidence)
+  NetworkGenerator::gen_bag_net(float alpha, bool fully_observed,
+      size_t lines_of_evidence)
   {
     const BayesianNetwork::VertexReferences no_condition;
     BayesianNetwork bn;
@@ -149,7 +149,8 @@ namespace cpprob
       BooleanRandomVariable bag_evidence("Bag", r->operator[]("Bag"));
       BayesianNetwork::iterator bag_evidence_v = bn.add_categorical(
           bag_evidence, bag_params_v);
-      bag_evidence_v->value_is_evidence(true);
+      if (fully_observed)
+        bag_evidence_v->value_is_evidence(true);
 
       for (CsvMapReader::NamedAttributes::iterator a = r->begin();
           a != r->end(); ++a)
@@ -157,9 +158,8 @@ namespace cpprob
         if (a->first != "Bag")
         {
           BooleanRandomVariable var(a->first, a->second);
-          BayesianNetwork::iterator vertex =
-              bn.add_conditional_categorical(var, list_of(bag_evidence_v),
-                  params_table[a->first]);
+          BayesianNetwork::iterator vertex = bn.add_conditional_categorical(var,
+              list_of(bag_evidence_v), params_table[a->first]);
           vertex->value_is_evidence(true);
         }
       }

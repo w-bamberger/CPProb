@@ -27,7 +27,7 @@ namespace cpprob
     gen_alarm_net();
 
     static BayesianNetwork
-    gen_bag_net(float alpha, size_t line_of_evidence =
+    gen_bag_net(float alpha, bool fully_observed, size_t line_of_evidence =
         std::numeric_limits<std::size_t>::max());
 
   };
