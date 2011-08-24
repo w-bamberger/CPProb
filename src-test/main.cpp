@@ -78,15 +78,17 @@ main(int argc, char **argv)
   ("collect-iterations",
       program_options::value<unsigned int>()->default_value(800),
       "number of iterations during which the samples are counted") //
-  ("with-debug-output",
-      program_options::value<bool>()->default_value(false)->zero_tokens(),
-      "print detailed information about the result of every step") //
+  ("data-file", program_options::value<string>(),
+      "CSV file with the data used for learning and inference") //
+  ("test-case",
+      program_options::value<TestCase>()->default_value(latent_bag_test),
+      "Choose what to test") //
   ("test-mode",
       program_options::value<bool>()->default_value(false)->zero_tokens(),
       "reduce the output so it fits for automated testing with texttest") //
-  ("test-case",
-      program_options::value<TestCase>()->default_value(latent_bag_test),
-      "Choose what to test");
+  ("with-debug-output",
+      program_options::value<bool>()->default_value(false)->zero_tokens(),
+      "print detailed information about the result of every step");
   program_options::store(
       program_options::parse_command_line(argc, argv, options_desc),
       options_map);
@@ -104,17 +106,27 @@ main(int argc, char **argv)
     break;
 
   case bag_test:
+    if (options_map.count("data-file") != 1)
+    {
+      cerr << "Please provide test data with the option --data-file." << endl;
+      return 1;
+    }
     test_bag_net();
     break;
 
   case latent_bag_test:
+    if (options_map.count("data-file") != 1)
+    {
+      cerr << "Please provide test data with the option --data-file." << endl;
+      return 1;
+    }
     test_latent_bag_net();
     break;
 
   default:
-    cpprob_throw_logic_error(
-        "Invalid test found: " << options_map["test-case"].as<TestCase> () << ".");
-    break;
+    cerr << "Invalid test found: " << options_map["test-case"].as<TestCase>()
+        << "." << endl;
+    return 1;
 
   }
 

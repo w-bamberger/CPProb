@@ -1,1 +1,1 @@
---test-mode --test-case bag-test
+--test-mode --test-case bag-test --data-file bag.csv

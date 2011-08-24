@@ -54,5 +54,5 @@ ProbabilitiesHoleBag:
 
 Extend the network for sampling
 Sample with 200 burn in iterations and 800 collect iterations.
-Predictive distribution of Flavor with sampling:       (Flavor:0,0.700179)  (Flavor:1,0.299821) 
+Predictive distribution of Flavor with sampling:      (Flavor:0,0.700179)  (Flavor:1,0.299821) 
 

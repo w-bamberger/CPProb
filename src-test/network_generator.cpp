@@ -10,11 +10,14 @@
 #include "../src-lib/boolean_random_variable.hpp"
 #include "../src-lib/discrete_joint_random_variable.hpp"
 #include <boost/assign.hpp>
+#include <boost/program_options.hpp>
 #include <boost/variant/get.hpp>
 
 using namespace boost;
 using namespace boost::assign;
 using namespace std;
+
+extern program_options::variables_map options_map;
 
 namespace cpprob
 {
@@ -138,7 +141,7 @@ namespace cpprob
         make_pair("Hole", bn.add_conditional_dirichlet(hole_params, alpha)));
 
     // Read the data from the file
-    CsvMapReader reader("bag.csv");
+    CsvMapReader reader(options_map["data-file"].as<string>());
     CsvMapReader::Records full_data = reader.read_rows();
 
     // Fill the data in the net
