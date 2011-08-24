@@ -8,3 +8,4 @@ filename_convention_scheme:standard
 full_name:CPProb
 
 link_test_path:bag/bag.csv
+link_test_path:latent-bag/latent-bag.csv

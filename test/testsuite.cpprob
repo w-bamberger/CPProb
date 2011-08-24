@@ -3,3 +3,7 @@ alarm
 
 # Testing MAP and ML learning and sampling in fully observed bag network.
 bag
+
+# Tests the bag network with algorithms for a latent variable. The
+# bag variable is considered as unobserved.
+latent-bag
