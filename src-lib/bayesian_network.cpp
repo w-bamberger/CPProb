@@ -622,7 +622,6 @@ namespace cpprob
     }
 
 // Sample the distribution
-    random_number_engine.seed(2);
     for (unsigned int iteration = 0; iteration < collect_iterations;
         iteration++)
         {
