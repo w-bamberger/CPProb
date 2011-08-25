@@ -73,10 +73,10 @@ main(int argc, char **argv)
   options_desc.add_options() //
   ("help", "show this help message") //
   ("burn-in-iterations",
-      program_options::value<unsigned int>()->default_value(200),
+      program_options::value<unsigned int>()->default_value(5),
       "number of iterations samples of which are not saved") //
   ("collect-iterations",
-      program_options::value<unsigned int>()->default_value(800),
+      program_options::value<unsigned int>()->default_value(500),
       "number of iterations during which the samples are counted") //
   ("data-file", program_options::value<string>(),
       "CSV file with the data used for learning and inference") //
@@ -185,7 +185,7 @@ test_alarm_net()
       unsigned int>();
   unsigned int collect_iterations = options_map["collect-iterations"].as<
       unsigned int>();
-  cout << "Sample with " << burn_in_iterations << " burn in iterations and "
+  cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
       << collect_iterations << " collect iterations.\n";
   t.restart();
   burglary_distribution = bn.sample(search_it, burn_in_iterations,
@@ -252,16 +252,14 @@ test_bag_net()
   put_out_probability_variables(cout, bn_ml_partial);
   cout << endl;
 
-  cout << "Extend the network for sampling\n";
+  cout << "Extend the network for prediction\n";
 
   BayesianNetwork::iterator bag_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
       BayesianNetwork::CompareVertexName("ProbabilitiesBag"));
-
   BooleanRandomVariable bag("Bag", true);
   BayesianNetwork::iterator bag_v = bn_map_full.add_categorical(bag,
       bag_params_v);
-  bag_v->value_is_evidence(true);
 
   BayesianNetwork::iterator hole_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
@@ -269,6 +267,7 @@ test_bag_net()
   BooleanRandomVariable hole("Hole", true);
   BayesianNetwork::iterator hole_v = bn_map_full.add_conditional_categorical(
       hole, list_of(bag_v), hole_params_v);
+  hole_v->value_is_evidence(true);
 
   BayesianNetwork::iterator wrapper_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
@@ -276,6 +275,7 @@ test_bag_net()
   BooleanRandomVariable wrapper("Wrapper", true);
   BayesianNetwork::iterator wrapper_v = bn_map_full.add_conditional_categorical(
       wrapper, list_of(bag_v), wrapper_params_v);
+  wrapper_v->value_is_evidence(true);
 
   BayesianNetwork::iterator flavor_params_v = find_if(bn_map_full.begin(),
       bn_map_full.end(),
@@ -291,7 +291,8 @@ test_bag_net()
       unsigned int>();
   unsigned int collect_iterations = options_map["collect-iterations"].as<
       unsigned int>();
-  cout << "Sample with " << burn_in_iterations << " burn in iterations and "
+  random_number_engine.seed(); // Reset in a well-defined state.
+  cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
       << collect_iterations << " collect iterations.\n";
   t.restart();
   CategoricalDistribution prediction = bn_map_full.sample(flavor_v,
@@ -299,8 +300,40 @@ test_bag_net()
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive distribution of " << prediction.begin()->first.name()
-      << " with sampling:" << prediction << endl;
+  cout << "Predictive distribution of with sampling:\n";
+  cout << prediction;
+  /*
+   * The counts in bag.csv are
+   *   C(F=0 | H=1, W=1):  79 (grep -e "false,true,true" bag.csv | wc)
+   *   C(F=1 | H=1, W=1): 272 (grep -e "true,true,true" bag.csv | wc)
+   *
+   * With prior parameters (5, 5) the counts are 84/277. This results in
+   * the probabilities 0.2327/0.7673.
+   */
+  cout << "Correct values (bag.csv):\n";
+  cout << "      (Flavor:0,0.2327)  (Flavor:1,0.7673)\n" << endl;
+
+  random_number_engine.seed(); // Reset in a well-defined state.
+  cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
+      << collect_iterations << " collect iterations.\n";
+  t.restart();
+  prediction = bn_map_full.sample(bag_v, burn_in_iterations,
+      collect_iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
+  cout << "Predictive distribution of with sampling:\n";
+  cout << prediction;
+  /*
+   * The counts in bag.csv are
+   *   C(B=0 | H=1, W=1): 302 (grep -e "false,.*,true,true" bag.csv | wc)
+   *   C(B=1 | H=1, W=1):  50 (grep -e "true,.*,true,true" bag.csv | wc)
+   *
+   * With prior parameters (5, 5) the counts are 307/55. This results in
+   * the probabilities 0.8481/0.1519.
+   */
+  cout << "Correct values (bag.csv):\n";
+  cout << "      (Bag:0,0.8481)  (Bag:1,0.1519)" << endl;
 }
 
 void
@@ -323,18 +356,94 @@ test_latent_bag_net()
 
   BooleanRandomVariable bag("Bag", true);
   BayesianNetwork::iterator bag_v = bn.add_categorical(bag, bag_params_v);
+  BayesianNetwork::iterator hole_params_v = find_if(bn.begin(), bn.end(),
+      BayesianNetwork::CompareVertexName("ProbabilitiesHoleBag"));
+  BooleanRandomVariable hole("Hole", true);
+  BayesianNetwork::iterator hole_v = bn.add_conditional_categorical(hole,
+      list_of(bag_v), hole_params_v);
+  hole_v->value_is_evidence(true);
+  BayesianNetwork::iterator wrapper_params_v = find_if(bn.begin(), bn.end(),
+      BayesianNetwork::CompareVertexName("ProbabilitiesWrapperBag"));
+  BooleanRandomVariable wrapper("Wrapper", true);
+  BayesianNetwork::iterator wrapper_v = bn.add_conditional_categorical(wrapper,
+      list_of(bag_v), wrapper_params_v);
+  wrapper_v->value_is_evidence(true);
+  BayesianNetwork::iterator flavor_params_v = find_if(bn.begin(), bn.end(),
+      BayesianNetwork::CompareVertexName("ProbabilitiesFlavorBag"));
+  BooleanRandomVariable flavor("Flavor", true);
+  BayesianNetwork::iterator flavor_v = bn.add_conditional_categorical(flavor,
+      list_of(bag_v), flavor_params_v);
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();
   unsigned int collect_iterations = options_map["collect-iterations"].as<
       unsigned int>();
-  cout << "Sample with " << burn_in_iterations << " burn in iterations and "
+  random_number_engine.seed(); // Reset in a well-defined state.
+  cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
       << collect_iterations << " collect iterations.\n";
   t.restart();
-  CategoricalDistribution bag_d = bn.sample(bag_v, burn_in_iterations,
+  CategoricalDistribution prediction = bn.sample(flavor_v, burn_in_iterations,
       collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive bag distribution with sampling:" << bag_d << endl;
+  cout << "Predictive distribution with sampling:\n";
+  cout << prediction << endl;
+  /*
+   * The counts in latent-bag.csv are
+   *   C(F=0 | H=1, W=1): 52 (grep -e "false,true,true" bag.csv | wc)
+   *   C(F=1 | H=1, W=1): 20 (grep -e "true,true,true" bag.csv | wc)
+   *
+   * With prior parameters (5, 5) the counts are 57/25. This results in
+   * the probabilities 0.6951/0.3049.
+   */
+  cout << "Correct values (latent-bag.csv):\n";
+  cout << "      (Flavor:0,0.6951)  (Flavor:1,0.3049)\n" << endl;
+
+  random_number_engine.seed(); // Reset in a well-defined state.
+  cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
+      << collect_iterations << " collect iterations.\n";
+  t.restart();
+  prediction = bn.sample(bag_v, burn_in_iterations, collect_iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+    cout << "Duration: " << duration << "\n";
+  cout << "Predictive distribution with sampling:\n";
+  cout << prediction << endl;
+  /*
+   * The counts in latent-bag.csv are
+   *   C(B=0 | H=1, W=1): 48 (grep -e "false,.*,true,true" bag.csv | wc)
+   *   C(B=1 | H=1, W=1): 24 (grep -e "true,.*,true,true" bag.csv | wc)
+   *
+   * With prior parameters (5, 5) the counts are 53/29. This results in
+   * the probabilities 0.6463/0.3537.
+   */
+  cout << "Correct values (latent-bag.csv):\n";
+  cout << "      (Bag:0,0.6463)  (Bag:1,0.3537)" << endl;
+
+//  for (int i = 1; i <= 10; ++i)
+//  {
+//    collect_iterations = i * 5000;
+//    cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
+//        << collect_iterations << " collect iterations.\n";
+//    t.restart();
+//    CategoricalDistribution prediction = bn.sample(flavor_v, burn_in_iterations,
+//        collect_iterations);
+//    duration = t.elapsed();
+//    cout << "Duration: " << duration << "\n";
+//    cout << "Predictive distribution with sampling:" << prediction << endl;
+//  }
+
+//  for (int i = 1; i < 5; ++i)
+//  {
+//    collect_iterations = 5000;
+//    cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
+//        << collect_iterations << " collect iterations.\n";
+//    t.restart();
+//    CategoricalDistribution prediction = bn.sample(flavor_v, burn_in_iterations,
+//        collect_iterations);
+//    duration = t.elapsed();
+//    cout << "Duration: " << duration << "\n";
+//    cout << "Predictive distribution with sampling:" << prediction << endl;
+//  }
 }

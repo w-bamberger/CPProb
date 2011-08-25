@@ -52,7 +52,15 @@ ProbabilitiesHoleBag:
       ((Bag:0 :,(Hole:0 1),(Hole:1 0)))
       ((Bag:1 :,(Hole:0 1),(Hole:1 0)))
 
-Extend the network for sampling
-Sample with 200 burn in iterations and 800 collect iterations.
-Predictive distribution of Flavor with sampling:      (Flavor:0,0.700179)  (Flavor:1,0.299821) 
+Extend the network for prediction
+Sample with 5 burn-in iterations and 500 collect iterations.
+Predictive distribution of with sampling:
+      (Flavor:0,0.24)  (Flavor:1,0.76) 
+Correct values (bag.csv):
+      (Flavor:0,0.2327)  (Flavor:1,0.7673)
 
+Sample with 5 burn-in iterations and 500 collect iterations.
+Predictive distribution of with sampling:
+      (Bag:0,0.894667)  (Bag:1,0.105333) 
+Correct values (bag.csv):
+      (Bag:0,0.8481)  (Bag:1,0.1519)
