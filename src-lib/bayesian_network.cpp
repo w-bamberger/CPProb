@@ -552,20 +552,22 @@ namespace cpprob
     }
     else
     {
-      float probability_sum = 0.0;
-      DiscreteRandomVariable& x =
-          dynamic_cast<DiscreteRandomVariable&>(current->random_variable());DiscreteRandomVariable
-      ::Range X_range = x.value_range();
+      DiscreteRandomVariable* x =
+          dynamic_cast<DiscreteRandomVariable*>(&current->random_variable());if (x == 0)
+          return enumerate_all(next, end);
 
-      for (x = X_range.begin(); x != X_range.end(); ++x)
-      {
-        conditional_probability = boost::apply_visitor(probability_visitor,
-            current->distribution());
-        probability_sum += conditional_probability * enumerate_all(next, end);
+          DiscreteRandomVariable::Range X_range = x->value_range();
+          double probability_sum = 0.0;
+
+          for (*x = X_range.begin(); *x != X_range.end(); ++(*x))
+          {
+            conditional_probability = boost::apply_visitor(probability_visitor,
+                current->distribution());
+            probability_sum += conditional_probability * enumerate_all(next, end);
+          }
+          return probability_sum;
+        }
       }
-      return probability_sum;
-    }
-  }
 
   CategoricalDistribution
   BayesianNetwork::sample(const iterator& X_it, unsigned int burn_in_iterations,
