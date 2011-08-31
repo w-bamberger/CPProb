@@ -18,8 +18,9 @@
 namespace cpprob
 {
 
-  class DiscreteRandomVariable;
   class DiscreteJointRandomVariable;
+  class DiscreteRandomReferences;
+  class DiscreteRandomVariable;
 
 }
 
@@ -43,6 +44,9 @@ namespace cpprob
   class DiscreteRandomVariable : public RandomVariable, public std::iterator<
       std::bidirectional_iterator_tag, DiscreteRandomVariable>
   {
+
+    friend class DiscreteJointRandomVariable;
+    friend class DiscreteRandomReferences;
 
   protected:
 
@@ -213,8 +217,6 @@ namespace cpprob
     }
 
   protected:
-
-    friend class DiscreteJointRandomVariable;
 
     struct Characteristics
     {

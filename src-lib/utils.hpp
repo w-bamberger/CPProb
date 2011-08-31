@@ -49,6 +49,20 @@ namespace cpprob
       return ChainFunctors<OuterOperator, InnerOperator>(outer_op, inner_op);
     }
 
+  template<class T>
+    class indirect_less : public std::binary_function<T*, T*, bool>
+    {
+
+    public:
+
+      bool
+      operator()(const T* const x, const T* const y) const
+      {
+        return *x < *y;
+      }
+
+    };
+
   template<typename _Iterator, typename _Tp>
     void
     normalizeSum(_Iterator begin, _Iterator end, _Tp targetSum)
