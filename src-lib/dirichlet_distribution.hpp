@@ -24,6 +24,12 @@ namespace cpprob
 
     DirichletDistribution(const RandomProbabilities& var, float alpha);
 
+    template<class Iterator>
+      DirichletDistribution(const Iterator& begin, const Iterator& end)
+          : parameters_(begin, end)
+      {
+      }
+
     ~DirichletDistribution();
 
     const Parameters&
