@@ -67,9 +67,8 @@ namespace cpprob
     {
       ConditionalProbabilityTable::const_iterator f = cpt_.find(condition);
       if (f == cpt_.end())
-        throw std::out_of_range(
-            "RandomConditionalProbabilities: Could not find condition "
-                + condition.name() + " in the probability table.");
+        cpprob_throw_out_of_range(
+            "RandomConditionalProbabilities: Could not find condition " << condition << " in the probability table.");
       return f->second;
     }
 
@@ -78,9 +77,8 @@ namespace cpprob
     {
       ConditionalProbabilityTable::iterator f = cpt_.find(condition);
       if (f == cpt_.end())
-        throw std::out_of_range(
-            "RandomConditionalProbabilities: Could not find condition "
-                + condition.name() + " in the probability table.");
+        cpprob_throw_out_of_range(
+            "RandomConditionalProbabilities: Could not find condition " << condition << " in the probability table.");
       return f->second;
     }
 
