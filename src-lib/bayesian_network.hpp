@@ -9,30 +9,14 @@
 #define BAYESIAN_NETWORK_HPP_
 
 #include "categorical_distribution.hpp"
-#include "conditional_categorical_distribution.hpp"
-#include "cond_dirichlet_distribution.hpp"
-#include "degenerate_distribution.hpp"
+#include "CategoricalNode.hpp"
+#include "ConditionalCategoricalNode.hpp"
+#include "ConditionalDirichletNode.hpp"
+#include "ConstantNode.hpp"
+#include "DirichletNode.hpp"
+#include "NodeUtils.hpp"
+#include <boost/variant/get.hpp>
 #include <boost/variant/variant.hpp>
-
-#ifdef VANET_DEBUG_MODE
-#include <debug/list>
-namespace cpprob
-{
-  namespace cont
-  {
-    using namespace __gnu_debug;
-  }
-}
-#else
-#include <list>
-namespace cpprob
-{
-  namespace cont
-  {
-    using namespace std;
-  }
-}
-#endif
 
 namespace cpprob
 {
@@ -42,157 +26,101 @@ namespace cpprob
 
   public:
 
-    class Vertex;
-    typedef cont::list<Vertex> VertexList;
-    typedef VertexList::iterator iterator;
-    typedef VertexList::const_iterator const_iterator;
-    typedef cont::list<iterator> VertexReferences;
+    typedef boost::variant<CategoricalNode, ConditionalCategoricalNode,
+        ConditionalDirichletNode, ConstantNode<DiscreteRandomVariable>,
+        ConstantNode<RandomConditionalProbabilities>,
+        ConstantNode<RandomProbabilities>, DirichletNode> Node;
 
-    class Vertex
-    {
+  private:
 
-    public:
+    typedef cont::list<Node> NodeList;
 
-      typedef BayesianNetwork::VertexReferences VertexReferences;
-      typedef boost::variant< //
-          CategoricalDistribution, //
-          ConditionalCategoricalDistribution, //
-          CondDirichletDistribution, //
-          DegenerateDistribution, //
-          DirichletDistribution> //
-      DistributionVariant;
+  public:
 
-      DistributionVariant&
-      distribution()
-      {
-        return distribution_;
-      }
-
-      const DistributionVariant&
-      distribution() const
-      {
-        return distribution_;
-      }
-
-      RandomVariable&
-      random_variable()
-      {
-        return random_variable_;
-      }
-
-      const RandomVariable&
-      random_variable() const
-      {
-        return random_variable_;
-      }
-
-      bool
-      value_is_evidence() const
-      {
-        return value_is_evidence_;
-      }
-
-      void
-      value_is_evidence(bool e)
-      {
-        value_is_evidence_ = e;
-      }
-
-      VertexReferences&
-      children()
-      {
-        return children_;
-      }
-
-      const VertexReferences&
-      children() const
-      {
-        return children_;
-      }
-
-      VertexReferences&
-      parents()
-      {
-        return parents_;
-      }
-
-      const VertexReferences&
-      parents() const
-      {
-        return parents_;
-      }
-
-    private:
-
-      friend class BayesianNetwork;
-
-      DistributionVariant distribution_;
-      RandomVariable& random_variable_;
-      bool value_is_evidence_;
-
-      VertexReferences children_;
-      VertexReferences parents_;
-
-      Vertex(RandomVariable& var, const DistributionVariant& distribution) :
-          distribution_(distribution), random_variable_(var), value_is_evidence_(
-              false)
-
-      {
-      }
-
-    };
-
-    class NameOfVertex;
-    class CompareVertexName;
-
-    friend std::ostream&
-    operator<<(std::ostream& os, const BayesianNetwork& hbn);
+    typedef NodeList::iterator iterator;
+    typedef NodeList::const_iterator const_iterator;
 
     BayesianNetwork();
 
-    /// @todo Copying does not work correctly yet.
     BayesianNetwork(const BayesianNetwork& other_hbn);
 
     ~BayesianNetwork();
 
-    iterator
-    add_categorical(const DiscreteRandomVariable& var);
+    CategoricalNode&
+    add_categorical(const DiscreteRandomVariable& value);
 
-    iterator
-    add_categorical(const DiscreteRandomVariable& var, iterator params_vertex);
+    template<class N>
+      CategoricalNode&
+      add_categorical(const DiscreteRandomVariable& value, N& parameter_node)
+      {
+        CategoricalNode& new_node = insert_categorical(value,
+            parameter_node.value());
+        parameter_node.add_child(new_node);
+        return new_node;
+      }
 
-    iterator
-    add_conditional_categorical(const DiscreteRandomVariable& var,
-        const VertexReferences& parents);
+    ConditionalCategoricalNode&
+    add_conditional_categorical(const DiscreteRandomVariable& value,
+        const cont::list<DiscreteNode*>& condition_nodes);
 
-    iterator
-    add_conditional_categorical(const DiscreteRandomVariable& var,
-        const VertexReferences& parents, iterator params_vertex);
+    template<class N>
+      ConditionalCategoricalNode&
+      add_conditional_categorical(const DiscreteRandomVariable& value,
+          const cont::list<DiscreteNode*>& condition_nodes, N& parameter_node)
+      {
+        DiscreteRandomReferences condition;
+        cont::list<DiscreteNode*>::const_iterator n = condition_nodes.begin();
+        for (; n != condition_nodes.end(); ++n)
+          condition.insert((*n)->value());
 
-    iterator
-    add_conditional_dirichlet(const RandomConditionalProbabilities& var,
+        ConditionalCategoricalNode& new_node = insert_conditional_categorical(
+            value, condition, parameter_node.value());
+
+        parameter_node.add_child(new_node);
+        for (n = condition_nodes.begin(); n != condition_nodes.end(); ++n)
+          (*n)->add_child(new_node);
+
+        return new_node;
+      }
+
+    ConditionalDirichletNode&
+    add_conditional_dirichlet(const RandomConditionalProbabilities& value,
         float alpha);
 
-    iterator
-    add_constant(const RandomConditionalProbabilities& var);
+    template<class V>
+      ConstantNode<V>&
+      add_constant(const V& value)
+      {
+        iterator new_node = vertices_.insert(end(), ConstantNode<V>(value));
+        return boost::get<ConstantNode<V> >(*new_node);
+      }
+
+    DirichletNode&
+    add_dirichlet(const RandomProbabilities& value, float alpha);
 
     iterator
-    add_constant(const RandomProbabilities& var);
-
-    iterator
-    add_dirichlet(const RandomProbabilities& var, float alpha);
-
-    iterator
-    begin();
+    begin()
+    {
+      return vertices_.begin();
+    }
 
     const_iterator
-    begin() const;
+    begin() const
+    {
+      return vertices_.begin();
+    }
 
     iterator
-    end();
+    end()
+    {
+      return vertices_.end();
+    }
 
     const_iterator
-    end() const;
+    end() const
+    {
+      return vertices_.end();
+    }
 
     /**
      * Computes the probability distribution of the given vertex by enumeration.
@@ -226,10 +154,32 @@ namespace cpprob
      * @throw std::bad_alloc Failed to allocate temporary memory.
      */
     CategoricalDistribution
-    enumerate(iterator X_v);
+    enumerate(CategoricalNode& X_n);
 
     CategoricalDistribution
-    sample(const iterator& X_it, unsigned int burn_in_iterations,
+    enumerate(ConditionalCategoricalNode& X_n);
+
+    template<class N>
+      N&
+      find(const std::string& name)
+      {
+        return boost::get<N>(
+            *std::find_if(begin(), end(), make_delayed_compare_node_name(name)));
+      }
+
+    template<class N>
+      const N&
+      find(const std::string& name) const
+      {
+        return boost::get<N>(
+            *std::find_if(begin(), end(), make_delayed_compare_node_name(name)));
+      }
+
+    friend std::ostream&
+    operator<<(std::ostream& os, const BayesianNetwork& hbn);
+
+    CategoricalDistribution
+    sample(const DiscreteNode& X, unsigned int burn_in_iterations,
         unsigned int collect_iterations);
 
     /**
@@ -275,13 +225,10 @@ namespace cpprob
 
   private:
 
-    class CategoricalMarkovBlanket;
-    class ConditionalDirichletMarkovBlanket;
-    class DirichletMarkovBlanket;
-    class MarkovBlanket;
-    class ProbabilityVisitor;
+    class CopyNode;
+    class LearnParameters;
 
-    VertexList vertices_;
+    NodeList vertices_;
 
     /**
      * Computes recursively the joint probability of the network defined by
@@ -300,63 +247,18 @@ namespace cpprob
     float
     enumerate_all(iterator current, iterator end);
 
-    /**
-     * Learns a parameter vertex of type RandomProbabilities. This is a helper
-     * function of #learn().
-     *
-     * @param v the parameter vertex to learn
-     * @throw Any #learn() catches all exceptions and maps them appropriately
-     *     for its interface.
-     */
     void
-    learn_probabilities(iterator v);
+    enumerate_impl(CategoricalDistribution& X_distribution,
+        DiscreteRandomVariable& x);
 
-    /**
-     * Learns a parameter vertex of type RandomConditionalProbabilities. This is
-     * a helper function of #learn().
-     *
-     * @param v the parameter vertex to learn
-     * @throw Any #learn() catches all exceptions and maps them appropriately
-     *     for its interface.
-     */
-    void
-    learn_conditional_probabilities(iterator v);
-  };
+    CategoricalNode&
+    insert_categorical(const DiscreteRandomVariable& value,
+        RandomProbabilities& parameters);
 
-  class BayesianNetwork::NameOfVertex : public std::unary_function<
-      const BayesianNetwork::Vertex&, std::string&>
-  {
-
-  public:
-
-    const std::string&
-    operator()(const BayesianNetwork::Vertex& vertex) const
-    {
-      return vertex.random_variable().name();
-    }
-
-  };
-
-  class BayesianNetwork::CompareVertexName : public std::unary_function<bool,
-      Vertex>
-  {
-
-  public:
-
-    CompareVertexName(const std::string& name) :
-        name_(name)
-    {
-    }
-
-    bool
-    operator()(const Vertex& vertex)
-    {
-      return name_ == vertex.random_variable_.name();
-    }
-
-  private:
-
-    std::string name_;
+    ConditionalCategoricalNode&
+    insert_conditional_categorical(const DiscreteRandomVariable& value,
+        const DiscreteRandomReferences& condition_nodes,
+        RandomConditionalProbabilities& parameters);
 
   };
 

@@ -52,9 +52,6 @@ operator>>(std::istream& is, TestCase& tc)
 
 program_options::variables_map options_map;
 
-ostream&
-put_out_probability_variables(ostream& os, BayesianNetwork& bn);
-
 void
 test_alarm_net();
 
@@ -133,25 +130,41 @@ main(int argc, char **argv)
   return 0;
 }
 
-ostream&
-put_out_probability_variables(ostream& os, BayesianNetwork& bn)
+class PutOutParameters : public static_visitor<>
 {
-  for (BayesianNetwork::const_iterator v = bn.begin(); v != bn.end(); ++v)
+
+public:
+
+  PutOutParameters(ostream& os)
+      : os_(os)
   {
-    if (!v->value_is_evidence())
-    {
-      if (const RandomProbabilities* ps = dynamic_cast<const RandomProbabilities*>(&v->random_variable()))
-      {
-        os << *ps << "\n";
-      }
-      else if (const RandomConditionalProbabilities* cps = dynamic_cast<const RandomConditionalProbabilities*>(&v->random_variable()))
-      {
-        os << *cps << "\n";
-      }
-    }
   }
-  return os;
-}
+
+  void
+  operator()(const ConditionalDirichletNode& node)
+  {
+    if (!node.is_evidence())
+      os_ << node.value() << "\n";
+  }
+
+  void
+  operator()(const DirichletNode& node)
+  {
+    if (!node.is_evidence())
+      os_ << node.value() << "\n";
+  }
+
+  template<class N>
+    void
+    operator()(const N& node)
+    {
+    }
+
+private:
+
+  ostream& os_;
+
+};
 
 void
 test_alarm_net()
@@ -166,20 +179,17 @@ test_alarm_net()
   if (options_map["with-debug-output"].as<bool>())
     cout << bn << endl;
 
-  BayesianNetwork::iterator search_it = find_if(bn.begin(), bn.end(),
-      BayesianNetwork::CompareVertexName("Burglary"));
+  CategoricalNode& burglary_node = bn.find<CategoricalNode>("Burglary");
 
   cout << "Enumerate\n";
   t.restart();
-  CategoricalDistribution burglary_distribution = bn.enumerate(search_it);
+  CategoricalDistribution burglary_distribution = bn.enumerate(burglary_node);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
   cout << "Burglary distribution with enumeration:\n";
   cout << burglary_distribution;
   cout << endl;
-
-  search_it->value_is_evidence(false);
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();
@@ -188,7 +198,7 @@ test_alarm_net()
   cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
       << collect_iterations << " collect iterations.\n";
   t.restart();
-  burglary_distribution = bn.sample(search_it, burn_in_iterations,
+  burglary_distribution = bn.sample(burglary_node, burn_in_iterations,
       collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
@@ -219,7 +229,8 @@ test_bag_net()
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  put_out_probability_variables(cout, bn_map_full);
+  for_each(bn_map_full.begin(), bn_map_full.end(),
+      make_apply_visitor_delayed(PutOutParameters(cout)));
   cout << endl;
 
   cout << "Learn ML on full data\n";
@@ -229,7 +240,8 @@ test_bag_net()
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  put_out_probability_variables(cout, bn_ml_full);
+  for_each(bn_ml_full.begin(), bn_ml_full.end(),
+      make_apply_visitor_delayed(PutOutParameters(cout)));
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
@@ -239,7 +251,8 @@ test_bag_net()
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  put_out_probability_variables(cout, bn_map_partial);
+  for_each(bn_map_partial.begin(), bn_map_partial.end(),
+      make_apply_visitor_delayed(PutOutParameters(cout)));
   cout << endl;
 
   cout << "Learn ML on partial data\n";
@@ -249,40 +262,38 @@ test_bag_net()
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  put_out_probability_variables(cout, bn_ml_partial);
+  for_each(bn_ml_partial.begin(), bn_ml_partial.end(),
+      make_apply_visitor_delayed(PutOutParameters(cout)));
   cout << endl;
 
   cout << "Extend the network for prediction\n";
 
-  BayesianNetwork::iterator bag_params_v = find_if(bn_map_full.begin(),
-      bn_map_full.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesBag"));
+  DirichletNode& bag_params_v = bn_map_full.find<DirichletNode>(
+      "ProbabilitiesBag");
   BooleanRandomVariable bag("Bag", true);
-  BayesianNetwork::iterator bag_v = bn_map_full.add_categorical(bag,
-      bag_params_v);
+  CategoricalNode& bag_v = bn_map_full.add_categorical(bag, bag_params_v);
 
-  BayesianNetwork::iterator hole_params_v = find_if(bn_map_full.begin(),
-      bn_map_full.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesHoleBag"));
+  ConditionalDirichletNode& hole_params_v = bn_map_full.find<
+      ConditionalDirichletNode>("ProbabilitiesHoleBag");
   BooleanRandomVariable hole("Hole", true);
-  BayesianNetwork::iterator hole_v = bn_map_full.add_conditional_categorical(
-      hole, list_of(bag_v), hole_params_v);
-  hole_v->value_is_evidence(true);
+  ConditionalCategoricalNode& hole_v = bn_map_full.add_conditional_categorical(
+      hole, list_of(&bag_v), hole_params_v);
+  hole_v.is_evidence(true);
 
-  BayesianNetwork::iterator wrapper_params_v = find_if(bn_map_full.begin(),
-      bn_map_full.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesWrapperBag"));
+  ConditionalDirichletNode& wrapper_params_v = bn_map_full.find<
+      ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   BooleanRandomVariable wrapper("Wrapper", true);
-  BayesianNetwork::iterator wrapper_v = bn_map_full.add_conditional_categorical(
-      wrapper, list_of(bag_v), wrapper_params_v);
-  wrapper_v->value_is_evidence(true);
+  ConditionalCategoricalNode& wrapper_v =
+      bn_map_full.add_conditional_categorical(wrapper, list_of(&bag_v),
+          wrapper_params_v);
+  wrapper_v.is_evidence(true);
 
-  BayesianNetwork::iterator flavor_params_v = find_if(bn_map_full.begin(),
-      bn_map_full.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesFlavorBag"));
+  ConditionalDirichletNode& flavor_params_v = bn_map_full.find<
+      ConditionalDirichletNode>("ProbabilitiesFlavorBag");
   BooleanRandomVariable flavor("Flavor", true);
-  BayesianNetwork::iterator flavor_v = bn_map_full.add_conditional_categorical(
-      flavor, list_of(bag_v), flavor_params_v);
+  ConditionalCategoricalNode& flavor_v =
+      bn_map_full.add_conditional_categorical(flavor, list_of(&bag_v),
+          flavor_params_v);
 
   if (options_map["with-debug-output"].as<bool>())
     cout << bn_map_full << endl;
@@ -300,7 +311,7 @@ test_bag_net()
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive distribution of with sampling:\n";
+  cout << "Predictive distribution with sampling:\n";
   cout << prediction;
   /*
    * The counts in bag.csv are
@@ -322,7 +333,7 @@ test_bag_net()
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive distribution of with sampling:\n";
+  cout << "Predictive distribution with sampling:\n";
   cout << prediction;
   /*
    * The counts in bag.csv are
@@ -351,28 +362,29 @@ test_latent_bag_net()
   if (options_map["with-debug-output"].as<bool>())
     cout << bn << endl;
 
-  BayesianNetwork::iterator bag_params_v = find_if(bn.begin(), bn.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesBag"));
-
+  DirichletNode& bag_params_v = bn.find<DirichletNode>("ProbabilitiesBag");
   BooleanRandomVariable bag("Bag", true);
-  BayesianNetwork::iterator bag_v = bn.add_categorical(bag, bag_params_v);
-  BayesianNetwork::iterator hole_params_v = find_if(bn.begin(), bn.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesHoleBag"));
+  CategoricalNode& bag_v = bn.add_categorical(bag, bag_params_v);
+
+  ConditionalDirichletNode& hole_params_v = bn.find<ConditionalDirichletNode>(
+      "ProbabilitiesHoleBag");
   BooleanRandomVariable hole("Hole", true);
-  BayesianNetwork::iterator hole_v = bn.add_conditional_categorical(hole,
-      list_of(bag_v), hole_params_v);
-  hole_v->value_is_evidence(true);
-  BayesianNetwork::iterator wrapper_params_v = find_if(bn.begin(), bn.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesWrapperBag"));
+  ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
+      list_of(&bag_v), hole_params_v);
+  hole_v.is_evidence(true);
+
+  ConditionalDirichletNode& wrapper_params_v =
+      bn.find<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   BooleanRandomVariable wrapper("Wrapper", true);
-  BayesianNetwork::iterator wrapper_v = bn.add_conditional_categorical(wrapper,
-      list_of(bag_v), wrapper_params_v);
-  wrapper_v->value_is_evidence(true);
-  BayesianNetwork::iterator flavor_params_v = find_if(bn.begin(), bn.end(),
-      BayesianNetwork::CompareVertexName("ProbabilitiesFlavorBag"));
+  ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
+      wrapper, list_of(&bag_v), wrapper_params_v);
+  wrapper_v.is_evidence(true);
+
+  ConditionalDirichletNode& flavor_params_v = bn.find<ConditionalDirichletNode>(
+      "ProbabilitiesFlavorBag");
   BooleanRandomVariable flavor("Flavor", true);
-  BayesianNetwork::iterator flavor_v = bn.add_conditional_categorical(flavor,
-      list_of(bag_v), flavor_params_v);
+  ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
+      list_of(&bag_v), flavor_params_v);
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();
