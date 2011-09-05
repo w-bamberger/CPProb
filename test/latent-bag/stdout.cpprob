@@ -3,14 +3,14 @@ CSV header: Bag Flavor Wrapper Hole
 
 Sample with 5 burn-in iterations and 500 collect iterations.
 Predictive distribution with sampling:
-      (Flavor:0,0.718)  (Flavor:1,0.282) 
+      (Flavor:0,0.7)  (Flavor:1,0.3) 
 
 Correct values (latent-bag.csv):
       (Flavor:0,0.6951)  (Flavor:1,0.3049)
 
 Sample with 5 burn-in iterations and 500 collect iterations.
 Predictive distribution with sampling:
-      (Bag:0,0.482)  (Bag:1,0.518) 
+      (Bag:0,0.518)  (Bag:1,0.482) 
 
 Correct values (latent-bag.csv):
       (Bag:0,0.6463)  (Bag:1,0.3537)

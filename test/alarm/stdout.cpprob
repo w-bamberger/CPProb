@@ -5,5 +5,5 @@ Burglary distribution with enumeration:
 
 Sample with 5 burn-in iterations and 500 collect iterations.
 Burglary distribution with Gibbs sampling:
-      (Burglary:0,0.766)  (Burglary:1,0.234) 
+      (Burglary:0,0.7658)  (Burglary:1,0.2342) 
 
