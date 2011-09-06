@@ -8,14 +8,13 @@
 #ifndef CATEGORICAL_DISTRIBUTION_HPP_
 #define CATEGORICAL_DISTRIBUTION_HPP_
 
-#include "bound_probability_distribution.hpp"
 #include "discrete_random_variable.hpp"
 #include "random_probabilities.hpp"
 
 namespace cpprob
 {
 
-  class CategoricalDistribution : public BoundProbabilityDistribution
+  class CategoricalDistribution
   {
 
     typedef RandomProbabilities ProbabilityTable;
@@ -127,11 +126,6 @@ namespace cpprob
     pt_.set(var, probability);
   }
 
-protected:
-
-  virtual std::ostream&
-  put_out(std::ostream& os) const;
-
 private:
 
   bool is_pt_self_allocated;
@@ -142,6 +136,9 @@ private:
   make_parameters_from_other_cd(const CategoricalDistribution& cd);
 
   };
+
+  std::ostream&
+  operator<<(std::ostream& os, const CategoricalDistribution& d);
 
 }
 

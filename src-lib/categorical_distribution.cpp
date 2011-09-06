@@ -10,26 +10,38 @@
 namespace cpprob
 {
 
-  CategoricalDistribution::CategoricalDistribution() :
-      is_pt_self_allocated(true), pt_(*new RandomProbabilities()), var_(0)
+  std::ostream&
+  operator<<(std::ostream& os, const CategoricalDistribution& d)
+  {
+    os << "     ";
+    for (CategoricalDistribution::const_iterator p = d.begin(); p != d.end();
+        ++p)
+      os << " (" << p->first << "," << p->second << ") ";
+    os << "\n";
+    return os;
+  }
+
+  CategoricalDistribution::CategoricalDistribution()
+      : is_pt_self_allocated(true), pt_(*new RandomProbabilities()), var_(0)
   {
   }
 
   CategoricalDistribution::CategoricalDistribution(
-      const CategoricalDistribution& cd) :
-      is_pt_self_allocated(cd.is_pt_self_allocated), pt_(
+      const CategoricalDistribution& cd)
+      : is_pt_self_allocated(cd.is_pt_self_allocated), pt_(
           make_parameters_from_other_cd(cd)), var_(cd.var_)
   {
   }
 
-  CategoricalDistribution::CategoricalDistribution(DiscreteRandomVariable& var) :
-      is_pt_self_allocated(true), pt_(*new RandomProbabilities(var)), var_(&var)
+  CategoricalDistribution::CategoricalDistribution(DiscreteRandomVariable& var)
+      : is_pt_self_allocated(true), pt_(*new RandomProbabilities(var)), var_(
+          &var)
   {
   }
 
   CategoricalDistribution::CategoricalDistribution(DiscreteRandomVariable& var,
-      RandomProbabilities& params) :
-      is_pt_self_allocated(false), pt_(params), var_(&var)
+      RandomProbabilities& params)
+      : is_pt_self_allocated(false), pt_(params), var_(&var)
   {
   }
 
@@ -57,16 +69,6 @@ namespace cpprob
       return *new RandomProbabilities(cd.pt_);
     else
       return cd.pt_;
-  }
-
-  std::ostream&
-  CategoricalDistribution::put_out(std::ostream& os) const
-  {
-    os << "     ";
-    for (const_iterator p = pt_.begin(); p != pt_.end(); ++p)
-      os << " (" << p->first << "," << p->second << ") ";
-    os << "\n";
-    return os;
   }
 
   std::ostream&
