@@ -1,12 +1,12 @@
 /*
- * random_probabilities.cpp
+ * RandomProbabilities.cpp
  *
  *  Created on: 26.07.2011
  *      Author: wbam
  */
 
-#include "random_probabilities.hpp"
-#include "io_utils.hpp"
+#include "RandomProbabilities.hpp"
+#include "IoUtils.hpp"
 #include <algorithm>
 
 using namespace std;

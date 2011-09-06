@@ -29,7 +29,7 @@
 #define DIRICHLETNODE_HPP_
 
 #include "CategoricalNode.hpp"
-#include "random_probabilities.hpp"
+#include "RandomProbabilities.hpp"
 
 #ifdef VANET_DEBUG_MODE
 #include <debug/list>

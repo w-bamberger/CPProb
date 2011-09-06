@@ -1,14 +1,14 @@
 /*
- * network_generator.cpp
+ * NetworkGenerator.cpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#include "network_generator.hpp"
-#include "csv_map_reader.hpp"
+#include "NetworkGenerator.hpp"
+#include "CsvMapReader.hpp"
 #include "../src-lib/RandomBoolean.hpp"
-#include "../src-lib/discrete_joint_random_variable.hpp"
+#include "../src-lib/DiscreteJointRandomVariable.hpp"
 #include <boost/assign.hpp>
 #include <boost/program_options.hpp>
 #include <boost/variant/get.hpp>

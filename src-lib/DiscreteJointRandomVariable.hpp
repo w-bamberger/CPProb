@@ -1,14 +1,14 @@
 /*
- * joint_random_variable.hpp
+ * DiscreteJointRandomVariabe.hpp
  *
  *  Created on: 24.05.2011
  *      Author: wbam
  */
 
-#ifndef DISCRETE_JOINT_RANDOM_VARIABLE_HPP_
-#define DISCRETE_JOINT_RANDOM_VARIABLE_HPP_
+#ifndef DISCRETEJOINTRANDOMVARIABLE_HPP_
+#define DISCRETEJOINTRANDOMVARIABLE_HPP_
 
-#include "discrete_random_variable.hpp"
+#include "DiscreteRandomVariable.hpp"
 #include <set>
 
 namespace cpprob

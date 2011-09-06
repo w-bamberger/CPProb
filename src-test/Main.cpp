@@ -5,10 +5,9 @@
  *      Author: wbam
  */
 
-#include "network_generator.hpp"
+#include "NetworkGenerator.hpp"
 #include "../src-lib/RandomBoolean.hpp"
-#include "../src-lib/discrete_joint_random_variable.hpp"
-#include "../src-lib/io_utils.hpp"
+#include "../src-lib/IoUtils.hpp"
 #include "../src-lib/Utils.hpp"
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>

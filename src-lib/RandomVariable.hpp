@@ -25,10 +25,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RANDOM_VARIABLE_HPP_
-#define RANDOM_VARIABLE_HPP_
+#ifndef RANDOMVARIABLE_HPP_
+#define RANDOMVARIABLE_HPP_
 
-#include "random_number_engine.hpp"
+#include "RandomNumberEngine.hpp"
 #include <iosfwd>
 #include <string>
 
@@ -69,7 +69,7 @@ namespace cpprob
      * in the standard TR1 header @em random. They are uniform pseudo-random
      * number generators. From these engine, non-uniform number generators can
      * be derived. Here the engine must be of the type defined in the project
-     * header random_number_engine.h. It is best to use the global variable
+     * header RandomNumberEngine.h. It is best to use the global variable
      * cpprob::random_number_engine. In the future, this argument will
      * be removed.
      *
@@ -139,4 +139,4 @@ namespace cpprob
 
 }
 
-#endif /* RANDOM_VARIABLE_HPP_ */
+#endif /* RANDOMVARIABLE_HPP_ */

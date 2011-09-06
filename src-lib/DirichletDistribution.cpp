@@ -1,12 +1,12 @@
 /*
- * dirichlet_distribution.cpp
+ * DirichletDistribution.cpp
  *
  *  Created on: 22.07.2011
  *      Author: wbam
  */
 
-#include "dirichlet_distribution.hpp"
-#include "io_utils.hpp"
+#include "DirichletDistribution.hpp"
+#include "IoUtils.hpp"
 #include <algorithm>
 
 using namespace std;

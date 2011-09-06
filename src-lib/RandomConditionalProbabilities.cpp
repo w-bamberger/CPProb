@@ -5,8 +5,8 @@
  *      Author: wbam
  */
 
-#include "random_conditional_probabilities.hpp"
-#include "io_utils.hpp"
+#include "RandomConditionalProbabilities.hpp"
+#include "IoUtils.hpp"
 #include <tr1/random>
 #include <tr1/tuple>
 #include <algorithm>

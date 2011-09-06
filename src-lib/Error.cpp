@@ -1,11 +1,11 @@
 /*
- * error.cpp
+ * Error.cpp
  *
  *  Created on: 28.07.2011
  *      Author: wbam
  */
 
-#include "error.hpp"
+#include "Error.hpp"
 #include <cstdlib>
 #include <iostream>
 

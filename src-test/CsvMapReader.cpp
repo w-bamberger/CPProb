@@ -1,12 +1,12 @@
 /*
- * csv_map_reader.cpp
+ * CsvMapReader.cpp
  *
  *  Created on: 06.06.2011
  *      Author: wbam
  */
 
-#include "csv_map_reader.hpp"
-#include "../src-lib/error.hpp"
+#include "CsvMapReader.hpp"
+#include "../src-lib/Error.hpp"
 #include <boost/tokenizer.hpp>
 #include <iostream>
 

@@ -5,8 +5,8 @@
  *      Author: wbam
  */
 
-#ifndef IO_UTILS_HPP_
-#define IO_UTILS_HPP_
+#ifndef IOUTILS_HPP_
+#define IOUTILS_HPP_
 
 #include <ostream>
 
@@ -49,4 +49,4 @@ namespace cpprob
 
 }
 
-#endif /* IO_UTILS_HPP_ */
+#endif /* IOUTILS_HPP_ */

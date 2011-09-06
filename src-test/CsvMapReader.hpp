@@ -1,12 +1,12 @@
 /*
- * csv_map_reader.hpp
+ * CsvMapReader.hpp
  *
  *  Created on: 06.06.2011
  *      Author: wbam
  */
 
-#ifndef CSV_MAP_READER_HPP_
-#define CSV_MAP_READER_HPP_
+#ifndef CSVMAPREADER_HPP_
+#define CSVMAPREADER_HPP_
 
 #include <fstream>
 #include <map>
@@ -39,4 +39,4 @@ namespace cpprob
 
 }
 
-#endif /* CSV_MAP_READER_HPP_ */
+#endif /* CSVMAPREADER_HPP_ */

@@ -1,14 +1,14 @@
 /*
- * network_generator.hpp
+ * NetworkGenerator.hpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#ifndef NETWORK_GENERATOR_HPP_
-#define NETWORK_GENERATOR_HPP_
+#ifndef NETWORKGENERATOR_HPP_
+#define NETWORKGENERATOR_HPP_
 
-#include "../src-lib/bayesian_network.hpp"
+#include "../src-lib/BayesianNetwork.hpp"
 #include <numeric>
 
 namespace cpprob
@@ -34,4 +34,4 @@ namespace cpprob
 
 }
 
-#endif /* NETWORK_GENERATOR_HPP_ */
+#endif /* NETWORKGENERATOR_HPP_ */

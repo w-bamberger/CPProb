@@ -29,7 +29,7 @@
 #define CATEGORICALNODE_HPP_
 
 #include "DiscreteNode.hpp"
-#include "random_probabilities.hpp"
+#include "RandomProbabilities.hpp"
 
 namespace cpprob
 {

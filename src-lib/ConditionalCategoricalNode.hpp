@@ -31,7 +31,7 @@
 
 #include "DiscreteNode.hpp"
 #include "DiscreteRandomReferences.hpp"
-#include "random_conditional_probabilities.hpp"
+#include "RandomConditionalProbabilities.hpp"
 
 namespace cpprob
 {

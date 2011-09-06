@@ -1,12 +1,12 @@
 /*
- * joint_random_variable.cpp
+ * DiscreteJointRandomVariable.cpp
  *
  *  Created on: 27.05.2011
  *      Author: wbam
  */
 
-#include "discrete_joint_random_variable.hpp"
-#include "io_utils.hpp"
+#include "DiscreteJointRandomVariable.hpp"
+#include "IoUtils.hpp"
 #include <tr1/tuple>
 #include <algorithm>
 #include <iostream>

@@ -1,14 +1,14 @@
 /*
- * random_probability.hpp
+ * RandomConditionalProbabilities.hpp
  *
  *  Created on: 08.07.2011
  *      Author: wbam
  */
 
-#ifndef RANDOM_PROBABILITY_HPP_
-#define RANDOM_PROBABILITY_HPP_
+#ifndef RANDOMCONDITIONALPROBABILITIES_HPP_
+#define RANDOMCONDITIONALPROBABILITIES_HPP_
 
-#include "random_probabilities.hpp"
+#include "RandomProbabilities.hpp"
 
 namespace cpprob
 {
@@ -155,4 +155,4 @@ namespace cpprob
 
 }
 
-#endif /* RANDOM_PROBABILITY_HPP_ */
+#endif /* RANDOMCONDITIONALPROBABILITIES_HPP_ */

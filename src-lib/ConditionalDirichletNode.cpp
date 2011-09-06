@@ -7,7 +7,7 @@
 
 #include "ConditionalDirichletNode.hpp"
 #include "ConditionalCategoricalNode.hpp"
-#include "dirichlet_distribution.hpp"
+#include "DirichletDistribution.hpp"
 
 using namespace std;
 using namespace std::tr1;

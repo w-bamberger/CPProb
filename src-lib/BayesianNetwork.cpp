@@ -1,13 +1,13 @@
 /*
- * bayesian_network.cpp
+ * BayesianNetwork.cpp
  *
  *  Created on: 07.07.2011
  *      Author: wbam
  */
 
-#include "bayesian_network.hpp"
-#include "error.hpp"
-#include "io_utils.hpp"
+#include "BayesianNetwork.hpp"
+#include "Error.hpp"
+#include "IoUtils.hpp"
 #include "NodeUtils.hpp"
 #include <tr1/tuple>
 #include <algorithm>

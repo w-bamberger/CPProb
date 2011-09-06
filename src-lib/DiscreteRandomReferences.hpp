@@ -28,7 +28,7 @@
 #ifndef DISCRETERANDOMREFERENCES_H_
 #define DISCRETERANDOMREFERENCES_H_
 
-#include "discrete_random_variable.hpp"
+#include "DiscreteRandomVariable.hpp"
 #include "Utils.hpp"
 #include <boost/iterator/indirect_iterator.hpp>
 

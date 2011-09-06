@@ -1,11 +1,11 @@
 /*
- * random_number_engine.cpp
+ * RandomNumberEngine.cpp
  *
  *  Created on: 11.07.2011
  *      Author: wbam
  */
 
-#include "random_number_engine.hpp"
+#include "RandomNumberEngine.hpp"
 
 namespace cpprob
 {

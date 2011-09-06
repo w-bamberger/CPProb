@@ -30,7 +30,7 @@
 #define CONDITIONALDIRICHLETNODE_HPP_
 
 #include "ConditionalCategoricalNode.hpp"
-#include "random_conditional_probabilities.hpp"
+#include "RandomConditionalProbabilities.hpp"
 
 #ifdef VANET_DEBUG_MODE
 #include <debug/list>

@@ -1,5 +1,5 @@
 /*
- * error.hpp
+ * Error.hpp
  *
  *  Created on: 28.07.2011
  *      Author: wbam

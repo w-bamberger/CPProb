@@ -1,15 +1,15 @@
 /*
- * discrete_random_variable.hpp
+ * DiscreteRandomVariable.hpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
 
-#ifndef DISCRETE_RANDOM_VARIABLE_HPP_
-#define DISCRETE_RANDOM_VARIABLE_HPP_
+#ifndef DISCRETERANDOMVARIABLE_HPP_
+#define DISCRETERANDOMVARIABLE_HPP_
 
-#include "random_variable.hpp"
-#include "error.hpp"
+#include "RandomVariable.hpp"
+#include "Error.hpp"
 #include <tr1/type_traits>
 #include <iterator>
 #include <map>
@@ -254,4 +254,4 @@ namespace cpprob
 
 }
 
-#endif /* DISCRETE_RANDOM_VARIABLE_HPP_ */
+#endif /* DISCRETERANDOMVARIABLE_HPP_ */

@@ -1,14 +1,14 @@
 /*
- * dirichlet_distribution.hpp
+ * DirichletDistribution.hpp
  *
  *  Created on: 22.07.2011
  *      Author: wbam
  */
 
-#ifndef DIRICHLET_DISTRIBUTION_HPP_
-#define DIRICHLET_DISTRIBUTION_HPP_
+#ifndef DIRICHLETDISTRIBUTION_HPP_
+#define DIRICHLETDISTRIBUTION_HPP_
 
-#include "random_probabilities.hpp"
+#include "RandomProbabilities.hpp"
 
 namespace cpprob
 {
@@ -77,4 +77,4 @@ private:
 
 }
 
-#endif /* DIRICHLET_DISTRIBUTION_HPP_ */
+#endif /* DIRICHLETDISTRIBUTION_HPP_ */

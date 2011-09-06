@@ -5,10 +5,10 @@
  *      Author: wbam
  */
 
-#ifndef CATEGORICAL_DISTRIBUTION_HPP_
-#define CATEGORICAL_DISTRIBUTION_HPP_
+#ifndef CATEGORICALDISTRIBUTION_HPP_
+#define CATEGORICALDISTRIBUTION_HPP_
 
-#include "discrete_random_variable.hpp"
+#include "DiscreteRandomVariable.hpp"
 
 namespace cpprob
 {
@@ -106,4 +106,4 @@ private:
 
 }
 
-#endif /* CATEGORICAL_DISTRIBUTION_HPP_ */
+#endif /* CATEGORICALDISTRIBUTION_HPP_ */

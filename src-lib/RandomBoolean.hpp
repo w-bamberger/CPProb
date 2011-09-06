@@ -5,10 +5,10 @@
  *      Author: wbam
  */
 
-#ifndef RANDOM_BOOLEAN_HPP_
-#define RANDOM_BOOLEAN_HPP_
+#ifndef RANDOMBOOLEAN_HPP_
+#define RANDOMBOOLEAN_HPP_
 
-#include "discrete_random_variable.hpp"
+#include "DiscreteRandomVariable.hpp"
 
 namespace cpprob
 {
@@ -50,4 +50,4 @@ namespace cpprob
   };
 }
 
-#endif /* RANDOM_BOOLEAN_HPP_ */
+#endif /* RANDOMBOOLEAN_HPP_ */

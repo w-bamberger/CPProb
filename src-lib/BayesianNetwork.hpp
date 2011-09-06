@@ -1,12 +1,12 @@
 /*
- * bayesian_network.hpp
+ * BayesianNetwork.hpp
  *
  *  Created on: 07.07.2011
  *      Author: wbam
  */
 
-#ifndef BAYESIAN_NETWORK_HPP_
-#define BAYESIAN_NETWORK_HPP_
+#ifndef BAYESIANNETWORK_HPP_
+#define BAYESIANNETWORK_HPP_
 
 #include "CategoricalDistribution.hpp"
 #include "CategoricalNode.hpp"
@@ -264,4 +264,4 @@ namespace cpprob
 
 }
 
-#endif /* BAYESIAN_NETWORK_HPP_ */
+#endif /* BAYESIANNETWORK_HPP_ */

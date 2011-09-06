@@ -1,12 +1,12 @@
 /*
- * random_number_engine.hpp
+ * RandomNumberEngine.hpp
  *
  *  Created on: 11.07.2011
  *      Author: wbam
  */
 
-#ifndef RANDOM_NUMBER_ENGINE_HPP_
-#define RANDOM_NUMBER_ENGINE_HPP_
+#ifndef RANDOMNUMBERENGINE_HPP_
+#define RANDOMNUMBERENGINE_HPP_
 
 #include <tr1/random>
 
@@ -18,4 +18,4 @@ namespace cpprob
 
 }
 
-#endif /* RANDOM_NUMBER_ENGINE_HPP_ */
+#endif /* RANDOMNUMBERENGINE_HPP_ */
