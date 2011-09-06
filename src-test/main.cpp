@@ -9,7 +9,7 @@
 #include "../src-lib/boolean_random_variable.hpp"
 #include "../src-lib/discrete_joint_random_variable.hpp"
 #include "../src-lib/io_utils.hpp"
-#include "../src-lib/utils.hpp"
+#include "../src-lib/Utils.hpp"
 #include <boost/assign.hpp>
 #include <boost/foreach.hpp>
 #include <boost/program_options.hpp>

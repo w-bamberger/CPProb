@@ -1,5 +1,5 @@
 /*
- * utils.hpp
+ * Utils.hpp
  *
  *  Created on: 14.05.2011
  *      Author: wbam
@@ -63,13 +63,20 @@ namespace cpprob
 
     };
 
-  template<typename _Iterator, typename _Tp>
+  template<class Iterator, class T>
     void
-    normalizeSum(_Iterator begin, _Iterator end, _Tp targetSum)
+    normalize_sum(Iterator begin, Iterator end, T target_sum)
     {
-      _Tp actualSum = std::accumulate(begin, end, _Tp(0));
+      T actual_sum = std::accumulate(begin, end, T(0));
       std::transform(begin, end, begin,
-          std::bind2nd(std::multiplies<_Tp>(), targetSum / actualSum));
+          std::bind2nd(std::multiplies<T>(), target_sum / actual_sum));
+    }
+
+  template<class Range, class T>
+    void
+    normalize_sum(Range range, T target_sum)
+    {
+      normalize_sum(range.begin(), range.end(), target_sum);
     }
 
 }

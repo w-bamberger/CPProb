@@ -29,7 +29,7 @@
 #define DISCRETERANDOMREFERENCES_H_
 
 #include "discrete_random_variable.hpp"
-#include "utils.hpp"
+#include "Utils.hpp"
 #include <boost/iterator/indirect_iterator.hpp>
 
 #ifdef VANET_DEBUG_MODE
@@ -58,7 +58,7 @@ namespace cpprob
   class DiscreteRandomReferences
   {
 
-    typedef std::set<DiscreteRandomVariable*,
+    typedef cont::set<DiscreteRandomVariable*,
         indirect_less<DiscreteRandomVariable> > Variables;
 
   public:
