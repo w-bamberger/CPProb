@@ -1,29 +1,29 @@
 /*
- * boolean_random_variable.hpp
+ * RandomBoolean.hpp
  *
  *  Created on: 24.05.2011
  *      Author: wbam
  */
 
-#ifndef BOOLEAN_RANDOM_VARIABLE_HPP_
-#define BOOLEAN_RANDOM_VARIABLE_HPP_
+#ifndef RANDOM_BOOLEAN_HPP_
+#define RANDOM_BOOLEAN_HPP_
 
 #include "discrete_random_variable.hpp"
 
 namespace cpprob
 {
 
-  class BooleanRandomVariable : public DiscreteRandomVariable
+  class RandomBoolean : public DiscreteRandomVariable
   {
 
   public:
 
-    BooleanRandomVariable(const std::string& name, bool observation);
+    RandomBoolean(const std::string& name, bool observation);
 
-    BooleanRandomVariable(const std::string& name,
+    RandomBoolean(const std::string& name,
         const std::string& observation_text);
 
-    virtual BooleanRandomVariable&
+    virtual RandomBoolean&
     observation(const bool& new_observation)
     {
       value_ = observation_value_map_[new_observation];
@@ -50,4 +50,4 @@ namespace cpprob
   };
 }
 
-#endif /* BOOLEAN_RANDOM_VARIABLE_HPP_ */
+#endif /* RANDOM_BOOLEAN_HPP_ */

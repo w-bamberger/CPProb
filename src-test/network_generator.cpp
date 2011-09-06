@@ -7,7 +7,7 @@
 
 #include "network_generator.hpp"
 #include "csv_map_reader.hpp"
-#include "../src-lib/boolean_random_variable.hpp"
+#include "../src-lib/RandomBoolean.hpp"
 #include "../src-lib/discrete_joint_random_variable.hpp"
 #include <boost/assign.hpp>
 #include <boost/program_options.hpp>
@@ -37,19 +37,19 @@ namespace cpprob
     BayesianNetwork bn;
     const DiscreteJointRandomVariable no_parents;
 
-    BooleanRandomVariable burglary("Burglary", true);
+    RandomBoolean burglary("Burglary", true);
     CategoricalNode& burglary_node = bn.add_categorical(burglary);
     RandomProbabilities& burglary_probs = burglary_node.probabilities();
     burglary_probs.set(burglary, 0.001);
     burglary_probs.set(burglary.observation(false), 0.999);
 
-    BooleanRandomVariable earthquake("Earthquake", true);
+    RandomBoolean earthquake("Earthquake", true);
     CategoricalNode& earthquake_node = bn.add_categorical(earthquake);
     RandomProbabilities& earthquake_probs = earthquake_node.probabilities();
     earthquake_probs.set(earthquake, 0.002);
     earthquake_probs.set(earthquake.observation(false), 0.998);
 
-    BooleanRandomVariable alarm("Alarm", true);
+    RandomBoolean alarm("Alarm", true);
 
     RandomConditionalProbabilities alarm_params(alarm,
         DiscreteJointRandomVariable(burglary, earthquake));
@@ -81,7 +81,7 @@ namespace cpprob
     ConditionalCategoricalNode& alarm_node = bn.add_conditional_categorical(
         alarm, list_of(&burglary_node)(&earthquake_node), alarm_params_node);
 
-    BooleanRandomVariable john_calls("JohnCalls", true);
+    RandomBoolean john_calls("JohnCalls", true);
     ConditionalCategoricalNode& john_calls_node =
         bn.add_conditional_categorical(john_calls, list_of(&alarm_node));
     john_calls_node.is_evidence(true);
@@ -94,7 +94,7 @@ namespace cpprob
     john_calls_probs.set(john_calls.observation(true), alarm, 0.05);
     john_calls_probs.set(john_calls.observation(false), alarm, 0.95);
 
-    BooleanRandomVariable mary_calls("MaryCalls", true);
+    RandomBoolean mary_calls("MaryCalls", true);
     ConditionalCategoricalNode& mary_calls_node =
         bn.add_conditional_categorical(mary_calls, list_of(&alarm_node));
     mary_calls_node.is_evidence(true);
@@ -119,21 +119,21 @@ namespace cpprob
 
     // Set up the parameter vertices
     map<string, ConditionalDirichletNode*> params_table;
-    BooleanRandomVariable bag("Bag", true);
+    RandomBoolean bag("Bag", true);
     RandomProbabilities bag_params(bag);
     DirichletNode& bag_params_node = bn.add_dirichlet(bag_params, alpha);
     RandomConditionalProbabilities flavor_params(
-        BooleanRandomVariable("Flavor", true), bag);
+        RandomBoolean("Flavor", true), bag);
     params_table.insert(
         make_pair("Flavor",
             &bn.add_conditional_dirichlet(flavor_params, alpha)));
     RandomConditionalProbabilities wrapper_params(
-        BooleanRandomVariable("Wrapper", true), bag);
+        RandomBoolean("Wrapper", true), bag);
     params_table.insert(
         make_pair("Wrapper",
             &bn.add_conditional_dirichlet(wrapper_params, alpha)));
     RandomConditionalProbabilities hole_params(
-        BooleanRandomVariable("Hole", true), bag);
+        RandomBoolean("Hole", true), bag);
     params_table.insert(
         make_pair("Hole", &bn.add_conditional_dirichlet(hole_params, alpha)));
 
@@ -146,7 +146,7 @@ namespace cpprob
     CsvMapReader::Records::iterator r = full_data.begin();
     for (; r != full_data.end() && line != lines_of_evidence; ++r, ++line)
     {
-      BooleanRandomVariable bag_evidence("Bag", r->operator[]("Bag"));
+      RandomBoolean bag_evidence("Bag", r->operator[]("Bag"));
       CategoricalNode& bag_evidence_node = bn.add_categorical(bag_evidence,
           bag_params_node);
       if (fully_observed)
@@ -157,7 +157,7 @@ namespace cpprob
           {
         if (a->first != "Bag")
         {
-          BooleanRandomVariable var(a->first, a->second);
+          RandomBoolean var(a->first, a->second);
           ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
               list_of(&bag_evidence_node), *params_table[a->first]);
           node.is_evidence(true);

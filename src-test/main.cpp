@@ -6,7 +6,7 @@
  */
 
 #include "network_generator.hpp"
-#include "../src-lib/boolean_random_variable.hpp"
+#include "../src-lib/RandomBoolean.hpp"
 #include "../src-lib/discrete_joint_random_variable.hpp"
 #include "../src-lib/io_utils.hpp"
 #include "../src-lib/Utils.hpp"
@@ -270,19 +270,19 @@ test_bag_net()
 
   DirichletNode& bag_params_v = bn_map_full.find<DirichletNode>(
       "ProbabilitiesBag");
-  BooleanRandomVariable bag("Bag", true);
+  RandomBoolean bag("Bag", true);
   CategoricalNode& bag_v = bn_map_full.add_categorical(bag, bag_params_v);
 
   ConditionalDirichletNode& hole_params_v = bn_map_full.find<
       ConditionalDirichletNode>("ProbabilitiesHoleBag");
-  BooleanRandomVariable hole("Hole", true);
+  RandomBoolean hole("Hole", true);
   ConditionalCategoricalNode& hole_v = bn_map_full.add_conditional_categorical(
       hole, list_of(&bag_v), hole_params_v);
   hole_v.is_evidence(true);
 
   ConditionalDirichletNode& wrapper_params_v = bn_map_full.find<
       ConditionalDirichletNode>("ProbabilitiesWrapperBag");
-  BooleanRandomVariable wrapper("Wrapper", true);
+  RandomBoolean wrapper("Wrapper", true);
   ConditionalCategoricalNode& wrapper_v =
       bn_map_full.add_conditional_categorical(wrapper, list_of(&bag_v),
           wrapper_params_v);
@@ -290,7 +290,7 @@ test_bag_net()
 
   ConditionalDirichletNode& flavor_params_v = bn_map_full.find<
       ConditionalDirichletNode>("ProbabilitiesFlavorBag");
-  BooleanRandomVariable flavor("Flavor", true);
+  RandomBoolean flavor("Flavor", true);
   ConditionalCategoricalNode& flavor_v =
       bn_map_full.add_conditional_categorical(flavor, list_of(&bag_v),
           flavor_params_v);
@@ -363,26 +363,26 @@ test_latent_bag_net()
     cout << bn << endl;
 
   DirichletNode& bag_params_v = bn.find<DirichletNode>("ProbabilitiesBag");
-  BooleanRandomVariable bag("Bag", true);
+  RandomBoolean bag("Bag", true);
   CategoricalNode& bag_v = bn.add_categorical(bag, bag_params_v);
 
   ConditionalDirichletNode& hole_params_v = bn.find<ConditionalDirichletNode>(
       "ProbabilitiesHoleBag");
-  BooleanRandomVariable hole("Hole", true);
+  RandomBoolean hole("Hole", true);
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
       list_of(&bag_v), hole_params_v);
   hole_v.is_evidence(true);
 
   ConditionalDirichletNode& wrapper_params_v =
       bn.find<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
-  BooleanRandomVariable wrapper("Wrapper", true);
+  RandomBoolean wrapper("Wrapper", true);
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
       wrapper, list_of(&bag_v), wrapper_params_v);
   wrapper_v.is_evidence(true);
 
   ConditionalDirichletNode& flavor_params_v = bn.find<ConditionalDirichletNode>(
       "ProbabilitiesFlavorBag");
-  BooleanRandomVariable flavor("Flavor", true);
+  RandomBoolean flavor("Flavor", true);
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
       list_of(&bag_v), flavor_params_v);
 

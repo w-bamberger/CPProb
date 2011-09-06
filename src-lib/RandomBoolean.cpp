@@ -1,11 +1,11 @@
 /*
- * boolean_random_variable.cpp
+ * RandomBoolean.cpp
  *
  *  Created on: 24.05.2011
  *      Author: wbam
  */
 
-#include "boolean_random_variable.hpp"
+#include "RandomBoolean.hpp"
 #include <tr1/tuple>
 #include <iostream>
 #include <stdexcept>
@@ -16,7 +16,7 @@ using namespace std::tr1;
 namespace cpprob
 {
 
-  class BooleanRandomVariable::Initialiser
+  class RandomBoolean::Initialiser
   {
 
   public:
@@ -31,18 +31,18 @@ namespace cpprob
 
   };
 
-  map<bool, size_t> BooleanRandomVariable::observation_value_map_;
-  map<string, size_t> BooleanRandomVariable::text_value_map_;
-  BooleanRandomVariable::Initialiser BooleanRandomVariable::initialiser_;
+  map<bool, size_t> RandomBoolean::observation_value_map_;
+  map<string, size_t> RandomBoolean::text_value_map_;
+  RandomBoolean::Initialiser RandomBoolean::initialiser_;
 
-  BooleanRandomVariable::BooleanRandomVariable(const string& name,
+  RandomBoolean::RandomBoolean(const string& name,
       bool observation)
   {
     set_up_characteristics(name);
     value_ = observation_value_map_[observation];
   }
 
-  BooleanRandomVariable::BooleanRandomVariable(const string& name,
+  RandomBoolean::RandomBoolean(const string& name,
       const string& observation_text)
   {
     set_up_characteristics(name);
@@ -50,13 +50,13 @@ namespace cpprob
   }
 
   ostream&
-  BooleanRandomVariable::put_out(ostream& os) const
+  RandomBoolean::put_out(ostream& os) const
   {
     return os << characteristics_->first << ":" << value_;
   }
 
   void
-  BooleanRandomVariable::set_up_characteristics(const string& name)
+  RandomBoolean::set_up_characteristics(const string& name)
   {
     characteristics_ = characteristics_table_.lower_bound(name);
     if (characteristics_ == characteristics_table_.end()
