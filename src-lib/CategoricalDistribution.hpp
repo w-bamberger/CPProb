@@ -9,7 +9,6 @@
 #define CATEGORICAL_DISTRIBUTION_HPP_
 
 #include "discrete_random_variable.hpp"
-#include "random_probabilities.hpp"
 
 namespace cpprob
 {
@@ -17,7 +16,7 @@ namespace cpprob
   class CategoricalDistribution
   {
 
-    typedef RandomProbabilities ProbabilityTable;
+    typedef std::map<DiscreteRandomVariable, float> ProbabilityTable;
 
   public:
 
@@ -32,20 +31,13 @@ namespace cpprob
     typedef mapped_type input_type;
     typedef key_type result_type;
 
-    CategoricalDistribution();
+    CategoricalDistribution()
+    {
+    }
 
-    CategoricalDistribution(const CategoricalDistribution& cd);
-
-    CategoricalDistribution(DiscreteRandomVariable& var);
-
-    CategoricalDistribution(DiscreteRandomVariable& var,
-        RandomProbabilities& params);
-
-    virtual
-    ~CategoricalDistribution();
-
-    virtual float
-    at_references() const;
+    ~CategoricalDistribution()
+    {
+    }
 
     const_iterator
     begin() const
@@ -78,10 +70,7 @@ namespace cpprob
     }
 
     void
-    normalize()
-    {
-      pt_.normalize();
-    }
+    normalize();
 
     template<class _RandomNumberGenerator>
       result_type
@@ -106,34 +95,9 @@ namespace cpprob
     return pt_[r];
   }
 
-  CategoricalDistribution&
-  operator=(const CategoricalDistribution& cd)
-  {
-    if (&pt_ != &cd.pt_)
-      {
-        pt_ = cd.pt_;
-        var_ = cd.var_;
-      }
-    return *this;
-  }
-
-  virtual std::ostream&
-  put_out_references(std::ostream& os) const;
-
-  void
-  set(const DiscreteRandomVariable& var, float probability)
-  {
-    pt_.set(var, probability);
-  }
-
 private:
 
-  bool is_pt_self_allocated;
-  ProbabilityTable& pt_;
-  DiscreteRandomVariable* var_;
-
-  static RandomProbabilities&
-  make_parameters_from_other_cd(const CategoricalDistribution& cd);
+  ProbabilityTable pt_;
 
   };
 

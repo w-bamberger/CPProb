@@ -6,7 +6,6 @@
  */
 
 #include "random_conditional_probabilities.hpp"
-#include "categorical_distribution.hpp"
 #include "io_utils.hpp"
 #include <tr1/random>
 #include <tr1/tuple>

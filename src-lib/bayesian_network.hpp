@@ -8,7 +8,7 @@
 #ifndef BAYESIAN_NETWORK_HPP_
 #define BAYESIAN_NETWORK_HPP_
 
-#include "categorical_distribution.hpp"
+#include "CategoricalDistribution.hpp"
 #include "CategoricalNode.hpp"
 #include "ConditionalCategoricalNode.hpp"
 #include "ConditionalDirichletNode.hpp"

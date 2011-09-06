@@ -28,7 +28,7 @@
 #ifndef DISCRETENODE_HPP_
 #define DISCRETENODE_HPP_
 
-#include "categorical_distribution.hpp"
+#include "CategoricalDistribution.hpp"
 #include <boost/range/adaptor/indirected.hpp>
 
 #ifdef VANET_DEBUG_MODE
