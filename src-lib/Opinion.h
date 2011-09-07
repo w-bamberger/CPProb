@@ -1,5 +1,5 @@
 /**
- * @file opinion.h
+ * @file Opinion.h
  * Implements the opinion of subjective logic.
  *
  * @author Walter Bamberger

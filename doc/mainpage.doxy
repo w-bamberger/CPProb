@@ -2,11 +2,69 @@
 
 @mainpage CPProb – Algorithms for Probabilistic Reasoning
 
-@section what-is-cpprob What is the library CPProb?
+@section what-is-cpprob What is CPProb?
+
+CPProb provides algorithms for various 
+<a href="http://en.wikipedia.org/wiki/Automated_reasoning">
+reasoning techniques</a>. It is a library written in C++. At present, 
+CPProb addresses
+
+@li exact <a href="http://en.wikipedia.org/wiki/Bayesian_inference">Bayesian 
+    inference</a> and Bayesian parameter learning;
+@li approximate Bayesian inference using Gibbs sampling; 
+@li non-parametric models with 
+    <a href="http://en.wikipedia.org/wiki/Dirichlet_process">
+    Dirichlet processes</a>; and
+@li <a href="http://folk.uio.no/josang/sl/">subjective logic</a>, a 
+    probabilistic logic based on the Dempster-Shafer belief theory.
+
+We are open for any other algorithm or technique (like fuzzy sets and logic).
+Feel free to complement the library with the algorithms you need (see 
+@ref extending-cpprob below). 
+
+CPProb wants to support you, first, in <em>using these algorithms in your own 
+application</em>. Probabilistic reasoning already left research towards real 
+producs. CPProb may freely be used by commercial and non-commercial 
+applications. Second, it helps you to <em>develop new algorithms and compare 
+them with the state of the art</em>. Within the library, probabilistic models 
+are described independently from the algorithm you run on the model. So it is 
+easy to add a new algorithm and compare it with existing ones. Third, CPProb 
+<em>eases to learn and understand the implemented algorithms</em>. Its well 
+documented code helps to bridge the gap between the mathematical concepts 
+described in common text books and actual implementations.   
+
+@section features Features
+
+CPProb offers the following features for automated reasoning:
+
+@li You can configure one probablistic model and run several algorithms on it.
+@li Random variables may distributed following a categorical distribution,
+    a Dirichlet distribution or a Dirichlet process.
+@li In discrete models, exact inference can be done with enumeration;
+    Parameters can be learned with maximum likelihood and maximum a posteriori
+    estimation.
+@li In all models, approximate inference can be performed with Gibbs sampling.
+@li Simple reasoning tasks can be done with subjective logic.
+
+On the technical side, CPProb offers the following features:
+  
+@li It is continuously benchmarked, profiled (with <a 
+    href="http://oprofile.sourceforge.net/">OProfile</a>) and memory checked
+    (with <a href="http://www.valgrind.org/">Valgrind</a>'s Memcheck and 
+    Ptrcheck). So it is supposed to be fast and stable.
+@li Two modes to balance the need for stability and performance. The release 
+    mode omits some requirement verifications that would significantly slow down
+    the algorithms. In constrast, in debug mode all requirements are verified
+    when a function is executed. This makes it easy to find even hard to debug
+    errors.
+@li The classes and algorithms should be easy to use.
+@li CPProb is open source software. You can easily adapt it to your needs. You
+    are allowed to use it in commercial and non-commercial software products.
+    
+Support for multi-threading with OpenMP will come soon.
 
 
-
-@section using-cpprob Using the Library
+@section getting-started Getting Started
 
 Getting and installing the library
 
@@ -14,9 +72,10 @@ The reference documentation can be accessed through the main menu above.
  
 Howtos for several probability problems:
 
+<strong>To get help</strong>, you can <a href="https://convore.com/cpprob/">chat 
+with me at Convore</a>. Just post a question, and I will be back to you as soon 
+as I get the email notification.
 
-
-@section support Getting Support
 
 @section extending-cpprob Extending the Library
 

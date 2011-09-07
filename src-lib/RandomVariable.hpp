@@ -1,5 +1,5 @@
 /**
- * @file random_variable.hpp
+ * @file RandomVariable.hpp
  * Defines the base class for all random variables.
  *
  * @author Walter Bamberger

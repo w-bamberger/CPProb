@@ -147,7 +147,7 @@ namespace cpprob
      *   All other random variables are used by the algorithm and thus are
      *   modified during execution.
      *
-     * @param X_v vertex whose distribution should be computed
+     * @param X_n node whose distribution should be computed
      * @return the unconditional distribution of the variable of the vertex X_v
      * @throw NetworkError The network does not conform to the requirements of
      *     this algorithm.
