@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -87,29 +94,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 This is the complete list of members for <a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a60770c1f182f3622e7402a55f69e2cf8">add_categorical</a>(const DiscreteRandomVariable &amp;var)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#ad0dcd081d96f61c715264bd38f3c76ca">add_categorical</a>(const DiscreteRandomVariable &amp;var, iterator params_vertex)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a9b9ac4f72a65523fd56672debcc326af">add_conditional_categorical</a>(const DiscreteRandomVariable &amp;var, const VertexReferences &amp;parents)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a455995a49dd3408ef032f5bc3fb1d9d5">add_conditional_categorical</a>(const DiscreteRandomVariable &amp;var, const VertexReferences &amp;parents, iterator params_vertex)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3b344eb56568edb20aab06a29c82deeb">add_conditional_dirichlet</a>(const RandomConditionalProbabilities &amp;var, float alpha)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab22d27accb4e1be85f9cd5bf5e70c2ca">add_constant</a>(const RandomConditionalProbabilities &amp;var)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a42e66dcbf96afd9be69f324697aebb7e">add_constant</a>(const RandomProbabilities &amp;var)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#abb8d907677f8c98a19a962b8f532722c">add_dirichlet</a>(const RandomProbabilities &amp;var, float alpha)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#aaeaea4fbe7a2992f91c7db5f72118831">add_categorical</a>(const DiscreteRandomVariable &amp;value)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a419b71f9e4b36121b03673299424238d">add_categorical</a>(const DiscreteRandomVariable &amp;value, N &amp;parameter_node)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3ed29ec0a75cb5318171b1d8050ebc83">add_conditional_categorical</a>(const DiscreteRandomVariable &amp;value, const cont::list&lt; DiscreteNode * &gt; &amp;condition_nodes)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a6fbaad8709adf20b90d88b939f907cba">add_conditional_categorical</a>(const DiscreteRandomVariable &amp;value, const cont::list&lt; DiscreteNode * &gt; &amp;condition_nodes, N &amp;parameter_node)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a384387f864613dcdda64dd6cccb56cf7">add_conditional_dirichlet</a>(const RandomConditionalProbabilities &amp;value, float alpha)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#afa7c0b67ea06db3bf35d1f4406805721">add_constant</a>(const V &amp;value)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3ab4b6ac83d6906aa2bdc9cffe476cf6">add_dirichlet</a>(const RandomProbabilities &amp;value, float alpha)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a06aed1b33c97025e215d46ecbb63bb9d">BayesianNetwork</a>()</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a5e5cb83d2473b68c9d533fdfbfa1471d">BayesianNetwork</a>(const BayesianNetwork &amp;other_hbn)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#aeb807814daaa8981dd576e0a78bc459c">begin</a>()</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a8456efbef5878e24c9a648d3777bdfa5">begin</a>() const </td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#adff293c5ce008b298735d51f24117f3c">const_iterator</a> typedef</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#af2edc6de00838869c62cc2a37594a563">end</a>()</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a6355d3d2a19b28f9ef66f4c637168cd2">end</a>() const </td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a18c5837d11faa55658b042d3d3bacb9a">enumerate</a>(iterator X_v)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a> typedef</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a9a662d792c9fb3b928f89ab2e5327d22">begin</a>()</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a0e1ede8d760324203a89da20e47e5e4d">begin</a>() const </td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab75d2aff16bfa1ea2219bb34992e4a5d">const_iterator</a> typedef</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#acda8bffbf07f61e6b1cc6ff0636f5a69">end</a>()</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#af8d1760db3cc54edc7a8bf23a78a899d">end</a>() const </td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a665595a91a90636eb3584065054a69d6">enumerate</a>(CategoricalNode &amp;X_n)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a0a6c3afadd3d4494c70edb48eec57c46">enumerate</a>(ConditionalCategoricalNode &amp;X_n)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a70caabf52e4d389d3a8d6b3bc5821272">find</a>(const std::string &amp;name)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a9d2bf5caeef265172941729fad4d632d">find</a>(const std::string &amp;name) const </td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a39623882019176d6f98165a15050bbbe">iterator</a> typedef</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a1cd1bcd2e4888d114ff036a0162a5dd6">learn</a>()</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a81af8f9a823470710d4a892652441b8a">Node</a> typedef</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a5b69d390f5888c50a31ebbcd93e169be">operator&lt;&lt;</a>(std::ostream &amp;os, const BayesianNetwork &amp;hbn)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [friend]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3bcd08decc1e728cd5e349b9947391db">sample</a>(const iterator &amp;X_it, unsigned int burn_in_iterations, unsigned int collect_iterations)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a02eb30594bcce930d0bd90d5afb2de89">sample</a>(const DiscreteNode &amp;X, unsigned int burn_in_iterations, unsigned int collect_iterations)</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a32b9a92eaffec2e5127db32fc3b57e9c">size</a>() const </td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td><code> [inline]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a1abad8a853ec04627984181f385b5e49">VertexList</a> typedef</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a093967a427e3f554743c9546dc32b2f9">VertexReferences</a> typedef</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classcpprob_1_1BayesianNetwork.html#a2df50634d6d9ae0a19be7581331821d9">~BayesianNetwork</a>()</td><td><a class="el" href="classcpprob_1_1BayesianNetwork.html">cpprob::BayesianNetwork</a></td><td></td></tr>
 </table></div>
 <!-- window showing the filter options -->
@@ -129,7 +137,7 @@ This is the complete list of members for <a class="el" href="classcpprob_1_1Baye
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:06 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

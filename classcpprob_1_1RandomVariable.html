@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -94,7 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>A RandomVariable represents the outcome of a statistical experiment.  
  <a href="classcpprob_1_1RandomVariable.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="random__variable_8hpp_source.html">random_variable.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="RandomVariable_8hpp_source.html">RandomVariable.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for cpprob::RandomVariable:</div>
 <div class="dyncontent">
@@ -104,8 +111,8 @@ Inheritance diagram for cpprob::RandomVariable:</div>
 <area href="classcpprob_1_1DiscreteRandomVariable.html" alt="cpprob::DiscreteRandomVariable" shape="rect" coords="122,56,357,80"/>
 <area href="classcpprob_1_1RandomConditionalProbabilities.html" alt="cpprob::RandomConditionalProbabilities" shape="rect" coords="367,56,602,80"/>
 <area href="classcpprob_1_1RandomProbabilities.html" title="Random vector that represents a probability table." alt="cpprob::RandomProbabilities" shape="rect" coords="612,56,847,80"/>
-<area href="classcpprob_1_1BooleanRandomVariable.html" alt="cpprob::BooleanRandomVariable" shape="rect" coords="0,112,235,136"/>
-<area href="classcpprob_1_1DiscreteJointRandomVariable.html" alt="cpprob::DiscreteJointRandomVariable" shape="rect" coords="245,112,480,136"/>
+<area href="classcpprob_1_1DiscreteJointRandomVariable.html" alt="cpprob::DiscreteJointRandomVariable" shape="rect" coords="0,112,235,136"/>
+<area href="classcpprob_1_1RandomBoolean.html" alt="cpprob::RandomBoolean" shape="rect" coords="245,112,480,136"/>
 </map>
  </div></div>
 
@@ -170,8 +177,8 @@ Friends</h2></td></tr>
 
 <p>Generates a random value in the range of the random variable and assigns it to itself. </p>
 <p>This may be useful for certain algorithms, e.g. to generate start values.</p>
-<p>The argument is a C++ random number engine. You can find those engines in the standard TR1 header <em>random</em>. They are uniform pseudo-random number generators. From these engine, non-uniform number generators can be derived. Here the engine must be of the type defined in the project header random_number_engine.h. It is best to use the global variable <a class="el" href="namespacecpprob.html#a2e4df6f03df56118cee429257a727dae">cpprob::random_number_engine</a>. In the future, this argument will be removed.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Remove rne argument in favor of the global variable.</dd></dl>
+<p>The argument is a C++ random number engine. You can find those engines in the standard TR1 header <em>random</em>. They are uniform pseudo-random number generators. From these engine, non-uniform number generators can be derived. Here the engine must be of the type defined in the project header RandomNumberEngine.h. It is best to use the global variable <a class="el" href="namespacecpprob.html#a2e4df6f03df56118cee429257a727dae">cpprob::random_number_engine</a>. In the future, this argument will be removed.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Remove rne argument in favor of the global variable.</dd></dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">rne</td><td>the random number engine to use as the source of randomness </td></tr>
@@ -231,7 +238,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the streamed received as the argument </dd></dl>
 
-<p>Implemented in <a class="el" href="classcpprob_1_1BooleanRandomVariable.html#a71973853c0fe01ad150ada88b94cfa6d">cpprob::BooleanRandomVariable</a>, <a class="el" href="classcpprob_1_1DiscreteJointRandomVariable.html#adf14e8bc8a310c06926c29c0c200d1e1">cpprob::DiscreteJointRandomVariable</a>, <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html#ac5e079910f309b9edfcd8cb21ad69aca">cpprob::DiscreteRandomVariable</a>, <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html#a4ac52fbc3efc8631c352557736b915a1">cpprob::RandomConditionalProbabilities</a>, and <a class="el" href="classcpprob_1_1RandomProbabilities.html#a9f4f62e8a6610297018a5e880ab5ad28">cpprob::RandomProbabilities</a>.</p>
+<p>Implemented in <a class="el" href="classcpprob_1_1DiscreteJointRandomVariable.html#adf14e8bc8a310c06926c29c0c200d1e1">cpprob::DiscreteJointRandomVariable</a>, <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html#ac5e079910f309b9edfcd8cb21ad69aca">cpprob::DiscreteRandomVariable</a>, <a class="el" href="classcpprob_1_1RandomBoolean.html#a203438d04259af6b4f7090a497b4c173">cpprob::RandomBoolean</a>, <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html#a4ac52fbc3efc8631c352557736b915a1">cpprob::RandomConditionalProbabilities</a>, and <a class="el" href="classcpprob_1_1RandomProbabilities.html#a9f4f62e8a6610297018a5e880ab5ad28">cpprob::RandomProbabilities</a>.</p>
 
 </div>
 </div>
@@ -276,7 +283,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="random__variable_8hpp_source.html">random_variable.hpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="RandomVariable_8hpp_source.html">RandomVariable.hpp</a></li>
 </ul>
 </div>
 <!-- window showing the filter options -->
@@ -296,7 +303,7 @@ Friends</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:07 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

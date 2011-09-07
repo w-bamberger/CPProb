@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -94,7 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Random vector that represents a probability table.  
  <a href="classcpprob_1_1RandomProbabilities.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="random__probabilities_8hpp_source.html">random_probabilities.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="RandomProbabilities_8hpp_source.html">RandomProbabilities.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for cpprob::RandomProbabilities:</div>
 <div class="dyncontent">
@@ -332,7 +339,7 @@ Protected Member Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Create an empty probability table. </p>
-<p>This constructor is not recommended, because the probabilities of an empty table cannot sum up to one and because the name of the random variable is undefined. For the use in the class ProbabilityDistribution, this constructor is necessary though. For this reason, the constructor is marked as explicit.</p>
+<p>This constructor is not recommended, because the probabilities of an empty table cannot sum up to one and because the name of the random variable is undefined. For the use in the class ProbabilityDistribution, this constructor is necessary though.</p>
 <dl class="user"><dt><b>Ensures:</b></dt><dd><ul>
 <li><code>name() == ""</code>.</li>
 <li><code>size() == 0</code>.</li>
@@ -425,8 +432,8 @@ Protected Member Functions</h2></td></tr>
 
 <p>Generates a random value in the range of the random variable and assigns it to itself. </p>
 <p>This may be useful for certain algorithms, e.g. to generate start values.</p>
-<p>The argument is a C++ random number engine. You can find those engines in the standard TR1 header <em>random</em>. They are uniform pseudo-random number generators. From these engine, non-uniform number generators can be derived. Here the engine must be of the type defined in the project header random_number_engine.h. It is best to use the global variable <a class="el" href="namespacecpprob.html#a2e4df6f03df56118cee429257a727dae">cpprob::random_number_engine</a>. In the future, this argument will be removed.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Remove rne argument in favor of the global variable.</dd></dl>
+<p>The argument is a C++ random number engine. You can find those engines in the standard TR1 header <em>random</em>. They are uniform pseudo-random number generators. From these engine, non-uniform number generators can be derived. Here the engine must be of the type defined in the project header RandomNumberEngine.h. It is best to use the global variable <a class="el" href="namespacecpprob.html#a2e4df6f03df56118cee429257a727dae">cpprob::random_number_engine</a>. In the future, this argument will be removed.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Remove rne argument in favor of the global variable.</dd></dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">rne</td><td>the random number engine to use as the source of randomness </td></tr>
@@ -434,7 +441,7 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Creating the variate every time from scratch is slow. </dd></dl>
+<p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Creating the variate every time from scratch is slow. </dd></dl>
 </p>
 
 <p>Implements <a class="el" href="classcpprob_1_1RandomVariable.html#a82aef0e4f5a0068ef358b047ab5d92dd">cpprob::RandomVariable</a>.</p>
@@ -1004,8 +1011,8 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="random__probabilities_8hpp_source.html">random_probabilities.hpp</a></li>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="random__probabilities_8cpp.html">random_probabilities.cpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="RandomProbabilities_8hpp_source.html">RandomProbabilities.hpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="RandomProbabilities_8cpp.html">RandomProbabilities.cpp</a></li>
 </ul>
 </div>
 <!-- window showing the filter options -->
@@ -1025,7 +1032,7 @@ Protected Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:07 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -91,7 +98,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="cpprob::DirichletDistribution" -->
-<p><code>#include &lt;<a class="el" href="dirichlet__distribution_8hpp_source.html">dirichlet_distribution.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="DirichletDistribution_8hpp_source.html">DirichletDistribution.hpp</a>&gt;</code></p>
 
 <p><a href="classcpprob_1_1DirichletDistribution-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -107,11 +114,13 @@ float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#a4db04c6b3672903795b42f3467cb2bb9">DirichletDistribution</a> (const <a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a> &amp;var, float alpha)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class Iterator &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#a15335175f00be156bf37bcde47031b0d">DirichletDistribution</a> (const Iterator &amp;begin, const Iterator &amp;end)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#a5b896dbf08ecd42cefecb5cfa2124909">~DirichletDistribution</a> ()</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;class RandomNumberEngine &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#a14d6285690822205da05cd01e8d49795">operator()</a> (<a class="el" href="namespacecpprob.html#a267d5666b46c9c13a7f2f6d9b7cf67a5">RandomNumberEngine</a> &amp;rne)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcpprob_1_1DirichletDistribution.html#a9dbea3043599b06d0b40e3dc94df0c61">Parameters</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#ae7cb3ec4c5d08258001d4b880402d57a">parameters</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1DirichletDistribution.html#a9dbea3043599b06d0b40e3dc94df0c61">Parameters</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#a068ae0e3448f120a4f9b421412520511">parameters</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classcpprob_1_1DirichletDistribution.html#a9dbea3043599b06d0b40e3dc94df0c61">Parameters</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#ae7cb3ec4c5d08258001d4b880402d57a">parameters</a> () const </td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DirichletDistribution.html#adec0dce7113a64fff4c7b070a4a91a91">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classcpprob_1_1DirichletDistribution.html">DirichletDistribution</a> &amp;dd)</td></tr>
@@ -177,6 +186,35 @@ Friends</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a15335175f00be156bf37bcde47031b0d"></a><!-- doxytag: member="cpprob::DirichletDistribution::DirichletDistribution" ref="a15335175f00be156bf37bcde47031b0d" args="(const Iterator &amp;begin, const Iterator &amp;end)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Iterator &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">cpprob::DirichletDistribution::DirichletDistribution </td>
+          <td>(</td>
+          <td class="paramtype">const Iterator &amp;&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Iterator &amp;&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -281,8 +319,8 @@ template&lt;class RandomNumberEngine &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="dirichlet__distribution_8hpp_source.html">dirichlet_distribution.hpp</a></li>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="dirichlet__distribution_8cpp.html">dirichlet_distribution.cpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="DirichletDistribution_8hpp_source.html">DirichletDistribution.hpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="DirichletDistribution_8cpp.html">DirichletDistribution.cpp</a></li>
 </ul>
 </div>
 <!-- window showing the filter options -->
@@ -302,7 +340,7 @@ template&lt;class RandomNumberEngine &gt; </div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:06 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

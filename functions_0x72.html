@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -93,6 +100,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_0x66.html#index_f"><span>f</span></a></li>
       <li><a href="functions_0x67.html#index_g"><span>g</span></a></li>
       <li><a href="functions_0x69.html#index_i"><span>i</span></a></li>
+      <li><a href="functions_0x6a.html#index_j"><span>j</span></a></li>
       <li><a href="functions_0x6b.html#index_k"><span>k</span></a></li>
       <li><a href="functions_0x6c.html#index_l"><span>l</span></a></li>
       <li><a href="functions_0x6d.html#index_m"><span>m</span></a></li>
@@ -102,7 +110,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions_0x72.html#index_r"><span>r</span></a></li>
       <li><a href="functions_0x73.html#index_s"><span>s</span></a></li>
       <li><a href="functions_0x74.html#index_t"><span>t</span></a></li>
-      <li><a href="functions_0x75.html#index_u"><span>u</span></a></li>
       <li><a href="functions_0x76.html#index_v"><span>v</span></a></li>
       <li><a href="functions_0x77.html#index_w"><span>w</span></a></li>
       <li><a href="functions_0x7e.html#index_0x7e"><span>~</span></a></li>
@@ -113,8 +120,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
-<li>random_variable()
-: <a class="el" href="classcpprob_1_1BayesianNetwork_1_1Vertex.html#aa051f2f38235782b51e6c01aa07c6a85">cpprob::BayesianNetwork::Vertex</a>
+<li>RandomBoolean()
+: <a class="el" href="classcpprob_1_1RandomBoolean.html#a26455095333e6c06d75da568901cabaf">cpprob::RandomBoolean</a>
 </li>
 <li>RandomConditionalProbabilities()
 : <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html#afe8d3ecfc6d2ed07b9c9bb3fa7900053">cpprob::RandomConditionalProbabilities</a>
@@ -131,15 +138,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>reference
 : <a class="el" href="classcpprob_1_1RandomProbabilities.html#acff62028470600df6c39363659ea5009">cpprob::RandomProbabilities</a>
 </li>
-<li>referenced_condition()
-: <a class="el" href="classcpprob_1_1ConditionalCategoricalDistribution.html#afd43ba789514ba7f72ee7c06132c1e8b">cpprob::ConditionalCategoricalDistribution</a>
-</li>
 <li>result_type
 : <a class="el" href="classcpprob_1_1DirichletDistribution.html#abac7cc63ccb46d0209c9216ee2ee4624">cpprob::DirichletDistribution</a>
-, <a class="el" href="classcpprob_1_1ConditionalCategoricalDistribution.html#aff4f22eb8d9c29641d52451a284962d5">cpprob::ConditionalCategoricalDistribution</a>
-, <a class="el" href="classcpprob_1_1ChainFunctors.html#a0ae34fafee8c6a1ae2f159691aff3360">cpprob::ChainFunctors&lt; OuterOperator, InnerOperator &gt;</a>
-, <a class="el" href="classcpprob_1_1CondDirichletDistribution.html#a5594ab39e91085347c40c070c005cd61">cpprob::CondDirichletDistribution</a>
 , <a class="el" href="classcpprob_1_1CategoricalDistribution.html#ac9d93cf191f7df040a5962d3755e4161">cpprob::CategoricalDistribution</a>
+, <a class="el" href="classcpprob_1_1ChainFunctors.html#a0ae34fafee8c6a1ae2f159691aff3360">cpprob::ChainFunctors&lt; OuterOperator, InnerOperator &gt;</a>
+, <a class="el" href="classcpprob_1_1ApplyVisitorDelayed.html#a86518d8d1edb90c25232005893971ed8">cpprob::ApplyVisitorDelayed&lt; Visitor &gt;</a>
 </li>
 </ul>
 </div>
@@ -160,7 +163,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:06 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

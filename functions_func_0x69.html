@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -93,13 +100,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_func_0x66.html#index_f"><span>f</span></a></li>
       <li><a href="functions_func_0x67.html#index_g"><span>g</span></a></li>
       <li class="current"><a href="functions_func_0x69.html#index_i"><span>i</span></a></li>
+      <li><a href="functions_func_0x6a.html#index_j"><span>j</span></a></li>
       <li><a href="functions_func_0x6c.html#index_l"><span>l</span></a></li>
       <li><a href="functions_func_0x6e.html#index_n"><span>n</span></a></li>
       <li><a href="functions_func_0x6f.html#index_o"><span>o</span></a></li>
       <li><a href="functions_func_0x70.html#index_p"><span>p</span></a></li>
       <li><a href="functions_func_0x72.html#index_r"><span>r</span></a></li>
       <li><a href="functions_func_0x73.html#index_s"><span>s</span></a></li>
-      <li><a href="functions_func_0x75.html#index_u"><span>u</span></a></li>
       <li><a href="functions_func_0x76.html#index_v"><span>v</span></a></li>
       <li><a href="functions_func_0x77.html#index_w"><span>w</span></a></li>
       <li><a href="functions_func_0x7e.html#index_0x7e"><span>~</span></a></li>
@@ -110,18 +117,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 &#160;
 
 <h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
-<li>ignorance()
-: <a class="el" href="classcpprob_1_1Opinion.html#a7c43be2aa74393ce5bf587d5a7b0f61a">cpprob::Opinion&lt; size_ &gt;</a>
+<li>init_sampling()
+: <a class="el" href="classcpprob_1_1CategoricalNode.html#a0a0a8f2252c4421106457d7ab55ab145">cpprob::CategoricalNode</a>
+, <a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html#a9592df401a57c47f85df9e8810604377">cpprob::ConditionalCategoricalNode</a>
+, <a class="el" href="classcpprob_1_1DirichletNode.html#aed17be6e30dfca1babdb35b814074716">cpprob::DirichletNode</a>
+, <a class="el" href="classcpprob_1_1DiscreteNode.html#a8282ec759cf588f5f52460ce0e213750">cpprob::DiscreteNode</a>
+, <a class="el" href="classcpprob_1_1ConditionalDirichletNode.html#ae8321a3b94c29d5f54cfa802def6d9f2">cpprob::ConditionalDirichletNode</a>
 </li>
 <li>Initialiser()
-: <a class="el" href="classcpprob_1_1BooleanRandomVariable_1_1Initialiser.html#a1eae76bd39798d7fb8186dd46944fd31">cpprob::BooleanRandomVariable::Initialiser</a>
+: <a class="el" href="classcpprob_1_1RandomBoolean_1_1Initialiser.html#aa90cb743a333cf8e29fc1d5c3fdcfd06">cpprob::RandomBoolean::Initialiser</a>
 </li>
 <li>insert()
-: <a class="el" href="classcpprob_1_1RandomProbabilities.html#ad2df6aedf2a039c004fb8b100cd10258">cpprob::RandomProbabilities</a>
+: <a class="el" href="classcpprob_1_1DiscreteRandomReferences.html#a54613aceb7cfd51aa3187622cffd6bf2">cpprob::DiscreteRandomReferences</a>
 , <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html#a2bcb13efd30c6d851847ba1d024ad08e">cpprob::RandomConditionalProbabilities</a>
+, <a class="el" href="classcpprob_1_1RandomProbabilities.html#ad2df6aedf2a039c004fb8b100cd10258">cpprob::RandomProbabilities</a>
 , <a class="el" href="classcpprob_1_1DiscreteJointRandomVariable.html#a2bbdb4ddf958138d8723854e39bf9af1">cpprob::DiscreteJointRandomVariable</a>
-, <a class="el" href="classcpprob_1_1ConditionalCategoricalDistribution.html#a99f68b551e09d6b6a39a93cc4558c590">cpprob::ConditionalCategoricalDistribution</a>
-, <a class="el" href="classcpprob_1_1RandomProbabilities.html#acbfa04343af04046e58cd84ddd0bc549">cpprob::RandomProbabilities</a>
+</li>
+<li>is_evidence()
+: <a class="el" href="classcpprob_1_1DiscreteNode.html#ab00259b727fdbd146d35ef29763b58e5">cpprob::DiscreteNode</a>
+, <a class="el" href="classcpprob_1_1ConstantNode.html#a51ae173808ed5682aa941f1c6ad6e986">cpprob::ConstantNode&lt; T &gt;</a>
+, <a class="el" href="classcpprob_1_1DirichletNode.html#a6d6613ab23e8829c0e6adaa5dddcc408">cpprob::DirichletNode</a>
+, <a class="el" href="classcpprob_1_1ConditionalDirichletNode.html#a7e10435da46c57f4ac2763891527a84f">cpprob::ConditionalDirichletNode</a>
+, <a class="el" href="classcpprob_1_1DirichletNode.html#ad69fbb9443679e9f435be2513f1d2721">cpprob::DirichletNode</a>
+, <a class="el" href="classcpprob_1_1DiscreteNode.html#a9bd568230905d316529ab749ba82cbd6">cpprob::DiscreteNode</a>
 </li>
 </ul>
 </div>
@@ -142,7 +160,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:06 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -93,6 +100,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_0x66.html#index_f"><span>f</span></a></li>
       <li><a href="functions_0x67.html#index_g"><span>g</span></a></li>
       <li><a href="functions_0x69.html#index_i"><span>i</span></a></li>
+      <li><a href="functions_0x6a.html#index_j"><span>j</span></a></li>
       <li><a href="functions_0x6b.html#index_k"><span>k</span></a></li>
       <li><a href="functions_0x6c.html#index_l"><span>l</span></a></li>
       <li><a href="functions_0x6d.html#index_m"><span>m</span></a></li>
@@ -102,7 +110,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_0x72.html#index_r"><span>r</span></a></li>
       <li class="current"><a href="functions_0x73.html#index_s"><span>s</span></a></li>
       <li><a href="functions_0x74.html#index_t"><span>t</span></a></li>
-      <li><a href="functions_0x75.html#index_u"><span>u</span></a></li>
       <li><a href="functions_0x76.html#index_v"><span>v</span></a></li>
       <li><a href="functions_0x77.html#index_w"><span>w</span></a></li>
       <li><a href="functions_0x7e.html#index_0x7e"><span>~</span></a></li>
@@ -114,37 +121,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
 <li>sample()
-: <a class="el" href="classcpprob_1_1BayesianNetwork_1_1MarkovBlanket.html#a01cdadce225be2d15903a259ea38489f">cpprob::BayesianNetwork::MarkovBlanket</a>
-, <a class="el" href="classcpprob_1_1BayesianNetwork_1_1CategoricalMarkovBlanket.html#a4bebeb7009dbfebe0cbc0c3a822808ff">cpprob::BayesianNetwork::CategoricalMarkovBlanket</a>
-, <a class="el" href="classcpprob_1_1BayesianNetwork.html#a3bcd08decc1e728cd5e349b9947391db">cpprob::BayesianNetwork</a>
-, <a class="el" href="classcpprob_1_1BayesianNetwork_1_1DirichletMarkovBlanket.html#a857cd0154badb600df04571372280b9a">cpprob::BayesianNetwork::DirichletMarkovBlanket</a>
+: <a class="el" href="classcpprob_1_1BayesianNetwork.html#a02eb30594bcce930d0bd90d5afb2de89">cpprob::BayesianNetwork</a>
+, <a class="el" href="classcpprob_1_1CategoricalNode.html#a0237bf0847c012caa696f8fc61f91f4d">cpprob::CategoricalNode</a>
+, <a class="el" href="classcpprob_1_1ConditionalDirichletNode.html#ad5d54c448392a1889dea225764a6e59f">cpprob::ConditionalDirichletNode</a>
+, <a class="el" href="classcpprob_1_1DirichletNode.html#a9789e7037d87e7ab255df27aeaca8729">cpprob::DirichletNode</a>
+, <a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html#aece016a3eb9d2ce87c4ebb9f33a6b33b">cpprob::ConditionalCategoricalNode</a>
+, <a class="el" href="classcpprob_1_1DiscreteNode.html#a179a34a9d72ba5c367bf8f06bcbcfada">cpprob::DiscreteNode</a>
+</li>
+<li>sampling_variate_
+: <a class="el" href="classcpprob_1_1DiscreteNode.html#a63145e065b55133bde1d1ec06526fc30">cpprob::DiscreteNode</a>
 </li>
 <li>set()
-: <a class="el" href="classcpprob_1_1RandomProbabilities.html#ae823d55a0163ee8c73657391a9928ec8">cpprob::RandomProbabilities</a>
-, <a class="el" href="classcpprob_1_1CategoricalDistribution.html#ae2c7b311e6b50fd71b1ed4ba1bc18e3e">cpprob::CategoricalDistribution</a>
-, <a class="el" href="classcpprob_1_1ConditionalCategoricalDistribution.html#a71c7a779243ad593722ac437ffc7e8d1">cpprob::ConditionalCategoricalDistribution</a>
-, <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html#a5caffdacd050cbab1deab0efac45933e">cpprob::RandomConditionalProbabilities</a>
+: <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html#a5caffdacd050cbab1deab0efac45933e">cpprob::RandomConditionalProbabilities</a>
+, <a class="el" href="classcpprob_1_1RandomProbabilities.html#ae823d55a0163ee8c73657391a9928ec8">cpprob::RandomProbabilities</a>
 </li>
 <li>set_up_characteristics()
-: <a class="el" href="classcpprob_1_1BooleanRandomVariable.html#a296276b58357973a9181db3f28aba0d8">cpprob::BooleanRandomVariable</a>
-</li>
-<li>setBaseRate()
-: <a class="el" href="classcpprob_1_1Opinion.html#a56e9d3aaec705b11f844ba8281b63077">cpprob::Opinion&lt; size_ &gt;</a>
-</li>
-<li>setEvidence()
-: <a class="el" href="classcpprob_1_1Opinion.html#ac28c6af701c6a3f4f6c3b8d54c335d59">cpprob::Opinion&lt; size_ &gt;</a>
+: <a class="el" href="classcpprob_1_1RandomBoolean.html#a3563b47e097c841a6808682f4619c697">cpprob::RandomBoolean</a>
 </li>
 <li>size()
-: <a class="el" href="classcpprob_1_1Opinion.html#ad14c615bbab33d3ddc3d89aedd4c3446">cpprob::Opinion&lt; size_ &gt;</a>
+: <a class="el" href="classcpprob_1_1BayesianNetwork.html#a32b9a92eaffec2e5127db32fc3b57e9c">cpprob::BayesianNetwork</a>
 , <a class="el" href="classcpprob_1_1DiscreteRandomVariable_1_1Range.html#a4700007f663059d9a8f75699f1f9e5e8">cpprob::DiscreteRandomVariable::Range</a>
 , <a class="el" href="classcpprob_1_1RandomProbabilities.html#a05c38042f9e9931cd3ead470439babb1">cpprob::RandomProbabilities</a>
-, <a class="el" href="classcpprob_1_1BayesianNetwork.html#a32b9a92eaffec2e5127db32fc3b57e9c">cpprob::BayesianNetwork</a>
+, <a class="el" href="classcpprob_1_1DiscreteRandomReferences.html#ac299265b334c6829f4b409867865cade">cpprob::DiscreteRandomReferences</a>
 </li>
 <li>size_
 : <a class="el" href="structcpprob_1_1DiscreteRandomVariable_1_1Characteristics.html#a737232e9d8bfd75a48131dfa2cc23714">cpprob::DiscreteRandomVariable::Characteristics</a>
 </li>
 <li>size_type
-: <a class="el" href="classcpprob_1_1RandomProbabilities.html#af727dc296356b7af6dd91b76b0a010d7">cpprob::RandomProbabilities</a>
+: <a class="el" href="classcpprob_1_1DiscreteRandomReferences.html#a58378a31c0668979f19ebc82ce41cfe2">cpprob::DiscreteRandomReferences</a>
+, <a class="el" href="classcpprob_1_1RandomProbabilities.html#af727dc296356b7af6dd91b76b0a010d7">cpprob::RandomProbabilities</a>
 </li>
 <li>StreamOut()
 : <a class="el" href="classcpprob_1_1StreamOut.html#a1fb43ba5833dc5935049549366a72c56">cpprob::StreamOut</a>
@@ -168,7 +173,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:06 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

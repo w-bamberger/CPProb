@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -95,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="cpprob::DiscreteRandomVariable" --><!-- doxytag: inherits="cpprob::RandomVariable" -->
-<p><code>#include &lt;<a class="el" href="discrete__random__variable_8hpp_source.html">discrete_random_variable.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="DiscreteRandomVariable_8hpp_source.html">DiscreteRandomVariable.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for cpprob::DiscreteRandomVariable:</div>
 <div class="dyncontent">
@@ -103,8 +110,8 @@ Inheritance diagram for cpprob::DiscreteRandomVariable:</div>
   <img src="classcpprob_1_1DiscreteRandomVariable.png" usemap="#cpprob::DiscreteRandomVariable_map" alt=""/>
   <map id="cpprob::DiscreteRandomVariable_map" name="cpprob::DiscreteRandomVariable_map">
 <area href="classcpprob_1_1RandomVariable.html" title="A RandomVariable represents the outcome of a statistical experiment." alt="cpprob::RandomVariable" shape="rect" coords="117,0,342,24"/>
-<area href="classcpprob_1_1BooleanRandomVariable.html" alt="cpprob::BooleanRandomVariable" shape="rect" coords="0,112,225,136"/>
-<area href="classcpprob_1_1DiscreteJointRandomVariable.html" alt="cpprob::DiscreteJointRandomVariable" shape="rect" coords="235,112,460,136"/>
+<area href="classcpprob_1_1DiscreteJointRandomVariable.html" alt="cpprob::DiscreteJointRandomVariable" shape="rect" coords="0,112,225,136"/>
+<area href="classcpprob_1_1RandomBoolean.html" alt="cpprob::RandomBoolean" shape="rect" coords="235,112,460,136"/>
 </map>
  </div></div>
 
@@ -151,6 +158,7 @@ Static Protected Attributes</h2></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DiscreteRandomVariable.html#ab7dfeb34657ac15f1c9af18e8705332b">DiscreteJointRandomVariable</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1DiscreteRandomVariable.html#a2714af3895a118c6fa11017170a66973">DiscreteRandomReferences</a></td></tr>
 </table>
 <hr/><h2>Member Typedef Documentation</h2>
 <a class="anchor" id="af0d7a219c3b3e47286f0e421848cbba4"></a><!-- doxytag: member="cpprob::DiscreteRandomVariable::CharacteristicsTable" ref="af0d7a219c3b3e47286f0e421848cbba4" args="" -->
@@ -244,8 +252,8 @@ Friends</h2></td></tr>
 
 <p>Generates a random value in the range of the random variable and assigns it to itself. </p>
 <p>This may be useful for certain algorithms, e.g. to generate start values.</p>
-<p>The argument is a C++ random number engine. You can find those engines in the standard TR1 header <em>random</em>. They are uniform pseudo-random number generators. From these engine, non-uniform number generators can be derived. Here the engine must be of the type defined in the project header random_number_engine.h. It is best to use the global variable <a class="el" href="namespacecpprob.html#a2e4df6f03df56118cee429257a727dae">cpprob::random_number_engine</a>. In the future, this argument will be removed.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Remove rne argument in favor of the global variable.</dd></dl>
+<p>The argument is a C++ random number engine. You can find those engines in the standard TR1 header <em>random</em>. They are uniform pseudo-random number generators. From these engine, non-uniform number generators can be derived. Here the engine must be of the type defined in the project header RandomNumberEngine.h. It is best to use the global variable <a class="el" href="namespacecpprob.html#a2e4df6f03df56118cee429257a727dae">cpprob::random_number_engine</a>. In the future, this argument will be removed.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Remove rne argument in favor of the global variable.</dd></dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">rne</td><td>the random number engine to use as the source of randomness </td></tr>
@@ -253,7 +261,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Creating the variate every time from scratch is slow. </dd></dl>
+<p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Creating the variate every time from scratch is slow. </dd></dl>
 </p>
 
 <p>Implements <a class="el" href="classcpprob_1_1RandomVariable.html#a82aef0e4f5a0068ef358b047ab5d92dd">cpprob::RandomVariable</a>.</p>
@@ -448,7 +456,7 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classcpprob_1_1RandomVariable.html#a5e940ad36f57e9ed3d38910bd2923da4">cpprob::RandomVariable</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classcpprob_1_1BooleanRandomVariable.html#a71973853c0fe01ad150ada88b94cfa6d">cpprob::BooleanRandomVariable</a>, and <a class="el" href="classcpprob_1_1DiscreteJointRandomVariable.html#adf14e8bc8a310c06926c29c0c200d1e1">cpprob::DiscreteJointRandomVariable</a>.</p>
+<p>Reimplemented in <a class="el" href="classcpprob_1_1DiscreteJointRandomVariable.html#adf14e8bc8a310c06926c29c0c200d1e1">cpprob::DiscreteJointRandomVariable</a>, and <a class="el" href="classcpprob_1_1RandomBoolean.html#a203438d04259af6b4f7090a497b4c173">cpprob::RandomBoolean</a>.</p>
 
 </div>
 </div>
@@ -499,6 +507,19 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a2714af3895a118c6fa11017170a66973"></a><!-- doxytag: member="cpprob::DiscreteRandomVariable::DiscreteRandomReferences" ref="a2714af3895a118c6fa11017170a66973" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classcpprob_1_1DiscreteRandomReferences.html">DiscreteRandomReferences</a><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/><h2>Member Data Documentation</h2>
 <a class="anchor" id="a374bd4e94f00e4a3aa093a59bf5b8332"></a><!-- doxytag: member="cpprob::DiscreteRandomVariable::characteristics_" ref="a374bd4e94f00e4a3aa093a59bf5b8332" args="" -->
 <div class="memitem">
@@ -540,8 +561,8 @@ Friends</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="discrete__random__variable_8hpp_source.html">discrete_random_variable.hpp</a></li>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="discrete__random__variable_8cpp.html">discrete_random_variable.cpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="DiscreteRandomVariable_8hpp_source.html">DiscreteRandomVariable.hpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="DiscreteRandomVariable_8cpp.html">DiscreteRandomVariable.cpp</a></li>
 </ul>
 </div>
 <!-- window showing the filter options -->
@@ -561,7 +582,7 @@ Friends</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:06 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>

@@ -18,7 +18,7 @@
 <div id="top"><!-- do not remove this div! -->
 
 <div id="titlearea">
-<table cellspacing="0" cellpadding="0">
+<table cellspacing="0" cellpadding="0" style="width:100%">
  <tbody>
  <tr style="height: 56px;">
   
@@ -27,11 +27,18 @@
    <div id="projectname">CPProb
    
    </div>
-   <div id="projectbrief">Probabilistic Reasoning with C++</div>
+   <div id="projectbrief">Algorithms for Probabilistic Reasoning</div>
   </td>
   
   
   
+  <!-- <td style="width:150px;text-align:center;background:#F9FAFC">CPProb at GitHub</td>
+   <td style="width:150px;text-align:center;background:#F9FAFC">Support</td> -->
+    
+   <td><ul class="tablist" style="position: relative; float: right; top: 13px;">
+     <li><a href="https://github.com/w-bamberger/CPProb">CPProb at GitHub</a></li>
+     <li><a href="https://convore.com/cpprob/">Support at Convore</a></li>
+   </ul></td>
  </tr>
  </tbody>
 </table>
@@ -92,59 +99,70 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <!-- doxytag: class="cpprob::BayesianNetwork" -->
-<p><code>#include &lt;<a class="el" href="bayesian__network_8hpp_source.html">bayesian_network.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="BayesianNetwork_8hpp_source.html">BayesianNetwork.hpp</a>&gt;</code></p>
 
 <p><a href="classcpprob_1_1BayesianNetwork-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1CategoricalMarkovBlanket.html">CategoricalMarkovBlanket</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1CompareVertexName.html">CompareVertexName</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1DirichletMarkovBlanket.html">DirichletMarkovBlanket</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1MarkovBlanket.html">MarkovBlanket</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1NameOfVertex.html">NameOfVertex</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1ProbabilityVisitor.html">ProbabilityVisitor</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1Vertex.html">Vertex</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1CopyNode.html">CopyNode</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork_1_1LearnParameters.html">LearnParameters</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef VertexList::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#adff293c5ce008b298735d51f24117f3c">const_iterator</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef VertexList::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef cont::list&lt; <a class="el" href="classcpprob_1_1BayesianNetwork_1_1Vertex.html">Vertex</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a1abad8a853ec04627984181f385b5e49">VertexList</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef cont::list&lt; <a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a093967a427e3f554743c9546dc32b2f9">VertexReferences</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef NodeList::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab75d2aff16bfa1ea2219bb34992e4a5d">const_iterator</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef NodeList::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a39623882019176d6f98165a15050bbbe">iterator</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef boost::variant<br class="typebreak"/>
+&lt; <a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a>, <br class="typebreak"/>
+<a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a>, <br class="typebreak"/>
+<a class="el" href="classcpprob_1_1ConditionalDirichletNode.html">ConditionalDirichletNode</a>, <br class="typebreak"/>
+<a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a><br class="typebreak"/>
+&lt; <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &gt;<br class="typebreak"/>
+, <a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a><br class="typebreak"/>
+&lt; <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> &gt;<br class="typebreak"/>
+, <a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a><br class="typebreak"/>
+&lt; <a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a> &gt;<br class="typebreak"/>
+, <a class="el" href="classcpprob_1_1DirichletNode.html">DirichletNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a81af8f9a823470710d4a892652441b8a">Node</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a06aed1b33c97025e215d46ecbb63bb9d">BayesianNetwork</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a5e5cb83d2473b68c9d533fdfbfa1471d">BayesianNetwork</a> (const <a class="el" href="classcpprob_1_1BayesianNetwork.html">BayesianNetwork</a> &amp;other_hbn)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a2df50634d6d9ae0a19be7581331821d9">~BayesianNetwork</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a60770c1f182f3622e7402a55f69e2cf8">add_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;var)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#ad0dcd081d96f61c715264bd38f3c76ca">add_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;var, <a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a> params_vertex)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a9b9ac4f72a65523fd56672debcc326af">add_conditional_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;var, const <a class="el" href="classcpprob_1_1BayesianNetwork.html#a093967a427e3f554743c9546dc32b2f9">VertexReferences</a> &amp;parents)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a455995a49dd3408ef032f5bc3fb1d9d5">add_conditional_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;var, const <a class="el" href="classcpprob_1_1BayesianNetwork.html#a093967a427e3f554743c9546dc32b2f9">VertexReferences</a> &amp;parents, <a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a> params_vertex)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3b344eb56568edb20aab06a29c82deeb">add_conditional_dirichlet</a> (const <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> &amp;var, float alpha)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab22d27accb4e1be85f9cd5bf5e70c2ca">add_constant</a> (const <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> &amp;var)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a42e66dcbf96afd9be69f324697aebb7e">add_constant</a> (const <a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a> &amp;var)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#abb8d907677f8c98a19a962b8f532722c">add_dirichlet</a> (const <a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a> &amp;var, float alpha)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#aeb807814daaa8981dd576e0a78bc459c">begin</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#adff293c5ce008b298735d51f24117f3c">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a8456efbef5878e24c9a648d3777bdfa5">begin</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#af2edc6de00838869c62cc2a37594a563">end</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#adff293c5ce008b298735d51f24117f3c">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a6355d3d2a19b28f9ef66f4c637168cd2">end</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a18c5837d11faa55658b042d3d3bacb9a">enumerate</a> (<a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a> X_v)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the probability distribution of the given vertex by enumeration.  <a href="#a18c5837d11faa55658b042d3d3bacb9a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#aaeaea4fbe7a2992f91c7db5f72118831">add_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;value)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class N &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a419b71f9e4b36121b03673299424238d">add_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;value, N &amp;parameter_node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3ed29ec0a75cb5318171b1d8050ebc83">add_conditional_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;value, const cont::list&lt; <a class="el" href="classcpprob_1_1DiscreteNode.html">DiscreteNode</a> * &gt; &amp;condition_nodes)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class N &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a6fbaad8709adf20b90d88b939f907cba">add_conditional_categorical</a> (const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;value, const cont::list&lt; <a class="el" href="classcpprob_1_1DiscreteNode.html">DiscreteNode</a> * &gt; &amp;condition_nodes, N &amp;parameter_node)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1ConditionalDirichletNode.html">ConditionalDirichletNode</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a384387f864613dcdda64dd6cccb56cf7">add_conditional_dirichlet</a> (const <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> &amp;value, float alpha)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class V &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a>&lt; V &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#afa7c0b67ea06db3bf35d1f4406805721">add_constant</a> (const V &amp;value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1DirichletNode.html">DirichletNode</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3ab4b6ac83d6906aa2bdc9cffe476cf6">add_dirichlet</a> (const <a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a> &amp;value, float alpha)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a39623882019176d6f98165a15050bbbe">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a9a662d792c9fb3b928f89ab2e5327d22">begin</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab75d2aff16bfa1ea2219bb34992e4a5d">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a0e1ede8d760324203a89da20e47e5e4d">begin</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a39623882019176d6f98165a15050bbbe">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#acda8bffbf07f61e6b1cc6ff0636f5a69">end</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab75d2aff16bfa1ea2219bb34992e4a5d">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#af8d1760db3cc54edc7a8bf23a78a899d">end</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a665595a91a90636eb3584065054a69d6">enumerate</a> (<a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a> &amp;X_n)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the probability distribution of the given vertex by enumeration.  <a href="#a665595a91a90636eb3584065054a69d6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a0a6c3afadd3d4494c70edb48eec57c46">enumerate</a> (<a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a> &amp;X_n)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class N &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">N &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a70caabf52e4d389d3a8d6b3bc5821272">find</a> (const std::string &amp;name)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class N &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">const N &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a9d2bf5caeef265172941729fad4d632d">find</a> (const std::string &amp;name) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a1cd1bcd2e4888d114ff036a0162a5dd6">learn</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills the values of parameter vertices from the data in the network.  <a href="#a1cd1bcd2e4888d114ff036a0162a5dd6"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a3bcd08decc1e728cd5e349b9947391db">sample</a> (const <a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a> &amp;X_it, unsigned int burn_in_iterations, unsigned int collect_iterations)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a02eb30594bcce930d0bd90d5afb2de89">sample</a> (const <a class="el" href="classcpprob_1_1DiscreteNode.html">DiscreteNode</a> &amp;X, unsigned int burn_in_iterations, unsigned int collect_iterations)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a32b9a92eaffec2e5127db32fc3b57e9c">size</a> () const </td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a5b69d390f5888c50a31ebbcd93e169be">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classcpprob_1_1BayesianNetwork.html">BayesianNetwork</a> &amp;hbn)</td></tr>
 </table>
 <hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="adff293c5ce008b298735d51f24117f3c"></a><!-- doxytag: member="cpprob::BayesianNetwork::const_iterator" ref="adff293c5ce008b298735d51f24117f3c" args="" -->
+<a class="anchor" id="ab75d2aff16bfa1ea2219bb34992e4a5d"></a><!-- doxytag: member="cpprob::BayesianNetwork::const_iterator" ref="ab75d2aff16bfa1ea2219bb34992e4a5d" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef VertexList::const_iterator <a class="el" href="classcpprob_1_1BayesianNetwork.html#adff293c5ce008b298735d51f24117f3c">cpprob::BayesianNetwork::const_iterator</a></td>
+          <td class="memname">typedef NodeList::const_iterator <a class="el" href="classcpprob_1_1BayesianNetwork.html#ab75d2aff16bfa1ea2219bb34992e4a5d">cpprob::BayesianNetwork::const_iterator</a></td>
         </tr>
       </table>
 </div>
@@ -152,12 +170,12 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a870cea9d3ab58688d0f6a43cdd8d8491"></a><!-- doxytag: member="cpprob::BayesianNetwork::iterator" ref="a870cea9d3ab58688d0f6a43cdd8d8491" args="" -->
+<a class="anchor" id="a39623882019176d6f98165a15050bbbe"></a><!-- doxytag: member="cpprob::BayesianNetwork::iterator" ref="a39623882019176d6f98165a15050bbbe" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef VertexList::iterator <a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">cpprob::BayesianNetwork::iterator</a></td>
+          <td class="memname">typedef NodeList::iterator <a class="el" href="classcpprob_1_1BayesianNetwork.html#a39623882019176d6f98165a15050bbbe">cpprob::BayesianNetwork::iterator</a></td>
         </tr>
       </table>
 </div>
@@ -165,25 +183,12 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a1abad8a853ec04627984181f385b5e49"></a><!-- doxytag: member="cpprob::BayesianNetwork::VertexList" ref="a1abad8a853ec04627984181f385b5e49" args="" -->
+<a class="anchor" id="a81af8f9a823470710d4a892652441b8a"></a><!-- doxytag: member="cpprob::BayesianNetwork::Node" ref="a81af8f9a823470710d4a892652441b8a" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef cont::list&lt;<a class="el" href="classcpprob_1_1BayesianNetwork_1_1Vertex.html">Vertex</a>&gt; <a class="el" href="classcpprob_1_1BayesianNetwork.html#a1abad8a853ec04627984181f385b5e49">cpprob::BayesianNetwork::VertexList</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a093967a427e3f554743c9546dc32b2f9"></a><!-- doxytag: member="cpprob::BayesianNetwork::VertexReferences" ref="a093967a427e3f554743c9546dc32b2f9" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef cont::list&lt;<a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&gt; <a class="el" href="classcpprob_1_1BayesianNetwork.html#a093967a427e3f554743c9546dc32b2f9">cpprob::BayesianNetwork::VertexReferences</a></td>
+          <td class="memname">typedef boost::variant&lt;<a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a>, <a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a>, <a class="el" href="classcpprob_1_1ConditionalDirichletNode.html">ConditionalDirichletNode</a>, <a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a>&lt;<a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a>&gt;, <a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a>&lt;<a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a>&gt;, <a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a>&lt;<a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a>&gt;, <a class="el" href="classcpprob_1_1DirichletNode.html">DirichletNode</a>&gt; <a class="el" href="classcpprob_1_1BayesianNetwork.html#a81af8f9a823470710d4a892652441b8a">cpprob::BayesianNetwork::Node</a></td>
         </tr>
       </table>
 </div>
@@ -222,7 +227,6 @@ Friends</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Copying does not work correctly yet. </dd></dl>
 
 </div>
 </div>
@@ -243,15 +247,15 @@ Friends</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a60770c1f182f3622e7402a55f69e2cf8"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_categorical" ref="a60770c1f182f3622e7402a55f69e2cf8" args="(const DiscreteRandomVariable &amp;var)" -->
+<a class="anchor" id="aaeaea4fbe7a2992f91c7db5f72118831"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_categorical" ref="aaeaea4fbe7a2992f91c7db5f72118831" args="(const DiscreteRandomVariable &amp;value)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_categorical </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a> &amp; cpprob::BayesianNetwork::add_categorical </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em></td><td>)</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -260,21 +264,85 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad0dcd081d96f61c715264bd38f3c76ca"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_categorical" ref="ad0dcd081d96f61c715264bd38f3c76ca" args="(const DiscreteRandomVariable &amp;var, iterator params_vertex)" -->
+<a class="anchor" id="a419b71f9e4b36121b03673299424238d"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_categorical" ref="a419b71f9e4b36121b03673299424238d" args="(const DiscreteRandomVariable &amp;value, N &amp;parameter_node)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class N &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_categorical </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a>&amp; cpprob::BayesianNetwork::add_categorical </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em>, </td>
+          <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td>
-          <td class="paramname"><em>params_vertex</em>&#160;</td>
+          <td class="paramtype">N &amp;&#160;</td>
+          <td class="paramname"><em>parameter_node</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6fbaad8709adf20b90d88b939f907cba"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_conditional_categorical" ref="a6fbaad8709adf20b90d88b939f907cba" args="(const DiscreteRandomVariable &amp;value, const cont::list&lt; DiscreteNode * &gt; &amp;condition_nodes, N &amp;parameter_node)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class N &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a>&amp; cpprob::BayesianNetwork::add_conditional_categorical </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cont::list&lt; <a class="el" href="classcpprob_1_1DiscreteNode.html">DiscreteNode</a> * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>condition_nodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">N &amp;&#160;</td>
+          <td class="paramname"><em>parameter_node</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3ed29ec0a75cb5318171b1d8050ebc83"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_conditional_categorical" ref="a3ed29ec0a75cb5318171b1d8050ebc83" args="(const DiscreteRandomVariable &amp;value, const cont::list&lt; DiscreteNode * &gt; &amp;condition_nodes)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a> &amp; cpprob::BayesianNetwork::add_conditional_categorical </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cont::list&lt; <a class="el" href="classcpprob_1_1DiscreteNode.html">DiscreteNode</a> * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>condition_nodes</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -287,75 +355,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a455995a49dd3408ef032f5bc3fb1d9d5"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_conditional_categorical" ref="a455995a49dd3408ef032f5bc3fb1d9d5" args="(const DiscreteRandomVariable &amp;var, const VertexReferences &amp;parents, iterator params_vertex)" -->
+<a class="anchor" id="a384387f864613dcdda64dd6cccb56cf7"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_conditional_dirichlet" ref="a384387f864613dcdda64dd6cccb56cf7" args="(const RandomConditionalProbabilities &amp;value, float alpha)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_conditional_categorical </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcpprob_1_1BayesianNetwork.html#a093967a427e3f554743c9546dc32b2f9">VertexReferences</a> &amp;&#160;</td>
-          <td class="paramname"><em>parents</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td>
-          <td class="paramname"><em>params_vertex</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a9b9ac4f72a65523fd56672debcc326af"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_conditional_categorical" ref="a9b9ac4f72a65523fd56672debcc326af" args="(const DiscreteRandomVariable &amp;var, const VertexReferences &amp;parents)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_conditional_categorical </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcpprob_1_1BayesianNetwork.html#a093967a427e3f554743c9546dc32b2f9">VertexReferences</a> &amp;&#160;</td>
-          <td class="paramname"><em>parents</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a3b344eb56568edb20aab06a29c82deeb"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_conditional_dirichlet" ref="a3b344eb56568edb20aab06a29c82deeb" args="(const RandomConditionalProbabilities &amp;var, float alpha)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_conditional_dirichlet </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1ConditionalDirichletNode.html">ConditionalDirichletNode</a> &amp; cpprob::BayesianNetwork::add_conditional_dirichlet </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em>, </td>
+          <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -374,16 +382,18 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab22d27accb4e1be85f9cd5bf5e70c2ca"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_constant" ref="ab22d27accb4e1be85f9cd5bf5e70c2ca" args="(const RandomConditionalProbabilities &amp;var)" -->
+<a class="anchor" id="afa7c0b67ea06db3bf35d1f4406805721"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_constant" ref="afa7c0b67ea06db3bf35d1f4406805721" args="(const V &amp;value)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class V &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_constant </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1ConstantNode.html">ConstantNode</a>&lt;V&gt;&amp; cpprob::BayesianNetwork::add_constant </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em></td><td>)</td>
-          <td></td>
+          <td class="paramtype">const V &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -391,32 +401,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a42e66dcbf96afd9be69f324697aebb7e"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_constant" ref="a42e66dcbf96afd9be69f324697aebb7e" args="(const RandomProbabilities &amp;var)" -->
+<a class="anchor" id="a3ab4b6ac83d6906aa2bdc9cffe476cf6"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_dirichlet" ref="a3ab4b6ac83d6906aa2bdc9cffe476cf6" args="(const RandomProbabilities &amp;value, float alpha)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_constant </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1DirichletNode.html">DirichletNode</a> &amp; cpprob::BayesianNetwork::add_dirichlet </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abb8d907677f8c98a19a962b8f532722c"></a><!-- doxytag: member="cpprob::BayesianNetwork::add_dirichlet" ref="abb8d907677f8c98a19a962b8f532722c" args="(const RandomProbabilities &amp;var, float alpha)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::add_dirichlet </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcpprob_1_1RandomProbabilities.html">RandomProbabilities</a> &amp;&#160;</td>
-          <td class="paramname"><em>var</em>, </td>
+          <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -435,15 +428,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aeb807814daaa8981dd576e0a78bc459c"></a><!-- doxytag: member="cpprob::BayesianNetwork::begin" ref="aeb807814daaa8981dd576e0a78bc459c" args="()" -->
+<a class="anchor" id="a9a662d792c9fb3b928f89ab2e5327d22"></a><!-- doxytag: member="cpprob::BayesianNetwork::begin" ref="a9a662d792c9fb3b928f89ab2e5327d22" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::begin </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a39623882019176d6f98165a15050bbbe">iterator</a> cpprob::BayesianNetwork::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -451,15 +444,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a8456efbef5878e24c9a648d3777bdfa5"></a><!-- doxytag: member="cpprob::BayesianNetwork::begin" ref="a8456efbef5878e24c9a648d3777bdfa5" args="() const " -->
+<a class="anchor" id="a0e1ede8d760324203a89da20e47e5e4d"></a><!-- doxytag: member="cpprob::BayesianNetwork::begin" ref="a0e1ede8d760324203a89da20e47e5e4d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#adff293c5ce008b298735d51f24117f3c">BayesianNetwork::const_iterator</a> cpprob::BayesianNetwork::begin </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab75d2aff16bfa1ea2219bb34992e4a5d">const_iterator</a> cpprob::BayesianNetwork::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -467,15 +460,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="af2edc6de00838869c62cc2a37594a563"></a><!-- doxytag: member="cpprob::BayesianNetwork::end" ref="af2edc6de00838869c62cc2a37594a563" args="()" -->
+<a class="anchor" id="af8d1760db3cc54edc7a8bf23a78a899d"></a><!-- doxytag: member="cpprob::BayesianNetwork::end" ref="af8d1760db3cc54edc7a8bf23a78a899d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">BayesianNetwork::iterator</a> cpprob::BayesianNetwork::end </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#ab75d2aff16bfa1ea2219bb34992e4a5d">const_iterator</a> cpprob::BayesianNetwork::end </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -483,15 +476,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6355d3d2a19b28f9ef66f4c637168cd2"></a><!-- doxytag: member="cpprob::BayesianNetwork::end" ref="a6355d3d2a19b28f9ef66f4c637168cd2" args="() const " -->
+<a class="anchor" id="acda8bffbf07f61e6b1cc6ff0636f5a69"></a><!-- doxytag: member="cpprob::BayesianNetwork::end" ref="acda8bffbf07f61e6b1cc6ff0636f5a69" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#adff293c5ce008b298735d51f24117f3c">BayesianNetwork::const_iterator</a> cpprob::BayesianNetwork::end </td>
+          <td class="memname"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a39623882019176d6f98165a15050bbbe">iterator</a> cpprob::BayesianNetwork::end </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -499,15 +492,32 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a18c5837d11faa55658b042d3d3bacb9a"></a><!-- doxytag: member="cpprob::BayesianNetwork::enumerate" ref="a18c5837d11faa55658b042d3d3bacb9a" args="(iterator X_v)" -->
+<a class="anchor" id="a0a6c3afadd3d4494c70edb48eec57c46"></a><!-- doxytag: member="cpprob::BayesianNetwork::enumerate" ref="a0a6c3afadd3d4494c70edb48eec57c46" args="(ConditionalCategoricalNode &amp;X_n)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a> cpprob::BayesianNetwork::enumerate </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a>&#160;</td>
-          <td class="paramname"><em>X_v</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classcpprob_1_1ConditionalCategoricalNode.html">ConditionalCategoricalNode</a> &amp;&#160;</td>
+          <td class="paramname"><em>X_n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a665595a91a90636eb3584065054a69d6"></a><!-- doxytag: member="cpprob::BayesianNetwork::enumerate" ref="a665595a91a90636eb3584065054a69d6" args="(CategoricalNode &amp;X_n)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a> cpprob::BayesianNetwork::enumerate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcpprob_1_1CategoricalNode.html">CategoricalNode</a> &amp;&#160;</td>
+          <td class="paramname"><em>X_n</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -515,10 +525,10 @@ Friends</h2></td></tr>
 <div class="memdoc">
 
 <p>Computes the probability distribution of the given vertex by enumeration. </p>
-<p>This algorithm only works with discrete distributions (<a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a> and <a class="el" href="classcpprob_1_1ConditionalCategoricalDistribution.html">ConditionalCategoricalDistribution</a>). To allow continuous variables for fixed parents vertices, you must associate them with the DeltaDistribution.</p>
+<p>This algorithm only works with discrete distributions (<a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a> and ConditionalCategoricalDistribution). To allow continuous variables for fixed parents vertices, you must associate them with the DeltaDistribution.</p>
 <p>For such a discrete Bayesian network, the joint probability can be computed by enumerating all possible states. This is what this algorithm does.</p>
 <dl class="user"><dt><b>Requires:</b></dt><dd><ul>
-<li>The network consists only of random variables of the type <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> or its sub-classes and of distributions of the types <a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a> and <a class="el" href="classcpprob_1_1ConditionalCategoricalDistribution.html">ConditionalCategoricalDistribution</a>. The only exception is an evidence vertex without parents. Such a vertex may use the DeltaDistribution.</li>
+<li>The network consists only of random variables of the type <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> or its sub-classes and of distributions of the types <a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a> and ConditionalCategoricalDistribution. The only exception is an evidence vertex without parents. Such a vertex may use the DeltaDistribution.</li>
 </ul>
 </dd></dl>
 <dl class="user"><dt><b>Ensures:</b></dt><dd><ul>
@@ -528,7 +538,7 @@ Friends</h2></td></tr>
 </dd></dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">X_v</td><td>vertex whose distribution should be computed </td></tr>
+    <tr><td class="paramname">X_n</td><td>node whose distribution should be computed </td></tr>
   </table>
   </dd>
 </dl>
@@ -540,6 +550,44 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a9d2bf5caeef265172941729fad4d632d"></a><!-- doxytag: member="cpprob::BayesianNetwork::find" ref="a9d2bf5caeef265172941729fad4d632d" args="(const std::string &amp;name) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class N &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const N&amp; cpprob::BayesianNetwork::find </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a70caabf52e4d389d3a8d6b3bc5821272"></a><!-- doxytag: member="cpprob::BayesianNetwork::find" ref="a70caabf52e4d389d3a8d6b3bc5821272" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class N &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">N&amp; cpprob::BayesianNetwork::find </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -558,11 +606,11 @@ Friends</h2></td></tr>
 <div class="memdoc">
 
 <p>Fills the values of parameter vertices from the data in the network. </p>
-<p>This method looks for the non-evidence vertices with random variables of the types <a class="el" href="classcpprob_1_1RandomProbabilities.html" title="Random vector that represents a probability table.">RandomProbabilities</a> or <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a>. It then tries to learn these probabilities from the values of the child vertices that are evidence. The method is maximum a posteriori learning if the parameters are associated with a <a class="el" href="classcpprob_1_1DirichletDistribution.html">DirichletDistribution</a> or a <a class="el" href="classcpprob_1_1CondDirichletDistribution.html">CondDirichletDistribution</a> as their prior. If such a prior is not found, maximum likelihood learning is used.</p>
+<p>This method looks for the non-evidence vertices with random variables of the types <a class="el" href="classcpprob_1_1RandomProbabilities.html" title="Random vector that represents a probability table.">RandomProbabilities</a> or <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a>. It then tries to learn these probabilities from the values of the child vertices that are evidence. The method is maximum a posteriori learning if the parameters are associated with a <a class="el" href="classcpprob_1_1DirichletDistribution.html">DirichletDistribution</a> or a CondDirichletDistribution as their prior. If such a prior is not found, maximum likelihood learning is used.</p>
 <dl class="user"><dt><b>Requires:</b></dt><dd><ul>
 <li>The vertices that should be learned must contain a random variable of the class <a class="el" href="classcpprob_1_1RandomProbabilities.html" title="Random vector that represents a probability table.">RandomProbabilities</a> or <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a>. In addition, the evidence flag of those vertices may not be set.</li>
 <li>The evidence to learn from must be represented as child of the parameter vertices. (This is how Bayesian parameter learning is usually represented in a Bayesian network.) These vertices must have the evidence flag set. Otherwise they are ignored.</li>
-<li>The evidence vertices for a <a class="el" href="classcpprob_1_1RandomProbabilities.html" title="Random vector that represents a probability table.">RandomProbabilities</a> parameter vertex must contain a random variable of the class <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a>. The evidence vertices for a <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> parameter vertex must contain a random variable of the class <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> and a distribution of the class <a class="el" href="classcpprob_1_1ConditionalCategoricalDistribution.html">ConditionalCategoricalDistribution</a>.</li>
+<li>The evidence vertices for a <a class="el" href="classcpprob_1_1RandomProbabilities.html" title="Random vector that represents a probability table.">RandomProbabilities</a> parameter vertex must contain a random variable of the class <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a>. The evidence vertices for a <a class="el" href="classcpprob_1_1RandomConditionalProbabilities.html">RandomConditionalProbabilities</a> parameter vertex must contain a random variable of the class <a class="el" href="classcpprob_1_1DiscreteRandomVariable.html">DiscreteRandomVariable</a> and a distribution of the class ConditionalCategoricalDistribution.</li>
 </ul>
 </dd></dl>
 <dl class="user"><dt><b>Ensures:</b></dt><dd><ul>
@@ -579,15 +627,15 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3bcd08decc1e728cd5e349b9947391db"></a><!-- doxytag: member="cpprob::BayesianNetwork::sample" ref="a3bcd08decc1e728cd5e349b9947391db" args="(const iterator &amp;X_it, unsigned int burn_in_iterations, unsigned int collect_iterations)" -->
+<a class="anchor" id="a02eb30594bcce930d0bd90d5afb2de89"></a><!-- doxytag: member="cpprob::BayesianNetwork::sample" ref="a02eb30594bcce930d0bd90d5afb2de89" args="(const DiscreteNode &amp;X, unsigned int burn_in_iterations, unsigned int collect_iterations)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classcpprob_1_1CategoricalDistribution.html">CategoricalDistribution</a> cpprob::BayesianNetwork::sample </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcpprob_1_1BayesianNetwork.html#a870cea9d3ab58688d0f6a43cdd8d8491">iterator</a> &amp;&#160;</td>
-          <td class="paramname"><em>X_it</em>, </td>
+          <td class="paramtype">const <a class="el" href="classcpprob_1_1DiscreteNode.html">DiscreteNode</a> &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -657,8 +705,8 @@ Friends</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="bayesian__network_8hpp_source.html">bayesian_network.hpp</a></li>
-<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="bayesian__network_8cpp.html">bayesian_network.cpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="BayesianNetwork_8hpp_source.html">BayesianNetwork.hpp</a></li>
+<li>/home/wbam/Vertrauen/CPProb/src-lib/<a class="el" href="BayesianNetwork_8cpp.html">BayesianNetwork.cpp</a></li>
 </ul>
 </div>
 <!-- window showing the filter options -->
@@ -678,7 +726,7 @@ Friends</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 17 2011 15:03:06 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
+Generated on Wed Sep 7 2011 09:48:47 for CPProb by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4</small></address>
 
 </body>
 </html>
