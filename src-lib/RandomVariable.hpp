@@ -66,7 +66,7 @@ namespace cpprob
      * to generate start values.
      *
      * The argument is a C++ random number engine. You can find those engines
-     * in the standard TR1 header @em random. They are uniform pseudo-random
+     * in the standard header @em random. They are uniform pseudo-random
      * number generators. From these engine, non-uniform number generators can
      * be derived. Here the engine must be of the type defined in the project
      * header RandomNumberEngine.h. It is best to use the global variable

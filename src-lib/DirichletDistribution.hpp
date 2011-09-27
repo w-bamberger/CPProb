@@ -19,7 +19,7 @@ namespace cpprob
   public:
 
     typedef std::map<DiscreteRandomVariable, float> Parameters;
-    typedef std::tr1::gamma_distribution<float>::input_type input_type;
+    typedef std::gamma_distribution<float>::input_type input_type;
     typedef RandomProbabilities result_type;
 
     DirichletDistribution(const RandomProbabilities& var, float alpha);
@@ -55,7 +55,7 @@ namespace cpprob
 
         for (; i != result.end(); ++i, ++param)
           {
-          std::tr1::gamma_distribution<float> gd = std::tr1::gamma_distribution<
+          std::gamma_distribution<float> gd = std::gamma_distribution<
               float>(param->second);
           i->second = gd(rne);
           sum += i->second;

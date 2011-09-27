@@ -6,12 +6,10 @@
  */
 
 #include "RandomBoolean.hpp"
-#include <tr1/tuple>
-#include <iostream>
 #include <stdexcept>
+#include <tuple>
 
 using namespace std;
-using namespace std::tr1;
 
 namespace cpprob
 {

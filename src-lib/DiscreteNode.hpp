@@ -132,7 +132,7 @@ namespace cpprob
     bool is_evidence_;
     DiscreteRandomVariable value_;
     Children children_;
-    std::tr1::variate_generator<RandomNumberEngine&, CategoricalDistribution> sampling_variate_;
+    std::variate_generator<RandomNumberEngine&, CategoricalDistribution> sampling_variate_;
 
   };
 

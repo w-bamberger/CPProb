@@ -8,12 +8,12 @@
 #ifndef RANDOMNUMBERENGINE_HPP_
 #define RANDOMNUMBERENGINE_HPP_
 
-#include <tr1/random>
+#include <random>
 
 namespace cpprob
 {
 
-  typedef std::tr1::mt19937 RandomNumberEngine;
+  typedef std::mt19937 RandomNumberEngine;
   extern RandomNumberEngine random_number_engine;
 
 }

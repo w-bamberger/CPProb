@@ -10,7 +10,6 @@
 #include <algorithm>
 
 using namespace std;
-using namespace std::tr1;
 
 namespace cpprob
 {

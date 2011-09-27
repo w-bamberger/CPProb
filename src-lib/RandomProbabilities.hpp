@@ -40,11 +40,9 @@ namespace cpprob
 
 namespace std
 {
-  namespace tr1
-  {
 
     /**
-     * Overload of type trait is_floating_point. std::tr1::variate_generator
+     * Overload of type trait is_floating_point. std::variate_generator
      * requires that the generated object is of arithmetic type (i.e. either
      * integral or floating point). This definition sets the type verification
      * to true.
@@ -55,7 +53,6 @@ namespace std
       {
       };
 
-  }
 }
 
 namespace cpprob

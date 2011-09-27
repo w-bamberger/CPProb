@@ -7,12 +7,10 @@
 
 #include "RandomConditionalProbabilities.hpp"
 #include "IoUtils.hpp"
-#include <tr1/random>
-#include <tr1/tuple>
 #include <algorithm>
+#include <tuple>
 
 using namespace std;
-using namespace std::tr1;
 
 namespace cpprob
 {

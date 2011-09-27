@@ -19,8 +19,6 @@ namespace cpprob
 
 namespace std
 {
-  namespace tr1
-  {
 
     template<>
       struct is_floating_point<cpprob::RandomConditionalProbabilities> : public integral_constant<
@@ -28,7 +26,6 @@ namespace std
       {
       };
 
-  }
 }
 
 namespace cpprob

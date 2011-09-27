@@ -6,7 +6,6 @@
  */
 
 #include "DiscreteRandomVariable.hpp"
-#include <tr1/random>
 #include <ostream>
 
 using namespace std;
@@ -25,9 +24,9 @@ namespace cpprob
         "DiscreteRandomVariable: Cannot compute random value for an empty random variable.");
 
     /// @todo Creating the variate every time from scratch is slow.
-    typedef std::tr1::uniform_int<std::size_t> Distribution;
+    typedef uniform_int<size_t> Distribution;
     Distribution distribution(0, characteristics_->second.size_ - 1);
-    std::tr1::variate_generator<RandomNumberEngine&, Distribution> variate(rng,
+    variate_generator<RandomNumberEngine&, Distribution> variate(rng,
         distribution);
     value_ = variate();
   }

@@ -9,15 +9,13 @@
 #include "Error.hpp"
 #include "IoUtils.hpp"
 #include "NodeUtils.hpp"
-#include <tr1/tuple>
 #include <algorithm>
-#include <iostream>
 #include <ostream>
+#include <tuple>
 #include <typeinfo>
 
 using namespace boost;
 using namespace std;
-using namespace std::tr1;
 
 namespace cpprob
 {
