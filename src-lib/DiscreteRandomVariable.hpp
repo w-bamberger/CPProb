@@ -10,43 +10,93 @@
 
 #include "RandomVariable.hpp"
 #include "Error.hpp"
-#include <tr1/type_traits>
 #include <iterator>
-#include <map>
 #include <stdexcept>
+#include <type_traits>
 
+#ifdef VANET_DEBUG_MODE
+#include <debug/map>
 namespace cpprob
 {
-
-  class DiscreteJointRandomVariable;
-  class DiscreteRandomReferences;
-  class DiscreteRandomVariable;
-
-}
-
-namespace std
-{
-  namespace tr1
+  namespace cont
   {
-
-    template<>
-      struct is_integral<cpprob::DiscreteRandomVariable> : public integral_constant<
-          bool, true>
-      {
-      };
-
+    using __gnu_debug::map;
   }
 }
+#else
+#include <map>
+namespace cpprob
+{
+  namespace cont
+  {
+    using std::map;
+  }
+}
+#endif
 
 namespace cpprob
 {
 
+  /**
+   * Represents the mathematical object of a discrete random variable.
+   * This is the base class for all kinds of discrete random variables. It
+   * implements the abstract concept of a discrete random variable in
+   * mathematics (see below) and leaves the concrete value set to the
+   * sub-classes. The common interface of all sub-classes contains the following
+   * properties and operations:
+   *
+   * @li A name identifies the sample space (the set of outcomes) the discrete
+   *     random variable is associated with. So all discrete random variables
+   *     that refer to the same sample space (the same events), provide the
+   *     same name.
+   * @li A range to enumerate the sample space.
+   * @li Enumeration operators (++ and --) and equality operations (== and !=)
+   *     together with a range definition
+   *     (see <a href="http://www.boost.org/doc/libs/release/libs/range/">Boost
+   *     range</a>) to enumerate the set of possible values.
+   * @li The less than operator (<) makes it possible to store
+   *     %DiscreteRandomVariable objects in ordered containers (like set or
+   *     map). They do not mean that one value is indeed greater than another
+   *     value in a mathematical sense. (For example, the values “tail” and
+   *     “head” have no numerical value and tail cannot be said to be greater
+   *     than head or the other way around.)
+   *
+   * In mathematics, a random variable is a mapping from the probability space
+   * in another measurable space. It is a mean to describe events of the
+   * probability space. A discrete random variable is based on a finite sample
+   * space (for example, Ω = {tail, head}). These outcomes need not be numbers.
+   * So an int variable would unnecessarily restrict the possible values
+   * (not the number of values but the semantics of the values). The class
+   * %DiscreteRandomVariable leaves the definition of the correct values to
+   * sub-classes. They can use booleans or strings or any other C++ type to
+   * represent the values. %DiscreteRandomVariable only cares about the fact that
+   * there is finite number of possible values. (More precisely, the number of
+   * possible values must be representable by std::size_t.) This leads to an
+   * interface of a enumerable and named object as described in the list above.
+   *
+   * The set of possible values is enumerable without actually knowing the
+   * values. The values need not be available as objects in memory. So they
+   * can only be enumerated but not be iterated. As a consequence, the
+   * interface provides a range (DiscreteRandomVariable::Range) to enumerate
+   * the values but not a container of the values. You can enumerate the
+   * values with an iterator-like notation. But there is no iterator you can
+   * dereference, as there is no object in memory the iterator can point to.
+   * Instead you enumerate the object, meaning that you increase or decrease
+   * its value.
+   *
+   * If you want to write a sub-class, you must maintain the structure of this
+   * class as you cannot override the read only methods. You can but need not
+   * override all modifying methods. This way, you can maintain additional
+   * structure that is necessary for your sub-class. RandomBoolean is an
+   * example of a class that just adds a couple of methods but does not override
+   * the pre-defined methods of this class. In constrast,
+   * DiscreteJointRandomVariable maintains an additional structure that depends
+   * on the current value of the variable. So it must override @em all modifying
+   * methods.
+   */
   class DiscreteRandomVariable : public RandomVariable, public std::iterator<
       std::bidirectional_iterator_tag, DiscreteRandomVariable>
   {
-
-    friend class DiscreteJointRandomVariable;
-    friend class DiscreteRandomReferences;
 
   protected:
 
@@ -96,20 +146,20 @@ namespace cpprob
 
     private:
 
-      typedef std::map<std::string, Characteristics> CharacteristicsTable;
+      typedef cont::map<std::string, Characteristics> CharacteristicsTable;
       friend class DiscreteRandomVariable;
 
       const CharacteristicsTable::iterator characteristics_;
 
-      Range(const CharacteristicsTable::iterator& characteristics) :
-          characteristics_(characteristics)
+      Range(const CharacteristicsTable::iterator& characteristics)
+          : characteristics_(characteristics)
       {
       }
 
     };
 
-    DiscreteRandomVariable() :
-        characteristics_(characteristics_table_.end()), value_(0)
+    DiscreteRandomVariable()
+        : characteristics_(characteristics_table_.end()), value_(0)
     {
     }
 
@@ -118,10 +168,10 @@ namespace cpprob
     {
     }
 
-    void
+    virtual void
     assign_random_value(RandomNumberEngine& rng);
 
-    virtual const std::string&
+    const std::string&
     name() const
     {
       if (characteristics_ != characteristics_table_.end())
@@ -158,7 +208,7 @@ namespace cpprob
       return *this;
     }
 
-    DiscreteRandomVariable&
+    virtual DiscreteRandomVariable&
     operator--()
     {
       cpprob_check_debug(characteristics_ != characteristics_table_.end(),
@@ -171,7 +221,7 @@ namespace cpprob
       return *this;
     }
 
-    DiscreteRandomVariable&
+    virtual DiscreteRandomVariable&
     operator--(int)
     {
       cpprob_check_debug(characteristics_ != characteristics_table_.end(),
@@ -204,13 +254,13 @@ namespace cpprob
         return value_ != i.value_ || characteristics_ != i.characteristics_;
     }
 
-    virtual bool
+    bool
     operator<(const DiscreteRandomVariable& var) const;
 
     virtual DiscreteRandomVariable&
     operator=(const DiscreteRandomVariable& var);
 
-    virtual Range
+    Range
     value_range() const
     {
       return Range(characteristics_);
@@ -218,25 +268,29 @@ namespace cpprob
 
   protected:
 
+    friend class DiscreteJointRandomVariable;
+    friend class DiscreteRandomReferences;
+
     struct Characteristics
     {
-      Characteristics(std::size_t size) :
-          size_(size)
+      Characteristics(std::size_t size)
+          : size_(size)
       {
       }
 
       std::size_t size_;
     };
-    typedef std::map<std::string, Characteristics> CharacteristicsTable;
+    typedef cont::map<std::string, Characteristics> CharacteristicsTable;
 
+    const static std::string empty_string_;
     static CharacteristicsTable characteristics_table_;
     CharacteristicsTable::iterator characteristics_;
     std::size_t value_;
 
     DiscreteRandomVariable(
         const CharacteristicsTable::iterator& characteristics,
-        std::size_t value) :
-        characteristics_(characteristics), value_(value)
+        std::size_t value)
+        : characteristics_(characteristics), value_(value)
     {
     }
 
@@ -246,11 +300,31 @@ namespace cpprob
     virtual std::ostream&
     put_out_characteristics_table(std::ostream& os) const;
 
-  private:
-
-    const static std::string empty_string_;
-
   };
+
+}
+
+namespace std
+{
+
+    /**
+     * Defines DiscreteRandomVariable as an arithmetic type.
+     * std::variate_generator expects that the type of an distribution
+     * sample is an arithmetic type (integral or floating). This restricts
+     * the sample type to the built-in types. To let DiscreteRandomVariable
+     * be the result of a sampling operation, this hack is necessary. It defines
+     * DiscreteRandomVariable as a integral type (comparable to int). From its
+     * meaning, DiscreteRandomVariable is indeed an integral type.
+     *
+     * Nonetheless, the following definition is not standard conform as I modify
+     * the namespace std. But it is the only solution I know to sample complex
+     * objects.
+     */
+    template<>
+      struct is_integral<cpprob::DiscreteRandomVariable> : public integral_constant<
+          bool, true>
+      {
+      };
 
 }
 
