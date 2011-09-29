@@ -30,27 +30,8 @@
 
 #include "DiscreteRandomVariable.hpp"
 #include "Utils.hpp"
+#include "cont/set.hpp"
 #include <boost/iterator/indirect_iterator.hpp>
-
-#ifdef VANET_DEBUG_MODE
-#include <debug/set>
-namespace cpprob
-{
-  namespace cont
-  {
-    using __gnu_debug::set;
-  }
-}
-#else
-#include <set>
-namespace cpprob
-{
-  namespace cont
-  {
-    using std::set;
-  }
-}
-#endif
 
 namespace cpprob
 {

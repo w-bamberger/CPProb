@@ -30,30 +30,8 @@
 
 #include "CategoricalNode.hpp"
 #include "RandomProbabilities.hpp"
-
-#ifdef VANET_DEBUG_MODE
-#include <debug/list>
-#include <debug/map>
-namespace cpprob
-{
-  namespace cont
-  {
-    using __gnu_debug::list;
-    using __gnu_debug::map;
-  }
-}
-#else
-#include <list>
-#include <map>
-namespace cpprob
-{
-  namespace cont
-  {
-    using std::list;
-    using std::map;
-  }
-}
-#endif
+#include "cont/list.hpp"
+#include "cont/map.hpp"
 
 namespace cpprob
 {

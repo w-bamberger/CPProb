@@ -10,29 +10,11 @@
 
 #include "RandomVariable.hpp"
 #include "Error.hpp"
+#include "cont/map.hpp"
 #include <iterator>
 #include <stdexcept>
 #include <type_traits>
 
-#ifdef VANET_DEBUG_MODE
-#include <debug/map>
-namespace cpprob
-{
-  namespace cont
-  {
-    using __gnu_debug::map;
-  }
-}
-#else
-#include <map>
-namespace cpprob
-{
-  namespace cont
-  {
-    using std::map;
-  }
-}
-#endif
 
 namespace cpprob
 {

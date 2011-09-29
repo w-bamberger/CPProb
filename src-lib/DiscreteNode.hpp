@@ -29,27 +29,8 @@
 #define DISCRETENODE_HPP_
 
 #include "CategoricalDistribution.hpp"
+#include "cont/list.hpp"
 #include <boost/range/adaptor/indirected.hpp>
-
-#ifdef VANET_DEBUG_MODE
-#include <debug/list>
-namespace cpprob
-{
-  namespace cont
-  {
-    using __gnu_debug::list;
-  }
-}
-#else
-#include <list>
-namespace cpprob
-{
-  namespace cont
-  {
-    using std::list;
-  }
-}
-#endif
 
 namespace cpprob
 {
