@@ -57,9 +57,6 @@ namespace cpprob
     Variables variables_;
 
     void
-    set_up_characteristics(const std::string& name, std::size_t size);
-
-    void
     update_random_variable();
 
   };

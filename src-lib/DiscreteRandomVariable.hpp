@@ -15,7 +15,6 @@
 #include <stdexcept>
 #include <type_traits>
 
-
 namespace cpprob
 {
 
@@ -276,11 +275,21 @@ namespace cpprob
     {
     }
 
+    DiscreteRandomVariable(const std::string& name, std::size_t size,
+        std::size_t value)
+        : value_(value)
+    {
+      set_up_characteristics(name, size);
+    }
+
     virtual std::ostream&
     put_out(std::ostream& os) const;
 
     virtual std::ostream&
     put_out_characteristics_table(std::ostream& os) const;
+
+    void
+    set_up_characteristics(const std::string& name, std::size_t size);
 
   };
 
@@ -289,24 +298,24 @@ namespace cpprob
 namespace std
 {
 
-    /**
-     * Defines DiscreteRandomVariable as an arithmetic type.
-     * std::variate_generator expects that the type of an distribution
-     * sample is an arithmetic type (integral or floating). This restricts
-     * the sample type to the built-in types. To let DiscreteRandomVariable
-     * be the result of a sampling operation, this hack is necessary. It defines
-     * DiscreteRandomVariable as a integral type (comparable to int). From its
-     * meaning, DiscreteRandomVariable is indeed an integral type.
-     *
-     * Nonetheless, the following definition is not standard conform as I modify
-     * the namespace std. But it is the only solution I know to sample complex
-     * objects.
-     */
-    template<>
-      struct is_integral<cpprob::DiscreteRandomVariable> : public integral_constant<
-          bool, true>
-      {
-      };
+  /**
+   * Defines DiscreteRandomVariable as an arithmetic type.
+   * std::variate_generator expects that the type of an distribution
+   * sample is an arithmetic type (integral or floating). This restricts
+   * the sample type to the built-in types. To let DiscreteRandomVariable
+   * be the result of a sampling operation, this hack is necessary. It defines
+   * DiscreteRandomVariable as a integral type (comparable to int). From its
+   * meaning, DiscreteRandomVariable is indeed an integral type.
+   *
+   * Nonetheless, the following definition is not standard conform as I modify
+   * the namespace std. But it is the only solution I know to sample complex
+   * objects.
+   */
+  template<>
+    struct is_integral<cpprob::DiscreteRandomVariable> : public integral_constant<
+        bool, true>
+    {
+    };
 
 }
 

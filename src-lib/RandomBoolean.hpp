@@ -38,9 +38,6 @@ namespace cpprob
     std::ostream&
     put_out(std::ostream& os) const;
 
-    void
-    set_up_characteristics(const std::string& name);
-
   private:
 
     class Initialiser;

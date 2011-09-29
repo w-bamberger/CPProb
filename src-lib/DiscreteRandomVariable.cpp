@@ -93,10 +93,29 @@ namespace cpprob
     os << "Characteristics table:\n";
     for (CharacteristicsTable::iterator it = characteristics_table_.begin();
         it != characteristics_table_.end(); ++it)
-        {
+    {
       os << it->first << ": " << it->second.size_ << "\n";
     }
     return os;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void
+  DiscreteRandomVariable::set_up_characteristics(const string& name,
+      size_t size)
+  {
+    characteristics_ = characteristics_table_.lower_bound(name);
+    if (characteristics_ == characteristics_table_.end()
+        || characteristics_->first != name)
+    {
+      if (characteristics_ == characteristics_table_.begin())
+        characteristics_ = characteristics_table_.insert(
+            make_pair(name, Characteristics(size))).first;
+      else
+        characteristics_ = characteristics_table_.insert(--characteristics_,
+            make_pair(name, Characteristics(size)));
+    }
   }
 
 }

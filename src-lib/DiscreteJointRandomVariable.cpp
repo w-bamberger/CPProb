@@ -118,25 +118,6 @@ namespace cpprob
   //----------------------------------------------------------------------------
 
   void
-  DiscreteJointRandomVariable::set_up_characteristics(const string& name,
-      size_t size)
-  {
-    characteristics_ = characteristics_table_.lower_bound(name);
-    if (characteristics_ == characteristics_table_.end()
-        || characteristics_->first != name)
-    {
-      if (characteristics_ == characteristics_table_.begin())
-        characteristics_ = characteristics_table_.insert(
-            make_pair(name, Characteristics(size))).first;
-      else
-        characteristics_ = characteristics_table_.insert(--characteristics_,
-            make_pair(name, Characteristics(size)));
-    }
-  }
-
-  //----------------------------------------------------------------------------
-
-  void
   DiscreteJointRandomVariable::update_random_variable()
   {
     string new_name;
