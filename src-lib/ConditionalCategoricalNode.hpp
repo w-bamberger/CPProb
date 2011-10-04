@@ -54,12 +54,6 @@ namespace cpprob
       return probabilities_.at(condition_.joint_value()).at(value_);
     }
 
-    DiscreteRandomReferences
-    condition()
-    {
-      return condition_;
-    }
-
     const DiscreteRandomReferences&
     condition() const
     {
