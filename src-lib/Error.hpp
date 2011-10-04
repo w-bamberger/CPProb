@@ -39,7 +39,7 @@ namespace cpprob
 
 }
 
-#define cpprob_throw(msg, exception_name) \
+#define cpprob_throw(exception_name, msg) \
    do { \
         std::ostringstream oss; \
         oss << msg; \
@@ -47,16 +47,16 @@ namespace cpprob
    } while (false)
 
 #define cpprob_throw_logic_error(msg) \
-    cpprob_throw(msg, std::logic_error)
+    cpprob_throw(std::logic_error, msg)
 
 #define cpprob_throw_network_error(msg) \
-    cpprob_throw(msg, cpprob::NetworkError)
+    cpprob_throw(cpprob::NetworkError, msg)
 
 #define cpprob_throw_out_of_range(msg) \
-    cpprob_throw(msg, std::out_of_range)
+    cpprob_throw(std::out_of_range, msg)
 
 #define cpprob_throw_runtime_error(msg) \
-    cpprob_throw(msg, std::runtime_error)
+    cpprob_throw(std::runtime_error, msg)
 
 #ifdef VANET_DEBUG_MODE
 #define cpprob_check_debug(condition, msg) \
