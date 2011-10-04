@@ -138,6 +138,12 @@ namespace cpprob
     set(const DiscreteRandomVariable& var,
         const DiscreteRandomVariable& condition, float probability);
 
+    std::size_t
+    size() const
+    {
+      return cpt_.size();
+    }
+
   protected:
 
     virtual std::ostream&

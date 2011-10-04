@@ -131,7 +131,7 @@ namespace cpprob
     {
       ConditionalDirichletNode& new_node =
           new_network_.add_conditional_dirichlet(old_node.value(),
-              old_node.parameters().begin()->second.begin()->second);
+              old_node.parameters().begin()->second);
       new_node.is_evidence(old_node.is_evidence());
       node_node_table[&old_node] = &new_node;
       value_node_table[&old_node.value()] = &new_node;
@@ -200,7 +200,7 @@ namespace cpprob
       DirichletNode::ChildRange children = node.children();
       for (DirichletNode::ChildRange::iterator child = children.begin();
           child != children.end(); ++child)
-          {
+      {
         if (child->is_evidence())
           probabilities[child->value()] += 1.0;
       }
@@ -225,20 +225,29 @@ namespace cpprob
       if (node.is_evidence())
         return;
 
+      /* Check requirements */
+      cpprob_check_debug(
+          node.children().size() != 0,
+          "BayesianNetwork: Cannot learn the conditional Dirichlet node without children (node name: " + node.value().name() + ").");
+
       /* Clear the target variable. I use it for counters and normalize it
        * in the end. */
       RandomConditionalProbabilities& probabilities = node.value();
       probabilities.clear();
 
-      /* See whether a Dirichlet prior is available. If so initialize
-       * the counters with the prior values. Without this pre-initialization,
-       * the remaining algorithm performs just maximum likelihood learning. */
-      ConditionalDirichletNode::Parameters::iterator param_it =
-          node.parameters().begin();
-      for (; param_it != node.parameters().end(); ++param_it)
+      /* Initialize the counters with the values of the Dirichlet prior
+       * distribution. If the prior values are zero, the remaining algorithm
+       * performs just maximum likelihood learning. I need the range of the
+       * condition variable first to set up the table of the counters. The
+       * parameter set of the Dirichlet prior contains only one Dirichlet
+       * distribution that is equal for all condition values. */
+      DiscreteRandomVariable::Range condition_range =
+          node.children().begin()->condition().joint_value().value_range();
+      for (auto condition = condition_range.begin();
+          condition != condition_range.end(); ++condition)
       {
-        RandomProbabilities& prob_set = probabilities[param_it->first];
-        copy(param_it->second.begin(), param_it->second.end(),
+        RandomProbabilities& prob_set = probabilities[condition];
+        copy(node.parameters().begin(), node.parameters().end(),
             inserter(prob_set, prob_set.begin()));
       }
 
@@ -490,7 +499,7 @@ namespace cpprob
     // Sample the distribution
     for (unsigned int iteration = 0; iteration < collect_iterations;
         iteration++)
-        {
+    {
       SampleNode sample_visitor;
 
       for (iterator vertex_it = begin(); vertex_it != end(); ++vertex_it)

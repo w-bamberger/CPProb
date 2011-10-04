@@ -36,18 +36,18 @@ namespace cpprob
       const RandomConditionalProbabilities& value, float alpha)
       : is_evidence_(false), value_(value)
   {
-    for (RandomConditionalProbabilities::iterator c_it = value_.begin();
-        c_it != value_.end(); ++c_it)
-        {
-      RandomProbabilities& pt = c_it->second;
-      map<DiscreteRandomVariable, float>& parameter_subset =
-          parameters_[c_it->first];
-      for (RandomProbabilities::iterator v_it = pt.begin(); v_it != pt.end();
-          ++v_it)
-          {
-        parameter_subset[v_it->first] = alpha;
-      }
-    }
+    /* Check the requirements. */
+    if (value_.size() == 0)
+      cpprob_throw_logic_error(
+          "ConditionalDirichletNode: Cannot initialize a conditional Dirichlet node from an empty value.");
+    RandomProbabilities& pt = value_.begin()->second;
+    if (pt.size() == 0)
+      cpprob_throw_logic_error(
+          "ConditionalDirichletNode: Cannot initialize a conditional Dirichlet node from an empty value.");
+
+    /* Initialize the parameter vector. */
+    for (auto v_it = pt.begin(); v_it != pt.end(); ++v_it)
+      parameters_[v_it->first] = alpha;
   }
 
   ConditionalDirichletNode::~ConditionalDirichletNode()
@@ -57,38 +57,53 @@ namespace cpprob
   void
   ConditionalDirichletNode::init_sampling()
   {
-    value_.clear();
-    for (Parameters::iterator p = parameters_.begin(); p != parameters_.end();
-        ++p)
-        {
-      DirichletDistribution sampling_distribution(p->second.begin(),
-          p->second.end());
-      variate_generator<RandomNumberEngine&, DirichletDistribution> sampling_variate_(
-          random_number_engine, sampling_distribution);
-      value_[p->first] = sampling_variate_();
-    }
+    /* Set up the prior distribution. */
+    DirichletDistribution sampling_distribution(parameters_.begin(),
+        parameters_.end());
+    variate_generator<RandomNumberEngine&, DirichletDistribution> sampling_variate_(
+        random_number_engine, sampling_distribution);
+
+    /* Sample the conditional probabilities from the prior distribution. */
+    for (auto v_it = value_.begin(); v_it != value_.end(); ++v_it)
+      v_it->second = sampling_variate_();
   }
 
   void
   ConditionalDirichletNode::sample()
   {
-    Parameters counters = parameters_;
+    /* Check the requirements. */
+    cpprob_check_debug(
+        children_.size() != 0,
+        "ConditionalDirichletNode: Cannot sample a conditional Dirichlet node (name: " + value_.name() + ") without children.");
 
-    for (Children::iterator c = children_.begin(); c != children_.end(); ++c)
+    /* Set up the counters and initialize them with the Dirichlet prior. */
+    map<DiscreteRandomVariable, Parameters> counters;
+    DiscreteRandomVariable::Range condition_range =
+        children().begin()->condition().joint_value().value_range();
+    for (auto condition = condition_range.begin();
+        condition != condition_range.end(); ++condition)
     {
-      const DiscreteRandomVariable & c_var = (*c)->value();
-      const DiscreteRandomVariable & c_condition =
-          (*c)->condition().joint_value();
-      counters[c_condition][c_var] += 1.0;
+      counters.insert(make_pair(condition, parameters_));
     }
 
-    for (Parameters::iterator pc = counters.begin(); pc != counters.end(); ++pc)
+    /* Count the child values. */
+    for (auto child = children_.begin(); child != children_.end(); ++child)
     {
-      DirichletDistribution sample_distribution(pc->second.begin(),
-          pc->second.end());
+      const DiscreteRandomVariable& child_var = (*child)->value();
+      const DiscreteRandomVariable& child_condition =
+          (*child)->condition().joint_value();
+      counters[child_condition][child_var] += 1.0;
+    }
+
+    /* Set up the sampling distribution and draw from it. */
+    for (auto counter_it = counters.begin(); counter_it != counters.end();
+        ++counter_it)
+    {
+      DirichletDistribution sample_distribution(counter_it->second.begin(),
+          counter_it->second.end());
       variate_generator<RandomNumberEngine&, DirichletDistribution> sampling_variate_(
           random_number_engine, sample_distribution);
-      value_[pc->first] = sampling_variate_();
+      value_[counter_it->first] = sampling_variate_();
     }
   }
 
