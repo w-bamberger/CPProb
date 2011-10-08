@@ -1,1 +1,1 @@
---test-case latent-bag-test --test-mode --data-file latent-bag.csv
+--run_test=latent_bag_test --test-mode --data-file latent-bag.csv

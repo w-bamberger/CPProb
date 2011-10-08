@@ -1,1 +1,1 @@
---test-mode --test-case alarm-test
+--test-mode --run_test=alarm_test
