@@ -58,7 +58,7 @@ namespace cpprob
 #define cpprob_throw_runtime_error(msg) \
     cpprob_throw(std::runtime_error, msg)
 
-#ifdef VANET_DEBUG_MODE
+#ifdef CPPROB_DEBUG_MODE
 #define cpprob_check_debug(condition, msg) \
    do { \
       if (!(condition)) \
