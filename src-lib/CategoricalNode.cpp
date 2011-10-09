@@ -16,11 +16,11 @@ namespace cpprob
   ostream&
   operator<<(ostream& os, const CategoricalNode& node)
   {
-    os << "Categorical node " << node.value().name() << "(at " << &node << ")";
+    os << "Categorical node " << node.value().name() << " (at " << &node << ")";
     if (node.is_evidence())
     {
       os << " with value\n";
-      os << "  " << node.value() << "(at " << &node.value() << ")\n";
+      os << "  " << node.value() << " (at " << &node.value() << ")\n";
     }
     else
     {
