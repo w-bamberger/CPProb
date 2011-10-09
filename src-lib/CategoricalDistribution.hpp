@@ -79,25 +79,32 @@ namespace cpprob
         input_type cum(0);
         const input_type r = rng();
         ProbabilityTable::const_iterator it = pt_.begin();
+
+        /* This loop is necessary in the case that r == 0 and
+         * the first row(s) in the probability table have probability 0. */
+        for (; it->second == 0 && it != pt_.end(); ++it)
+          ;
+
+        /* Now execute the inverse cumulative probability function. */
         for (; it != pt_.end(); ++it)
-          {
+        {
           cum += it->second;
           if (cum >= r)
             return it->first;
         }
-      --it;
-      return it->first;
+        --it;
+        return it->first;
+      }
+
+    float&
+    operator[](const key_type& r)
+    {
+      return pt_[r];
     }
 
-  float&
-  operator[](const key_type& r)
-  {
-    return pt_[r];
-  }
+  private:
 
-private:
-
-  ProbabilityTable pt_;
+    ProbabilityTable pt_;
 
   };
 
