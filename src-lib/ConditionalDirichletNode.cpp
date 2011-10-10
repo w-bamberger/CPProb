@@ -107,4 +107,22 @@ namespace cpprob
     }
   }
 
+  void
+  ConditionalDirichletNode::sample(const DiscreteRandomVariable& condition,
+      const ConstChildren& children)
+  {
+    /* Set up the counters and initialize them with the Dirichlet prior. */
+    Parameters counters = parameters_;
+
+    /* Count the child value. */
+    for (auto child = children.begin(); child != children.end(); ++child)
+      counters[(*child)->value()] += 1.0;
+
+    /* Set up the sampling distribution and draw from it. */
+    DirichletDistribution sample_distribution(counters.begin(), counters.end());
+    std::variate_generator<RandomNumberEngine&, DirichletDistribution> sampling_variate_(
+        random_number_engine, sample_distribution);
+    value_[condition] = sampling_variate_();
+  }
+
 } /* namespace cpprob */

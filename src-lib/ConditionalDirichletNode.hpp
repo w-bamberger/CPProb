@@ -40,10 +40,10 @@ namespace cpprob
   class ConditionalDirichletNode
   {
 
-    typedef cont::list<ConditionalCategoricalNode*> Children;
-
   public:
 
+    typedef cont::list<ConditionalCategoricalNode*> Children;
+    typedef cont::list<const ConditionalCategoricalNode*> ConstChildren;
     typedef boost::indirected_range<const Children> ConstChildRange;
     typedef boost::indirected_range<Children> ChildRange;
     typedef std::map<DiscreteRandomVariable, float> Parameters;
@@ -88,6 +88,10 @@ namespace cpprob
 
     void
     sample();
+
+    void
+    sample(const DiscreteRandomVariable& condition,
+        const ConstChildren& children);
 
     RandomConditionalProbabilities&
     value()

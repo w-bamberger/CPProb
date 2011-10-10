@@ -424,6 +424,18 @@ namespace cpprob
       return pt_[var];
     }
 
+    bool
+    operator==(const RandomProbabilities& other) const
+    {
+      return pt_ == other.pt_;
+    }
+
+    bool
+    operator!=(const RandomProbabilities& other) const
+    {
+      return !operator==(other);
+    }
+
     /**
      * Modifies the probability associated with the event @c var. If @c var
      * was not yet part of this probability table, it is inserted with the

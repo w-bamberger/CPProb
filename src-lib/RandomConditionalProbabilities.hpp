@@ -134,6 +134,18 @@ namespace cpprob
       return cpt_[condition];
     }
 
+    bool
+    operator==(const RandomConditionalProbabilities& other) const
+    {
+      return cpt_ == other.cpt_;
+    }
+
+    bool
+    operator!=(const RandomConditionalProbabilities& other) const
+    {
+      return !operator==(other);
+    }
+
     void
     set(const DiscreteRandomVariable& var,
         const DiscreteRandomVariable& condition, float probability);
