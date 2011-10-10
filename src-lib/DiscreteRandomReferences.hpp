@@ -39,7 +39,7 @@ namespace cpprob
   class DiscreteRandomReferences
   {
 
-    typedef cont::set<DiscreteRandomVariable*,
+    typedef cont::set<const DiscreteRandomVariable*,
         indirect_less<DiscreteRandomVariable> > Variables;
 
   public:
@@ -104,7 +104,7 @@ namespace cpprob
     }
 
     std::pair<iterator, bool>
-    insert(DiscreteRandomVariable& new_reference)
+    insert(const DiscreteRandomVariable& new_reference)
     {
       characteristics_ = DiscreteRandomVariable::characteristics_table_.end();
       return references_.insert(&new_reference);
