@@ -41,17 +41,17 @@ namespace cpprob
 namespace std
 {
 
-    /**
-     * Overload of type trait is_floating_point. std::variate_generator
-     * requires that the generated object is of arithmetic type (i.e. either
-     * integral or floating point). This definition sets the type verification
-     * to true.
-     */
-    template<>
-      struct is_floating_point<cpprob::RandomProbabilities> : public integral_constant<
-          bool, true>
-      {
-      };
+  /**
+   * Overload of type trait is_floating_point. std::variate_generator
+   * requires that the generated object is of arithmetic type (i.e. either
+   * integral or floating point). This definition sets the type verification
+   * to true.
+   */
+  template<>
+    struct is_floating_point<cpprob::RandomProbabilities> : public integral_constant<
+        bool, true>
+    {
+    };
 
 }
 

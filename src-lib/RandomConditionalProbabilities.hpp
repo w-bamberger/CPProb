@@ -20,11 +20,11 @@ namespace cpprob
 namespace std
 {
 
-    template<>
-      struct is_floating_point<cpprob::RandomConditionalProbabilities> : public integral_constant<
-          bool, true>
-      {
-      };
+  template<>
+    struct is_floating_point<cpprob::RandomConditionalProbabilities> : public integral_constant<
+        bool, true>
+    {
+    };
 
 }
 
