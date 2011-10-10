@@ -7,3 +7,6 @@ bag
 # Tests the bag network with algorithms for a latent variable. The
 # bag variable is considered as unobserved.
 latent-bag
+
+# Unit test for DiscreteJointRandomVariable.
+DiscreteJointRandomVariableTest

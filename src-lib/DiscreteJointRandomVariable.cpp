@@ -8,8 +8,8 @@
 #include "DiscreteJointRandomVariable.hpp"
 #include "IoUtils.hpp"
 #include <algorithm>
-#include <iostream>
 #include <tuple>
+#include <iostream>
 
 using namespace std;
 
@@ -25,14 +25,27 @@ namespace cpprob
   DiscreteJointRandomVariable::DiscreteJointRandomVariable(
       const DiscreteRandomVariable& var1, const DiscreteRandomVariable& var2)
   {
+    if (var1.characteristics_ == characteristics_table_.end()
+        || var1.value_ == var1.characteristics_->second.size_)
+      throw invalid_argument(
+          "JointRandomVariable: Could not insert variable " + var1.name()
+              + ".");
+
+    if (var2.characteristics_ == characteristics_table_.end()
+        || var2.value_ == var2.characteristics_->second.size_)
+      throw invalid_argument(
+          "JointRandomVariable: Could not insert variable " + var2.name()
+              + ".");
+
     if (!variables_.insert(var1).second)
-      throw logic_error(
+      throw invalid_argument(
           "JointRandomVariable: Could not insert variable " + var1.name()
               + ".");
     if (!variables_.insert(var2).second)
-      throw logic_error(
+      throw invalid_argument(
           "JointRandomVariable: Could not insert variable " + var2.name()
               + ".");
+
     update_random_variable();
   }
 
@@ -42,38 +55,148 @@ namespace cpprob
   {
   }
 
-  //----------------------------------------------------------------------------
-
-  void
-  DiscreteJointRandomVariable::insert(const DiscreteRandomVariable& var)
+  DiscreteJointRandomVariable::const_iterator
+  DiscreteJointRandomVariable::find(const std::string& name) const
   {
-    cpprob_check_debug( var.characteristics_ != characteristics_table_.end(),
-        "DiscreteJointRandomVariable: Cannot insert an empty random variable.");
-    if (!variables_.insert(var).second)
-      throw runtime_error(
-          "JointRandomVariable: Could not insert variable " + var.name() + ".");
-
-    update_random_variable();
+    /// @todo Takes no advantage of the sorting of the set.
+    const_iterator search = begin();
+    for (; search != end(); ++search)
+    {
+      if (search->name() == name)
+        return search;
+    }
+    return search;
   }
 
   //----------------------------------------------------------------------------
 
-  DiscreteRandomVariable&
-  DiscreteJointRandomVariable::operator++()
+  DiscreteJointRandomVariable::iterator
+  DiscreteJointRandomVariable::find(const std::string& name)
   {
-    for (Variables::reverse_iterator it = variables_.rbegin();
-        it != variables_.rend(); ++it)
-        {
-      if (*it != it->value_range().end())
+    /// @todo Takes no advantage of the sorting of the set.
+    iterator search = begin();
+    for (; search != end(); ++search)
+    {
+      if (search->name() == name)
+        return search;
+    }
+    return search;
+  }
+
+  //----------------------------------------------------------------------------
+
+  pair<DiscreteJointRandomVariable::iterator, bool>
+  DiscreteJointRandomVariable::insert(const DiscreteRandomVariable& var)
+  {
+    if (var.characteristics_ == characteristics_table_.end()
+        || var.value_ == var.characteristics_->second.size_)
+      return make_pair(variables_.end(), false);
+
+    pair<iterator, bool> result = variables_.insert(var);
+    if (result.second == false)
+      return result;
+
+    update_random_variable();
+    return result;
+  }
+
+  //----------------------------------------------------------------------------
+
+  DiscreteJointRandomVariable&
+  DiscreteJointRandomVariable::operator--()
+  {
+    cpprob_check_debug(
+        characteristics_ != characteristics_table_.end(),
+        "DiscreteJointRandomVariable: Cannot decrement an empty random variable.");
+    cpprob_check_debug( value_ > 0,
+        "DiscreteJointRandomVariable: Cannot decrement the value " << value_ //
+        << " of the variable " << name() << " below 0.");
+
+    for (Variables::iterator it = variables_.begin(); it != variables_.end();
+        ++it)
+    {
+      DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
+      if (var == var.value_range().begin())
       {
-        DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
-        ++var;
+        var = var.value_range().end();
+        --var;
       }
       else
       {
-        DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
-        var = it->value_range().begin();
+        --var;
+        break;
       }
+    }
+
+    update_random_variable();
+    return *this;
+  }
+
+  //----------------------------------------------------------------------------
+
+  DiscreteRandomVariable
+  DiscreteJointRandomVariable::operator--(int)
+  {
+    cpprob_check_debug(
+        characteristics_ != characteristics_table_.end(),
+        "DiscreteJointRandomVariable: Cannot decrement an empty random variable.");
+    cpprob_check_debug( value_ > 0,
+        "DiscreteJointRandomVariable: Cannot decrement the value " << value_ //
+        << " of the variable " << name() << " below 0.");
+
+    DiscreteRandomVariable tmp = *this;
+
+    for (Variables::iterator it = variables_.begin(); it != variables_.end();
+        ++it)
+    {
+      DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
+      if (var == var.value_range().begin())
+      {
+        var = var.value_range().end();
+        --var;
+      }
+      else
+      {
+        --var;
+        break;
+      }
+    }
+
+    update_random_variable();
+    return tmp;
+  }
+
+  //----------------------------------------------------------------------------
+
+  DiscreteJointRandomVariable&
+  DiscreteJointRandomVariable::operator++()
+  {
+    cpprob_check_debug(
+        characteristics_ != characteristics_table_.end(),
+        "DiscreteJointRandomVariable: Cannot increment an empty random variable.");
+    cpprob_check_debug( value_ < characteristics_->second.size_,
+        "DiscreteJointRandomVariable: Cannot increment the value " << value_ //
+        << " of the variable " << name() << " above the maximum "//
+        << characteristics_->second.size_ << ".");
+
+    if (value_ < characteristics_->second.size_ - 1)
+    {
+      for (Variables::iterator it = variables_.begin(); it != variables_.end();
+          ++it)
+      {
+        DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
+        ++var;
+        if (var == var.value_range().end())
+          var = var.value_range().begin();
+        else
+          break;
+      }
+    }
+    else if (value_ == characteristics_->second.size_ - 1)
+    {
+      DiscreteRandomVariable& var =
+          const_cast<DiscreteRandomVariable&>(*(variables_.begin()));
+      ++var;
     }
 
     update_random_variable();
@@ -82,25 +205,51 @@ namespace cpprob
 
 //----------------------------------------------------------------------------
 
-  DiscreteRandomVariable&
+  DiscreteRandomVariable
   DiscreteJointRandomVariable::operator++(int)
   {
-    for (Variables::reverse_iterator it = variables_.rbegin();
-        it != variables_.rend(); ++it)
-        {
-      if (*it != it->value_range().end())
+    cpprob_check_debug(
+        characteristics_ != characteristics_table_.end(),
+        "DiscreteJointRandomVariable: Cannot increment an empty random variable.");
+    cpprob_check_debug( value_ < characteristics_->second.size_,
+        "DiscreteJointRandomVariable: Cannot increment the value " << value_ //
+        << " of the variable " << name() << " above the maximum "//
+        << characteristics_->second.size_ << ".");
+
+    DiscreteRandomVariable tmp = *this;
+
+    if (value_ < characteristics_->second.size_ - 1)
+    {
+      for (Variables::iterator it = variables_.begin(); it != variables_.end();
+          ++it)
       {
         DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
         ++var;
+        if (var == var.value_range().end())
+          var = var.value_range().begin();
+        else
+          break;
       }
-      else
-      {
-        DiscreteRandomVariable& var = const_cast<DiscreteRandomVariable&>(*it);
-        var = it->value_range().begin();
-      }
+    }
+    else if (value_ == characteristics_->second.size_ - 1)
+    {
+      DiscreteRandomVariable& var =
+          const_cast<DiscreteRandomVariable&>(*(variables_.begin()));
+      ++var;
     }
 
     update_random_variable();
+    return tmp;
+  }
+
+  //----------------------------------------------------------------------------
+
+  DiscreteJointRandomVariable&
+  DiscreteJointRandomVariable::operator=(const DiscreteJointRandomVariable& v)
+  {
+    DiscreteRandomVariable::operator =(
+        static_cast<const DiscreteRandomVariable&>(v));
+    variables_ = v.variables_;
     return *this;
   }
 
@@ -126,7 +275,7 @@ namespace cpprob
 
     for (Variables::const_iterator it = variables_.begin();
         it != variables_.end(); ++it)
-        {
+    {
       cpprob_check_debug( it->characteristics_ != characteristics_table_.end(),
           "DiscreteJointRandomVariable: Cannot join an empty random variable.");
 
@@ -138,8 +287,7 @@ namespace cpprob
     if (characteristics_ == characteristics_table_.end()
         || new_name != characteristics_->first)
       set_up_characteristics(new_name, new_size);
-    else
-      characteristics_->second.size_ = new_size;
+    characteristics_->second.size_ = new_size;
   }
 
 }

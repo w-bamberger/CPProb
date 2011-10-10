@@ -205,7 +205,7 @@ namespace cpprob
     {
       cpprob_check_debug(characteristics_ != characteristics_table_.end(),
           "DiscreteRandomVariable: Cannot decrement an empty random variable.");
-      cpprob_check_debug( value_ < characteristics_->second.size_,
+      cpprob_check_debug( value_ > 0,
           "DiscreteRandomVariable: Cannot decrement the value " << value_ //
           << " of the variable " << name() << " below 0.");
 
@@ -237,7 +237,7 @@ namespace cpprob
     {
       cpprob_check_debug(characteristics_ != characteristics_table_.end(),
           "DiscreteRandomVariable: Cannot decrement an empty random variable.");
-      cpprob_check_debug( value_ < characteristics_->second.size_,
+      cpprob_check_debug( value_ > 0,
           "DiscreteRandomVariable: Cannot decrement the value " << value_ //
           << " of the variable " << name() << " below 0.");
 
