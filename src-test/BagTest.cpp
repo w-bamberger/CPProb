@@ -5,8 +5,9 @@
  *      Author: wbam
  */
 
-#include "NetworkGenerator.hpp"
+#include "../src-lib/BayesianNetwork.hpp"
 #include "../src-lib/RandomBoolean.hpp"
+#include "CsvMapReader.hpp"
 #include <boost/program_options.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/timer.hpp>
@@ -52,6 +53,62 @@ private:
 
 };
 
+BayesianNetwork
+gen_bag_net(float alpha, bool fully_observed, size_t lines_of_evidence =
+    std::numeric_limits<std::size_t>::max())
+{
+  const DiscreteRandomReferences no_condition;
+  BayesianNetwork bn;
+
+  // Set up the parameter vertices
+  map<string, ConditionalDirichletNode*> params_table;
+  RandomBoolean bag("Bag", true);
+  RandomProbabilities bag_params(bag);
+  DirichletNode& bag_params_node = bn.add_dirichlet(bag_params, alpha);
+  RandomConditionalProbabilities flavor_params(RandomBoolean("Flavor", true),
+      bag);
+  params_table.insert(
+      make_pair("Flavor", &bn.add_conditional_dirichlet(flavor_params, alpha)));
+  RandomConditionalProbabilities wrapper_params(RandomBoolean("Wrapper", true),
+      bag);
+  params_table.insert(
+      make_pair("Wrapper",
+          &bn.add_conditional_dirichlet(wrapper_params, alpha)));
+  RandomConditionalProbabilities hole_params(RandomBoolean("Hole", true), bag);
+  params_table.insert(
+      make_pair("Hole", &bn.add_conditional_dirichlet(hole_params, alpha)));
+
+  // Read the data from the file
+  CsvMapReader reader(options_map["data-file"].as<string>());
+  CsvMapReader::Records full_data = reader.read_rows();
+
+  // Fill the data in the net
+  size_t line = 0;
+  CsvMapReader::Records::iterator r = full_data.begin();
+  for (; r != full_data.end() && line != lines_of_evidence; ++r, ++line)
+  {
+    RandomBoolean bag_evidence("Bag", r->operator[]("Bag"));
+    CategoricalNode& bag_evidence_node = bn.add_categorical(bag_evidence,
+        bag_params_node);
+    if (fully_observed)
+      bag_evidence_node.is_evidence(true);
+
+    for (CsvMapReader::NamedAttributes::iterator a = r->begin(); a != r->end();
+        ++a)
+    {
+      if (a->first != "Bag")
+      {
+        RandomBoolean var(a->first, a->second);
+        ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
+          { &bag_evidence_node }, *params_table[a->first]);
+        node.is_evidence(true);
+      }
+    }
+  }
+
+  return bn;
+}
+
 BOOST_AUTO_TEST_CASE( bag_test )
 {
   BOOST_REQUIRE_MESSAGE(options_map.count("data-file") == 1,
@@ -60,7 +117,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   cout << "Generate the full hybrid bag network\n";
   double duration;
   boost::timer t;
-  BayesianNetwork bn_map_full = NetworkGenerator::gen_bag_net(5.0, true);
+  BayesianNetwork bn_map_full = gen_bag_net(5.0, true);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
@@ -80,7 +137,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   cout << endl;
 
   cout << "Learn ML on full data\n";
-  BayesianNetwork bn_ml_full = NetworkGenerator::gen_bag_net(0.0, true);
+  BayesianNetwork bn_ml_full = gen_bag_net(0.0, true);
   t.restart();
   bn_ml_full.learn();
   duration = t.elapsed();
@@ -91,7 +148,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   cout << endl;
 
   cout << "Learn MAP on partial data\n";
-  BayesianNetwork bn_map_partial = NetworkGenerator::gen_bag_net(5.0, true, 5);
+  BayesianNetwork bn_map_partial = gen_bag_net(5.0, true, 5);
   t.restart();
   bn_map_partial.learn();
   duration = t.elapsed();
@@ -102,7 +159,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   cout << endl;
 
   cout << "Learn ML on partial data\n";
-  BayesianNetwork bn_ml_partial = NetworkGenerator::gen_bag_net(0.0, true, 5);
+  BayesianNetwork bn_ml_partial = gen_bag_net(0.0, true, 5);
   t.restart();
   bn_ml_partial.learn();
   duration = t.elapsed();

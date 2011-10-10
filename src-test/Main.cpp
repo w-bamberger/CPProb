@@ -5,25 +5,15 @@
  *      Author: wbam
  */
 
-#include "NetworkGenerator.hpp"
-#include "../src-lib/RandomBoolean.hpp"
-#include "../src-lib/IoUtils.hpp"
-#include "../src-lib/Utils.hpp"
-#include <boost/assign.hpp>
-#include <boost/foreach.hpp>
 #include <boost/program_options.hpp>
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
-#include <boost/timer.hpp>
-#include <cstdlib>
-#include <functional>
 #include <iostream>
 
 extern "C" void
 __libc_freeres(void);
 
 using namespace boost;
-using namespace cpprob;
 using namespace std;
 
 program_options::options_description options_desc("Usage of the tests");

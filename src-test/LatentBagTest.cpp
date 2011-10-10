@@ -5,7 +5,7 @@
  *      Author: wbam
  */
 
-#include "NetworkGenerator.hpp"
+#include "../src-lib/BayesianNetwork.hpp"
 #include "../src-lib/RandomBoolean.hpp"
 #include <boost/program_options.hpp>
 #include <boost/test/unit_test.hpp>
@@ -14,6 +14,9 @@
 using namespace cpprob;
 using namespace std;
 
+BayesianNetwork
+gen_bag_net(float alpha, bool fully_observed, size_t lines_of_evidence =
+    std::numeric_limits<std::size_t>::max());
 extern boost::program_options::variables_map options_map;
 
 BOOST_AUTO_TEST_CASE( latent_bag_test )
@@ -24,7 +27,7 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
   cout << "Generate the bag network with all data but no bag observations\n";
   double duration;
   boost::timer t;
-  BayesianNetwork bn = NetworkGenerator::gen_bag_net(5.0, false);
+  BayesianNetwork bn = gen_bag_net(5.0, false);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
     cout << "Duration: " << duration << "\n";
