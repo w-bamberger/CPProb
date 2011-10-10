@@ -227,7 +227,7 @@ namespace cpprob
 
       /* Check requirements */
       cpprob_check_debug(
-          node.children().size() != 0,
+          node.children().begin() != node.children().end(),
           "BayesianNetwork: Cannot learn the conditional Dirichlet node without children (node name: " + node.value().name() + ").");
 
       /* Clear the target variable. I use it for counters and normalize it
