@@ -24,16 +24,21 @@ namespace cpprob
   {
 
     typedef variant<CategoricalNode*, ConditionalCategoricalNode*,
-        ConditionalDirichletNode*, ConstantNode<DiscreteRandomVariable>*,
+        ConditionalDirichletNode*, ConstantNode<DirichletProcessParameters>*,
+        ConstantNode<DiscreteRandomVariable>*,
         ConstantNode<RandomConditionalProbabilities>*,
-        ConstantNode<RandomProbabilities>*, DirichletNode*> NodePointer;
+        ConstantNode<RandomProbabilities>*, DirichletNode*,
+        DirichletProcessNode*> NodePointer;
     typedef variant<const CategoricalNode*, const ConditionalCategoricalNode*,
         const ConditionalDirichletNode*,
+        const ConstantNode<DirichletProcessParameters>*,
         const ConstantNode<DiscreteRandomVariable>*,
         const ConstantNode<RandomConditionalProbabilities>*,
-        const ConstantNode<RandomProbabilities>*, const DirichletNode*> ConstNodePointer;
-    typedef variant<const DiscreteRandomVariable*,
-        const RandomConditionalProbabilities*, const RandomProbabilities*> ValuePointer;
+        const ConstantNode<RandomProbabilities>*, const DirichletNode*,
+        const DirichletProcessNode*> ConstNodePointer;
+    typedef variant<const DirichletProcessParameters*,
+        const DiscreteRandomVariable*, const RandomConditionalProbabilities*,
+        const RandomProbabilities*> ValuePointer;
     typedef map<ConstNodePointer, NodePointer> NodeNodeTable;
     typedef map<ValuePointer, NodePointer> ValueNodeTable;
 
@@ -90,7 +95,8 @@ namespace cpprob
       for (DiscreteRandomReferences::const_iterator c =
           old_node.condition().begin(); c != old_node.condition().end(); ++c)
       {
-        ValueNodeTable::iterator new_condition_node = value_node_table.find(&(*c));
+        ValueNodeTable::iterator new_condition_node = value_node_table.find(
+            &(*c));
         if (new_condition_node == value_node_table.end())
           cpprob_throw_logic_error(
               "BayesianNetwork: Could not copy the network because of an inconsistent structure.");
@@ -143,6 +149,43 @@ namespace cpprob
       DirichletNode& new_node = new_network_.add_dirichlet(old_node.value(),
           old_node.parameters().begin()->second);
       new_node.is_evidence(old_node.is_evidence());
+      node_node_table[&old_node] = &new_node;
+      value_node_table[&old_node.value()] = &new_node;
+    }
+
+    void
+    operator()(const ConstantNode<DirichletProcessParameters>& old_node)
+    {
+      typedef ConstantNode<DirichletProcessParameters> NodeType;
+      const auto& old_value = old_node.value();
+
+      // Translate the Dirichlet nodes managed by the Dirichlet process.
+      cont::list<ConditionalDirichletNode*> managed_nodes;
+      auto old_managed_nodes = old_value.managed_nodes();
+      for (auto node_it = old_managed_nodes.begin();
+          node_it != old_managed_nodes.end(); ++node_it)
+      {
+        ConditionalDirichletNode* old_managed_node = &(*node_it);
+        ConditionalDirichletNode* new_managed_node = get<
+            ConditionalDirichletNode*>(node_node_table.at(old_managed_node));
+        managed_nodes.push_back(new_managed_node);
+      }
+
+      // Create the new node for the Dirichlet process parameters.
+      NodeType& new_node = new_network_.add_dirichlet_process_parameters(
+          old_value.name(), old_value.concentration(), managed_nodes);
+      node_node_table[&old_node] = &new_node;
+      value_node_table[&old_value] = &new_node;
+    }
+
+    void
+    operator()(const DirichletProcessNode& old_node)
+    {
+      auto* new_parameters_node =
+          get<ConstantNode<DirichletProcessParameters>*>(
+              value_node_table.at(&old_node.parameters()));
+
+      auto& new_node = new_network_.add_dirichlet_process(*new_parameters_node);
       node_node_table[&old_node] = &new_node;
       value_node_table[&old_node.value()] = &new_node;
     }
@@ -351,6 +394,15 @@ namespace cpprob
   {
     iterator new_node = vertices_.insert(end(), DirichletNode(value, alpha));
     return get<DirichletNode>(*new_node);
+  }
+
+  DirichletProcessNode&
+  BayesianNetwork::add_dirichlet_process(
+      ConstantNode<DirichletProcessParameters>& parent)
+  {
+    iterator new_node = vertices_.insert(end(),
+        DirichletProcessNode(parent.value()));
+    return get<DirichletProcessNode>(*new_node);
   }
 
   CategoricalDistribution
