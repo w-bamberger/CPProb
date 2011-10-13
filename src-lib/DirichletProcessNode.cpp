@@ -61,11 +61,10 @@ namespace cpprob
 
     /* Compile the prior distribution. */
     CategoricalDistribution distribution;
-    auto value_range =
-        RandomInteger(parameters_.name(), counters.size(), 0).value_range();
-    for (auto v = value_range.begin(); v != value_range.end(); ++v)
-      distribution[v] = counters[v];
-    distribution[value_range.end()] = parameters_.concentration();
+    auto value_range_end = counters.begin()->first.value_range().end();
+    for (auto count = counters.begin(); count != counters.end(); ++count)
+      distribution.insert(*count);
+    distribution[value_range_end] = parameters_.concentration();
     distribution.normalize();
 
     /* Draw from the prior distribution. */
@@ -73,12 +72,12 @@ namespace cpprob
         random_number_engine, distribution);
     DiscreteRandomVariable sample = sampling_variate();
 
-    if (sample != value_range.end())
+    if (sample != value_range_end)
       value_ = sample;
     else
       value_ = parameters_.next_component(children_);
 
-    parameters_.component_counters_[value_] += 1;
+    counters[value_] += 1;
   }
 
 } /* namespace cpprob */
