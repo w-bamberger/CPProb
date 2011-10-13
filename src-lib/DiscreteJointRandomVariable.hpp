@@ -27,7 +27,7 @@ namespace cpprob
     DiscreteJointRandomVariable();
 
     /**
-     * @Requires:
+     * @par Requires:
      * - @c var1 and @c var2 must be associated with a set of outcomes.
      *   (They may not be default constructed without further assignment.)
      * - @c var1 and @c var2 must have a valid value. (var1.value_range().end()
