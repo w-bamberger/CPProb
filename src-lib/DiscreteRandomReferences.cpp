@@ -34,6 +34,14 @@ namespace cpprob
         == DiscreteRandomVariable::characteristics_table_.end())
       set_up_characteristics();
 
+    /* Reset the size of the range. This is necessary if any of the
+     * referenced variables has changed its size. This happens, for example,
+     * in the sampling of infinite mixtures.
+     *
+     * This action is rather cheap here and ensures that the resulting value
+     * is always correct. The user need not care about it. */
+    characteristics_->second.size_ = range_size;
+
     return DiscreteRandomVariable(characteristics_, value);
   }
 
