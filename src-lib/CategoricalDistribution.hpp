@@ -35,6 +35,11 @@ namespace cpprob
     {
     }
 
+    CategoricalDistribution(std::initializer_list<value_type> entries)
+    : pt_(entries)
+    {
+    }
+
     ~CategoricalDistribution()
     {
     }
@@ -100,6 +105,19 @@ namespace cpprob
     operator[](const key_type& r)
     {
       return pt_[r];
+    }
+
+    CategoricalDistribution&
+    operator=(std::initializer_list<value_type>& entries)
+    {
+      pt_ = entries;
+      return *this;
+    }
+
+    std::size_t
+    size() const
+    {
+      return pt_.size();
     }
 
   private:
