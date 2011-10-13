@@ -31,6 +31,12 @@ namespace cpprob
       characteristics_->second.size_ = size;
     }
 
+    explicit
+    RandomInteger(const DiscreteRandomVariable& var)
+        : DiscreteRandomVariable(var)
+    {
+    }
+
     virtual
     ~RandomInteger()
     {
