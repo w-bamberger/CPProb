@@ -57,15 +57,28 @@ namespace cpprob
   void
   ConditionalDirichletNode::init_sampling()
   {
+    /* Check requirements. */
+    cpprob_check_debug(
+        children_.size() != 0,
+        "ConditionalDirichletNode: Cannot sample a conditional Dirichlet node (name: " + value_.name() + ") without children.");
+
     /* Set up the prior distribution. */
     DirichletDistribution sampling_distribution(parameters_.begin(),
         parameters_.end());
     variate_generator<RandomNumberEngine&, DirichletDistribution> sampling_variate_(
         random_number_engine, sampling_distribution);
 
-    /* Sample the conditional probabilities from the prior distribution. */
-    for (auto v_it = value_.begin(); v_it != value_.end(); ++v_it)
-      v_it->second = sampling_variate_();
+    /* Sample the conditional probabilities from the prior distribution.
+     * I take the range of the condition variable for the case that the range
+     * of some conditions changed after construction. This happens, for example,
+     * in infinite mixture models. */
+    auto condition_range =
+        children().begin()->condition().joint_value().value_range();
+    for (auto condition = condition_range.begin();
+        condition != condition_range.end(); ++condition)
+    {
+      value_[condition] = sampling_variate_();
+    }
   }
 
   void
