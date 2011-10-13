@@ -39,8 +39,25 @@ namespace cpprob
   class DiscreteRandomReferences
   {
 
-    typedef cont::set<const DiscreteRandomVariable*,
-        indirect_less<DiscreteRandomVariable> > Variables;
+    class IndirectNameLess : public std::binary_function<DiscreteRandomVariable,
+        DiscreteRandomVariable, bool>
+    {
+
+    public:
+
+      bool
+      operator()(const DiscreteRandomVariable* var1,
+          const DiscreteRandomVariable* var2) const
+      {
+        cpprob_check_debug(
+            var1->characteristics_ != DiscreteRandomVariable::characteristics_table_.end() && var2->characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+            "DiscreteRandomReferences: Cannot compare a variable that is not associated with a set of observations.");
+        return var1->characteristics_->first < var2->characteristics_->first;
+      }
+
+    };
+
+    typedef cont::set<const DiscreteRandomVariable*, IndirectNameLess> Variables;
 
   public:
 

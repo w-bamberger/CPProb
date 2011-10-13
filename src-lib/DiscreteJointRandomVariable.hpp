@@ -17,7 +17,7 @@ namespace cpprob
   class DiscreteJointRandomVariable : public DiscreteRandomVariable
   {
 
-    typedef std::set<DiscreteRandomVariable> Variables;
+    typedef std::set<DiscreteRandomVariable, DiscreteRandomVariable::NameLess> Variables;
 
   public:
 

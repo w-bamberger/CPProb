@@ -84,6 +84,83 @@ namespace cpprob
 
   public:
 
+    class NameLess : public std::binary_function<DiscreteRandomVariable,
+        DiscreteRandomVariable, bool>
+    {
+
+    public:
+
+      bool
+      operator()(const DiscreteRandomVariable& var1,
+          const DiscreteRandomVariable& var2) const
+      {
+        cpprob_check_debug(
+            var1.characteristics_ != DiscreteRandomVariable::characteristics_table_.end() && var2.characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+            "DiscreteRandomVariable: Cannot compare a variable that is not associated with a set of observations.");
+        return var1.characteristics_->first < var2.characteristics_->first;
+      }
+
+    };
+
+    class NameValueLess : public std::binary_function<DiscreteRandomVariable,
+        DiscreteRandomVariable, bool>
+    {
+
+    public:
+
+      /**
+       * This comparison works for variables with the same or different sets
+       * of outcomes. One or both sets may even be empty.
+       */
+      bool
+      operator()(const DiscreteRandomVariable& var1,
+          const DiscreteRandomVariable& var2) const
+      {
+        /* The default value of characteristics, i.e. characteristics_table_.end(),
+         * is taken as the highest value. So the ordering of the random variable
+         * store objects is in order of the iterators of CharacteristicsTable.
+         * The sub-ordering criterion, in case both iterators are the same,
+         * is the value_. */
+        if (var1.characteristics_ == characteristics_table_.end())
+          /* No element can be larger than characteristics.
+           * (value_ cannot be set.) */
+          return false;
+
+        else if (var2.characteristics_ == characteristics_table_.end())
+          /* characteristics must be different and thus smaller
+           * than var.characteristics. */
+          return true;
+
+        else if (var1.characteristics_ == var2.characteristics_)
+          return var1.value_ < var2.value_;
+
+        else
+          return var1.characteristics_->first < var2.characteristics_->first;
+      }
+
+    };
+
+    class ValueLess : public std::binary_function<DiscreteRandomVariable,
+        DiscreteRandomVariable, bool>
+    {
+
+    public:
+
+      bool
+      operator()(const DiscreteRandomVariable& var1,
+          const DiscreteRandomVariable& var2) const
+      {
+        cpprob_check_debug(
+            var1.characteristics_ != DiscreteRandomVariable::characteristics_table_.end() && var2.characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+            "DiscreteRandomVariable: Cannot compare a variable that is not associated with a set of observations.");
+        cpprob_check_debug(
+            var1.characteristics_->second.size_ != 0 && var1.characteristics_->second.size_ != 0,
+            "DiscreteRandomVariable: Cannot compare a variable with an empty set of observations.");
+        return var1.value_ < var2.value_;
+      }
+
+    };
+
     class Range
     {
 
@@ -358,10 +435,52 @@ namespace cpprob
     }
 
     /**
-     * @todo Remove this operator and substitute it by comparison predicates.
+     * Determines if this variable is lower than the given variable @c var
+     * following the implicit ordering of the set of outcomes.
+     *
+     * @par Requries:
+     * - Both variables must belong to the same set of outcomes
+     *   (<tt>%name() == var.%name()</tt>). (Only checked in debug mode.)
+     *
+     * @par Ensures:
+     * - <tt>(*this < var) == (var > *this)</tt>.
+     * - Only one of the operations @c >, @c < and @c == is true.
+     *
+     * @param var the variable to compare with
+     * @return true if this variable is lower than @c var; otherwise false.
      */
     bool
-    operator<(const DiscreteRandomVariable& var) const;
+    operator<(const DiscreteRandomVariable& var) const
+    {
+      cpprob_check_debug(
+          characteristics_ == var.characteristics_,
+          "DiscreteRandomVariable: Can only compare outcomes of the same kind of random variable.");
+      return value_ < var.value_;
+    }
+
+    /**
+     * Determines if this variable is greater than the given variable @c var
+     * following the implicit ordering of the set of outcomes.
+     *
+     * @par Requries:
+     * - Both variables must belong to the same set of outcomes
+     *   (<tt>%name() == var.%name()</tt>). (Only checked in debug mode.)
+     *
+     * @par Ensures:
+     * - <tt>(*this > var) == (var < *this)</tt>.
+     * - Only one of the operations @c >, @c < and @c == is true.
+     *
+     * @param var the variable to compare with
+     * @return true if this variable is greater than @c var; otherwise false.
+     */
+    bool
+    operator>(const DiscreteRandomVariable& var) const
+    {
+      cpprob_check_debug(
+          characteristics_ == var.characteristics_,
+          "DiscreteRandomVariable: Can only compare outcomes of the same kind of random variable.");
+      return value_ > var.value_;
+    }
 
     /**
      * Assigns the value of another variable to this variable. Only variables

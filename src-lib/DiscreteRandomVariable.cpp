@@ -31,37 +31,6 @@ namespace cpprob
     value_ = variate();
   }
 
-  bool
-  DiscreteRandomVariable::operator<(const DiscreteRandomVariable& var) const
-  {
-    /*
-     * The default value of characteristics, i.e. characteristics_table_.end(),
-     * is taken as the highest value. So the ordering of the random variable
-     * store objects is in order of the iterators of CharacteristicsTable.
-     * The sub-odering criterion, in case both iterators are the same,
-     * is the value_.
-     */
-    if (characteristics_ == characteristics_table_.end())
-      /*
-       * No element can be larger than characteristics.
-       * (value_ cannot be set.)
-       */
-      return false;
-
-    else if (var.characteristics_ == characteristics_table_.end())
-      /*
-       * characteristics must be different and thus smaller
-       * than var.characteristics.
-       */
-      return true;
-
-    else if (characteristics_ == var.characteristics_)
-      return value_ < var.value_;
-
-    else
-      return characteristics_->first < var.characteristics_->first;
-  }
-
   DiscreteRandomVariable&
   DiscreteRandomVariable::operator=(const DiscreteRandomVariable& var)
   {
