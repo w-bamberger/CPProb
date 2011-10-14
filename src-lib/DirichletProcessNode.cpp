@@ -39,17 +39,15 @@ namespace cpprob
 
   DirichletProcessNode::DirichletProcessNode(
       DirichletProcessParameters& parameters)
-      : parameters_(parameters), value_(
-          RandomInteger(parameters.name(),
-              parameters.component_counters_.size() + 1,
-              parameters.component_counters_.size()))
+      : parameters_(parameters), value_(RandomInteger(parameters.name(), 1, 0))
   {
-    parameters_.component_counters_[value_] += 1;
   }
 
   void
   DirichletProcessNode::init_sampling()
   {
+    parameters_.component_counters_[value_] += 1;
+    sample();
   }
 
   void
@@ -59,15 +57,39 @@ namespace cpprob
         parameters_.component_counters_;
     counters[value_] -= 1;
 
-    /* Compile the prior distribution. */
+    /* Compile the posterior distribution for the used components. */
     CategoricalDistribution distribution;
-    auto value_range_end = counters.begin()->first.value_range().end();
+    float p = 0.0;
     for (auto count = counters.begin(); count != counters.end(); ++count)
-      distribution.insert(*count);
-    distribution[value_range_end] = parameters_.concentration();
+    {
+      // The prior
+      p = count->second;
+
+      // The factors of the posterior update
+      value_ = count->first;
+      for (Children::const_iterator d = children_.begin(); d != children_.end();
+          ++d)
+      {
+        p *= (*d)->at_references();
+      }
+
+      auto insert_result = distribution.insert(make_pair(count->first, p));
+      cpprob_check_debug(
+          insert_result.second,
+          "DirichletProcessNode: Could not insert a counter into the distribution during sampling.");
+    }
+
+    /* Compile the posterior distribution for the unused component. */
+    // The prior
+    p = parameters_.concentration();
+    // The posterior update
+    p *= parameters_.prior_probability_of_managed_nodes(children_);
+    auto value_range_end = counters.begin()->first.value_range().end();
+    distribution[value_range_end] = p;
+
     distribution.normalize();
 
-    /* Draw from the prior distribution. */
+    /* Draw from the posterior distribution. */
     variate_generator<RandomNumberEngine&, CategoricalDistribution> sampling_variate(
         random_number_engine, distribution);
     DiscreteRandomVariable sample = sampling_variate();

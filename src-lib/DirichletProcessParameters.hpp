@@ -108,6 +108,14 @@ namespace cpprob
     friend std::ostream&
     operator<<(std::ostream& os, const DirichletProcessParameters& parameters);
 
+    float
+    prior_probability_of_managed_node(const ConditionalDirichletNode& node,
+        cont::map<DiscreteRandomVariable, size_t> counters) const;
+
+    float
+    prior_probability_of_managed_nodes(
+        const Children& children_of_component) const;
+
     void
     sample_managed_node(ConditionalDirichletNode& node,
         const DiscreteRandomVariable& component,

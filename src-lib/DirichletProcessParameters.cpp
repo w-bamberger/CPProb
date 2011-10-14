@@ -50,8 +50,6 @@ namespace cpprob
         if (&(*child)->probabilities() == &(*node)->value())
           children_of_node[new_component].push_back(*child);
       }
-      cout << "Extend " << (*node)->value().name() << " by " << new_component
-          << "\n";
       extend_managed_node(**node, old_range, new_range, children_of_node);
     }
     return new_component;
@@ -210,6 +208,58 @@ namespace cpprob
     }
 
     return create_component(children_of_component);
+  }
+
+  float
+  DirichletProcessParameters::prior_probability_of_managed_nodes(
+      const Children& children_of_component) const
+  {
+    float p = 1.0;
+    for (auto node = managed_nodes_.begin(); node != managed_nodes_.end();
+        ++node)
+    {
+      cont::map<DiscreteRandomVariable, size_t> child_counters;
+      for (auto child = children_of_component.begin();
+          child != children_of_component.end(); ++child)
+      {
+        if (&(*child)->probabilities() == &(*node)->value())
+          child_counters[(*child)->value()] += 1;
+      }
+      p *= prior_probability_of_managed_node(**node, child_counters);
+    }
+    return p;
+  }
+
+  float
+  DirichletProcessParameters::prior_probability_of_managed_node(
+      const ConditionalDirichletNode& node,
+      cont::map<DiscreteRandomVariable, size_t> counters) const
+  {
+    float sum_parameters = 0.0;
+    size_t sum_counters = 0;
+    float nominator = 1.0;
+    for (auto parameter = node.parameters().begin();
+        parameter != node.parameters().end(); ++parameter)
+    {
+      float p = parameter->second;
+      sum_parameters += p;
+      size_t counter = counters[parameter->first];
+      sum_counters += counter;
+      for (; counter != 0; --counter)
+      {
+        nominator *= p;
+        p += 1.0;
+      }
+    }
+
+    float denominator = 1.0;
+    for (; sum_counters != 0; --sum_counters)
+    {
+      denominator *= sum_parameters;
+      sum_parameters += 1;
+    }
+
+    return nominator / denominator;
   }
 
   void
