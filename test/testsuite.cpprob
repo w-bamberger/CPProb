@@ -7,6 +7,9 @@ bag
 # Tests the bag network with algorithms for a latent variable. The
 # bag variable is considered as unobserved.
 latent-bag
+
+# Sampling in the latent bag network with an infinite mixture model based on a Dirichlet process.
+InfiniteBagTest
 ConditionalDirichletNodeTest
 
 # Unit test for DiscreteJointRandomVariable.

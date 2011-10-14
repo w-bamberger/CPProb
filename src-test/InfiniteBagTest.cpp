@@ -114,7 +114,7 @@ public:
     params_table.insert(
         make_pair("Hole", &bn.add_conditional_dirichlet(hole_params, alpha)));
     ConstantNode<DirichletProcessParameters>& bag_params_node =
-        bn.add_dirichlet_process_parameters(bag.name(), 2.0,
+        bn.add_dirichlet_process_parameters(bag.name(), 5.0,
             boost::adaptors::values(params_table));
 
     // Read the data from the file
@@ -234,8 +234,9 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
   {
     cout << "Correct values (" << data_file_ << "):\n";
     cout << correct_flavor_distribution_ << endl;
-    BOOST_CHECK_CLOSE(prediction.begin()->second,
-        correct_flavor_distribution_.begin()->second, 5);
+    BOOST_CHECK_LT(
+        fabs( prediction.begin()->second - correct_flavor_distribution_.begin()->second),
+        0.06);
   }
 
   if (options_map["with-debug-output"].as<bool>())
