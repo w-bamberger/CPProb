@@ -21,11 +21,14 @@ namespace cpprob
   public:
 
     // Types following the map conventions
-    typedef ProbabilityTable::iterator iterator;
-    typedef ProbabilityTable::const_iterator const_iterator;
     typedef DiscreteRandomVariable key_type;
     typedef float mapped_type;
     typedef std::pair<const key_type, mapped_type> value_type;
+
+    typedef ProbabilityTable::iterator iterator;
+    typedef ProbabilityTable::const_iterator const_iterator;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
 
     // Types following the distribution conventions
     typedef mapped_type input_type;
@@ -36,7 +39,7 @@ namespace cpprob
     }
 
     CategoricalDistribution(std::initializer_list<value_type> entries)
-    : pt_(entries)
+        : pt_(entries)
     {
     }
 
@@ -72,6 +75,18 @@ namespace cpprob
     end()
     {
       return pt_.end();
+    }
+
+    iterator
+    insert(iterator position, const value_type& new_entry)
+    {
+      return pt_.insert(position, new_entry);
+    }
+
+    std::pair<iterator, bool>
+    insert(const value_type& new_entry)
+    {
+      return pt_.insert(new_entry);
     }
 
     void
