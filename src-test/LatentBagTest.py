@@ -6,8 +6,6 @@
 from proby import *
 import csv
 
-print greet()
-
 alpha = 5.0
 
 bn = BayesianNetwork()

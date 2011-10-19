@@ -12,6 +12,7 @@ include_directories(${PYTHON_INCLUDE_PATH})
 
 # Sources
 file(GLOB cpp_source_files *.?pp)
+file(GLOB python_source_files *.py)
 
 # Target
 add_library(proby SHARED ${cpp_source_files})
@@ -23,7 +24,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
         
 # Installation
-install(DIRECTORY proby DESTINATION lib/python2.6/dist-packages)
+set(destination_path lib/python2.6/dist-packages/proby)
+install(FILES ${python_source_files} DESTINATION ${destination_path})
 install(TARGETS proby 
-        LIBRARY DESTINATION lib/python2.6/dist-packages/proby 
-        ARCHIVE DESTINATION lib/python2.6/dist-packages/proby)
+        LIBRARY DESTINATION ${destination_path} 
+        ARCHIVE DESTINATION ${destination_path})
