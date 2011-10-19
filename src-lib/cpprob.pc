@@ -1,0 +1,10 @@
+prefix=/usr/local
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: CPProb
+Description: Algorithms for probabilistic reasoning
+URL: http://w-bamberger.github.com/CPProb/
+Version: 1.0.0
+Cflags: -I${includedir}
+Libs: -L${libdir} -lcpprob

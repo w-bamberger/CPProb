@@ -11,10 +11,12 @@ include_directories(${Boost_INCLUDE_DIRS})
 file(GLOB_RECURSE source_files *.?pp)
 file(GLOB main_header_files *.hpp)
 file(GLOB cont_header_files cont/*.hpp)
+file(GLOB pkgconfig_files *.pc)
 
 # Target
 add_library(cpprob SHARED ${source_files})
-set_target_properties(cpprob PROPERTIES
+add_library(cpprob_static STATIC ${source_files})
+set_target_properties(cpprob cpprob_static PROPERTIES
         VERSION ${CPProb_VERSION_MAJOR}.${CPProb_VERSION_MINOR}
         SOVERSION ${CPProb_VERSION_MAJOR})
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -25,8 +27,12 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 install(TARGETS cpprob 
         LIBRARY DESTINATION lib 
         ARCHIVE DESTINATION lib)
+install(TARGETS cpprob_static
+        LIBRARY DESTINATION lib 
+        ARCHIVE DESTINATION lib)
 install(FILES ${main_header_files} DESTINATION include/cpprob)
 install(FILES ${cont_header_files} DESTINATION include/cpprob/cont)
+install(FILES ${pkgconfig_files} DESTINATION lib/pkgconfig)
 
 # Packaging
 include(InstallRequiredSystemLibraries)

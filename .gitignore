@@ -1,6 +1,7 @@
 build-lib
 build-python
 build-test
+cpprob?1.0*
 Debug
 Enhanced Debug
 Release
