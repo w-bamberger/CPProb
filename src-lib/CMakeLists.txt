@@ -14,17 +14,18 @@ file(GLOB cont_header_files cont/*.hpp)
 file(GLOB pkgconfig_files *.pc)
 
 # Target
-add_library(cpprob SHARED ${source_files})
+add_library(cpprob_shared SHARED ${source_files})
 add_library(cpprob_static STATIC ${source_files})
-set_target_properties(cpprob cpprob_static PROPERTIES
-        VERSION ${CPProb_VERSION_MAJOR}.${CPProb_VERSION_MINOR}
-        SOVERSION ${CPProb_VERSION_MAJOR})
+set_target_properties(cpprob_shared cpprob_static PROPERTIES
+    OUTPUT_NAME "cpprob"
+    VERSION ${CPProb_VERSION_MAJOR}.${CPProb_VERSION_MINOR}
+    SOVERSION ${CPProb_VERSION_MAJOR})
 if(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-std=c++0x)
 endif(CMAKE_COMPILER_IS_GNUCXX)
         
 # Installation
-install(TARGETS cpprob 
+install(TARGETS cpprob_shared
         LIBRARY DESTINATION lib 
         ARCHIVE DESTINATION lib)
 install(TARGETS cpprob_static
