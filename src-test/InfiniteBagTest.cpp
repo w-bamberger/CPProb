@@ -13,6 +13,7 @@
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/timer.hpp>
+#include <iostream>
 
 using namespace cpprob;
 using namespace std;

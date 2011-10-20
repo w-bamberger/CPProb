@@ -10,6 +10,7 @@
 #include <boost/program_options.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/timer.hpp>
+#include <iostream>
 
 using namespace cpprob;
 using namespace std;

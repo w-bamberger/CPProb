@@ -1,9 +1,17 @@
+cmake_minimum_required(VERSION 2.6)
+project(CPProb)
+set(CPProb_VERSION_MAJOR 1)
+set(CPProb_VERSION_MINOR 0)
+
 # Dependencies
-find_package(Boost 1.40.0 REQUIRED program_options)
+find_package(Boost 1.40.0 REQUIRED program_options unit_test_framework)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Source
 file(GLOB_RECURSE src_files *.?pp)
+if(CMAKE_COMPILER_IS_GNUCXX)
+  add_definitions(-std=c++0x)
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # Target
 add_executable(cpprobtest ${src_files})
