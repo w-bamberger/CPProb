@@ -13,6 +13,10 @@ namespace cpprob
     export_bayesian_network()
     {
       CategoricalNode&
+      (BayesianNetwork::*add_categorical)(
+          const DiscreteRandomVariable&) = &BayesianNetwork::add_categorical;
+
+      CategoricalNode&
       (BayesianNetwork::*add_categorical_with_dirichlet)(
           const DiscreteRandomVariable&, DirichletNode&)
           = &BayesianNetwork::add_categorical;
@@ -29,6 +33,9 @@ namespace cpprob
 
       class_ < BayesianNetwork
           > ("BayesianNetwork") //
+          .def(init<BayesianNetwork>())
+          .def("add_categorical", add_categorical,
+              return_internal_reference<>()) //
           .def("add_categorical", add_categorical_with_dirichlet,
               return_internal_reference<>()) //
           .def("add_conditional_categorical",
@@ -42,6 +49,7 @@ namespace cpprob
           .def("add_dirichlet", &BayesianNetwork::add_dirichlet,
               return_internal_reference<>()) //
           .def("sample", &BayesianNetwork::sample) //
+          .def("__len__", &BayesianNetwork::size) //
           .def(self_ns::str(self_ns::self));
     }
 
