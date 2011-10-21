@@ -28,6 +28,9 @@ namespace cpprob
     export_dirichlet_node();
 
     void
+    export_discrete_joint_random_variable();
+
+    void
     export_discrete_node();
 
     void
@@ -54,6 +57,7 @@ BOOST_PYTHON_MODULE (_proby)
 
   /* Random variables. */
   export_discrete_random_variable();
+  export_discrete_joint_random_variable();
   export_random_boolean();
   export_random_conditional_probabilities();
   export_random_integer();
