@@ -97,6 +97,12 @@ namespace cpprob
     virtual DiscreteJointRandomVariable&
     operator=(const DiscreteJointRandomVariable& v);
 
+    std::size_t
+    size() const
+    {
+      return variables_.size();
+    }
+
   protected:
 
     virtual std::ostream&
