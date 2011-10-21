@@ -1,1 +1,1 @@
---run_test=InfiniteBagTest --data-file=latent-bag.csv
+--run_test=InfiniteBagTest --data-file=latent-bag.csv --test-mode

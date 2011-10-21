@@ -1,10 +1,8 @@
 Running 1 test case...
 Generate the bag network with infinite mixtures
 CSV header: Bag Flavor Wrapper Hole 
-Duration: 0.01
 
 Sample with 5 burn-in iterations and 500 collect iterations.
-Duration: 9.24
 Predictive distribution with sampling:
       (Flavor:0,0.641999)  (Flavor:1,0.358) 
 
