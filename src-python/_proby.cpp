@@ -25,6 +25,9 @@ namespace cpprob
     export_conditional_dirichlet_node();
 
     void
+    export_constant_node();
+
+    void
     export_dirichlet_node();
 
     void
@@ -71,6 +74,7 @@ BOOST_PYTHON_MODULE (_proby)
   export_categorical_node();
   export_conditional_categorical_node();
   export_conditional_dirichlet_node();
+  export_constant_node();
   export_dirichlet_node();
 
   /* Model. */
