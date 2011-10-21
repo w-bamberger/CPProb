@@ -28,7 +28,24 @@ namespace cpprob
       os << " with no evidence\n";
     }
 
-    os << "  Parameters: \n";
+    os << "  Parameters:";
+    string prefix;
+    for (auto p = node.parameters().begin(); p != node.parameters().end(); ++p)
+    {
+      os << prefix << "(" << p->first << ", " << p->second << ")";
+      prefix = ", ";
+    }
+    os << "\n";
+
+    os << "  Children: ";
+    prefix = "";
+    for (auto c = node.children().begin(); c != node.children().end(); ++c)
+    {
+      os << prefix << c->value().name() << "(at " << &(*c) << ")";
+      prefix = ", ";
+    }
+    os << "\n";
+
     return os;
   }
 
@@ -37,7 +54,7 @@ namespace cpprob
   {
     for (RandomProbabilities::iterator v_it = value_.begin();
         v_it != value_.end(); ++v_it)
-        {
+    {
       parameters_[v_it->first] = alpha;
     }
   }
@@ -65,7 +82,7 @@ namespace cpprob
 
     for (Children::const_iterator c = children_.begin(); c != children_.end();
         ++c)
-        {
+    {
       const DiscreteRandomVariable & c_var = (*c)->value();
       sample_distribution.parameters()[c_var] += 1.0;
     }

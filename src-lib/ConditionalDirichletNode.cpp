@@ -28,7 +28,25 @@ namespace cpprob
       os << " with no evidence\n";
     }
 
-    os << "  Parameters: \n";
+    string prefix;
+    os << "  Parameters:";
+    for (auto p = node.parameters().begin(); p != node.parameters().end();
+        ++p)
+    {
+      os << prefix << "(" << p->first << ", " << p->second << ")";
+      prefix = ", ";
+    }
+    os << "\n";
+
+    os << "  Children: ";
+    prefix = "";
+    for (auto c = node.children().begin(); c != node.children().end(); ++c)
+    {
+      os << prefix << c->value().name() << "(at " << &(*c) << ")";
+      prefix = ", ";
+    }
+    os << "\n";
+
     return os;
   }
 
