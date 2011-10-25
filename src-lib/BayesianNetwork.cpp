@@ -539,8 +539,10 @@ namespace cpprob
   BayesianNetwork::sample(const DiscreteNode& X,
       unsigned int burn_in_iterations, unsigned int collect_iterations)
   {
-    CategoricalDistribution X_distribution;
     const DiscreteRandomVariable& x = X.value();
+    CategoricalDistribution X_distribution;
+	for (auto x_value = x.value_range().begin(); x_value != x.value_range().end(); ++x_value)
+	  X_distribution[x_value] = 0.0;
 
     for_each(begin(), end(), make_apply_visitor_delayed(InitSamplingOfNode()));
 
