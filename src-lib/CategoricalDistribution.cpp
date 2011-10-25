@@ -21,6 +21,36 @@ namespace cpprob
     return os;
   }
 
+  float
+  mean(const CategoricalDistribution& d)
+  {
+    float m = 0.0;
+    float value = 0.0;
+
+    for (auto it = d.begin(); it != d.end(); ++it, ++value)
+      m += value * it->second;
+
+    return m;
+  }
+
+  float
+  variance(const CategoricalDistribution& d)
+  {
+    float v = 0.0;
+    float diff = -mean(d);
+
+    for (auto it = d.begin(); it != d.end(); ++it, ++diff)
+      v += diff * diff * it->second;
+
+    return v;
+  }
+
+  float
+  standard_deviation(const CategoricalDistribution& d)
+  {
+    return sqrt(variance(d));
+  }
+
   void
   CategoricalDistribution::normalize()
   {

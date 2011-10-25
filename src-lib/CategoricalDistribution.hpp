@@ -77,6 +77,24 @@ namespace cpprob
       return pt_.end();
     }
 
+    void
+    erase(iterator entry)
+    {
+      pt_.erase(entry);
+    }
+
+    const_iterator
+    find(const key_type& var) const
+    {
+      return pt_.find(var);
+    }
+
+    iterator
+    find(const key_type& var)
+    {
+      return pt_.find(var);
+    }
+
     iterator
     insert(iterator position, const value_type& new_entry)
     {
@@ -141,8 +159,17 @@ namespace cpprob
 
   };
 
+  float
+  mean(const CategoricalDistribution& d);
+
   std::ostream&
   operator<<(std::ostream& os, const CategoricalDistribution& d);
+
+  float
+  standard_deviation(const CategoricalDistribution& d);
+
+  float
+  variance(const CategoricalDistribution& d);
 
 }
 
