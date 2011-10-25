@@ -324,7 +324,7 @@ namespace cpprob
   operator<<(ostream& os, const BayesianNetwork& bn)
   {
     NodeIsEvidence is_evidence_visitor;
-    bool is_large_network = bn.size() > 10;
+    bool is_large_network = bn.size() > 20;
 
     if (is_large_network)
       os << "Non-evidence vertices of the Bayesian network:\n";
