@@ -43,7 +43,7 @@ namespace cpprob
     for (auto node = managed_nodes_.begin(); node != managed_nodes_.end();
         ++node)
     {
-      cont::map<DiscreteRandomVariable, ConstChildren> children_of_node;
+      cont::map<DiscreteRandomVariable, ConstChildren, DiscreteRandomVariable::NameLess> children_of_node;
       for (auto child = children_of_component.begin();
           child != children_of_component.end(); ++child)
       {
@@ -60,8 +60,13 @@ namespace cpprob
       ConditionalDirichletNode& node,
       const DiscreteRandomVariable::Range& old_range,
       const DiscreteRandomVariable::Range& new_range,
-      const cont::map<DiscreteRandomVariable, ConstChildren>& children_of_node)
+      const cont::map<DiscreteRandomVariable, ConstChildren, DiscreteRandomVariable::NameLess>& children_of_node)
   {
+    /**
+     * @todo Refactor around children_of_node.
+     * It is a map of which only one value is taken!
+     */
+
     /* Check requirements. */
     cpprob_check_debug(
         old_range.size() < new_range.size(),

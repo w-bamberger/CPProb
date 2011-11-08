@@ -97,7 +97,7 @@ namespace cpprob
         ConditionalDirichletNode& node,
         const DiscreteRandomVariable::Range& old_range,
         const DiscreteRandomVariable::Range& new_range,
-        const cont::map<DiscreteRandomVariable, ConstChildren>& children_of_component);
+        const cont::map<DiscreteRandomVariable, ConstChildren, DiscreteRandomVariable::NameLess>& children_of_component);
 
     DiscreteRandomVariable
     next_component(const Children& children_of_component);
