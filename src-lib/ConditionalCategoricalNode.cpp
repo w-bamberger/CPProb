@@ -71,8 +71,7 @@ namespace cpprob
     sampling_distribution.clear();
     RandomProbabilities& probabilities_subset = probabilities_.begin()->second;
     RandomProbabilities::iterator p = probabilities_subset.begin();
-    CategoricalDistribution::iterator d = sampling_distribution.begin();
-    for (; p != probabilities_subset.end(); ++p, ++d)
+    for (; p != probabilities_subset.end(); ++p)
       sampling_distribution[p->first] = p->second;
     value_ = sampling_variate_();
   }

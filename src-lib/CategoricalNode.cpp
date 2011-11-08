@@ -59,8 +59,7 @@ namespace cpprob
         sampling_variate_.distribution();
     sampling_distribution.clear();
     RandomProbabilities::iterator p = probabilities_.begin();
-    CategoricalDistribution::iterator d = sampling_distribution.begin();
-    for (; p != probabilities_.end(); ++p, ++d)
+    for (; p != probabilities_.end(); ++p)
       sampling_distribution[p->first] = p->second;
     value_ = sampling_variate_();
   }
