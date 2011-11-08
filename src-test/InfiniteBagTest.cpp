@@ -53,18 +53,18 @@ public:
    * lead to the total count (57/25). Normalizing the total count leads to
    * the conditional probabilities of the given file.
    */
-  initializer_list<CategoricalDistribution::value_type>
+  CategoricalDistribution
   flavor_counts()
   {
     const RandomBoolean flavor_false("Flavor", false);
     const RandomBoolean flavor_true("Flavor", true);
 
     if (data_file_ == "latent-bag-short.csv")
-      return
-      {
-        { flavor_false, 6.0},
-        { flavor_true, 2.0} //
-      };
+      return CategoricalDistribution(
+        {
+          { flavor_false, 6.0 },
+          { flavor_true, 2.0 } //
+        });
 
     else if (data_file_ == "latent-bag.csv")
       /*
@@ -72,22 +72,21 @@ public:
        *   C(F=0 | H=1, W=1): 52 (grep -e ",false,true,true" latent-bag.csv | wc)
        *   C(F=1 | H=1, W=1): 20 (grep -e ",true,true,true" latent-bag.csv | wc)
        */
-      return
-      {
-        { flavor_false, 52.0},
-        { flavor_true, 20.0} //
-      };
+      return CategoricalDistribution(
+        {
+          { flavor_false, 52.0 },
+          { flavor_true, 20.0 } //
+        });
 
     else if (data_file_ == "latent-bag-long.csv")
-      return
-      {
-        { flavor_false, 2534.0},
-        { flavor_true, 1280.0} //
-      };
+      return CategoricalDistribution(
+        {
+          { flavor_false, 2534.0 },
+          { flavor_true, 1280.0 } //
+        });
 
     else
-      return
-      {};
+      return CategoricalDistribution();
   }
 
   BayesianNetwork
