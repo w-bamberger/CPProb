@@ -48,7 +48,7 @@ namespace cpprob
       return value_;
     }
 
-    void
+    RandomInteger&
     observation(std::size_t new_value)
     {
       if (new_value < characteristics_->second.size_)
@@ -56,6 +56,8 @@ namespace cpprob
       else
         cpprob_throw_out_of_range(
             "RandomInteger: The new value " << new_value << " is greater than the size " << characteristics_->second.size_);
+
+      return *this;
     }
 
   protected:
