@@ -666,7 +666,8 @@ namespace cpprob
 
     friend class DiscreteJointRandomVariable;
     friend class DiscreteRandomReferences;
-
+    template<class T>
+    friend class DiscreteRandomVariableMap;
   };
 
 }

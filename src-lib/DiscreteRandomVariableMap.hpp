@@ -392,7 +392,7 @@ namespace cpprob
       T&
       at(const key_type& k)
       {
-        if (k.index() + 1 >= values_.size())
+        if (k.value_ + 1 >= values_.size())
         cpprob_throw_out_of_range("DiscreteRandomVariableMap: key " << k <<" is not in the map.");
         return do_access(k, true);
       }
@@ -400,7 +400,7 @@ namespace cpprob
       const T&
       at(const key_type& k) const
       {
-        if (k.index() + 1 >= values_.size())
+        if (k.value_ + 1 >= values_.size())
           cpprob_throw_out_of_range("DiscreteRandomVariableMap: key " << k << " is not in the map.");
         return do_access(k);
       }
@@ -494,9 +494,9 @@ namespace cpprob
       iterator
       find(const key_type& k)
       {
-        if (k.index() + 1 < values_.size())
+        if (k.value_ + 1 < values_.size())
         {
-          typename Container::iterator key_position = values_.begin() + k.index() + 1;
+          typename Container::iterator key_position = values_.begin() + k.value_ + 1;
           if (is_linked(*key_position))
             return key_position;
         }
@@ -506,9 +506,9 @@ namespace cpprob
       const_iterator
       find(const key_type& k) const
       {
-        if (k.index() + 1 < values_.size())
+        if (k.value_ + 1 < values_.size())
         {
-          typename Container::const_iterator key_position = values_.begin() + k.index() + 1;
+          typename Container::const_iterator key_position = values_.begin() + k.value_ + 1;
           if (is_linked(*key_position))
             return key_position;
         }
@@ -545,8 +545,8 @@ namespace cpprob
       mapped_type&
       do_access(const key_type& k, bool throw_if_inexistent)
       {
-        cpprob_check_debug(k.index() + 1 < values_.size(),"DiscreteRandomVariableMap: Element access failed due to inconsistent indices (name: " << k.name() << ", range size: " << k.value_range().size() << ", index: " << k.index() << ", container size: " << values_.size() << ").");
-        auto accessed_node = values_.begin() + k.index() + 1;
+        cpprob_check_debug(k.value_ + 1 < values_.size(),"DiscreteRandomVariableMap: Element access failed due to inconsistent indices (name: " << k.name() << ", range size: " << k.value_range().size() << ", index: " << k.value_ << ", container size: " << values_.size() << ").");
+        auto accessed_node = values_.begin() + k.value_ + 1;
 
         if (! is_linked(*accessed_node))
         {
@@ -562,8 +562,8 @@ namespace cpprob
       const mapped_type&
       do_access(const key_type& k) const
       {
-        cpprob_check_debug(k.index() + 1 < values_.size(),"DiscreteRandomVariableMap: Element access failed due to inconsistent indices (name: " << k.name() << ", range size: " << k.value_range().size() << ", index: " << k.index() << ", container size: " << values_.size() << ").");
-        auto accessed_node = values_.begin() + k.index() + 1;
+        cpprob_check_debug(k.value_ + 1 < values_.size(),"DiscreteRandomVariableMap: Element access failed due to inconsistent indices (name: " << k.name() << ", range size: " << k.value_range().size() << ", index: " << k.value_ << ", container size: " << values_.size() << ").");
+        auto accessed_node = values_.begin() + k.value_ + 1;
 
         if (! is_linked(*accessed_node))
           cpprob_throw_out_of_range("DiscreteRandomVariableMap: Key " << k << " is not in the map.");
@@ -574,8 +574,8 @@ namespace cpprob
       std::pair<iterator, bool>
       do_insert(const_reference v)
       {
-        cpprob_check_debug(v.first.index() + 1 < values_.size(),"DiscreteRandomVariableMap: Element assignment failed due to inconsistent indices (name: " << v.first.name() << ", range size: " << v.first.value_range().size() << ", index: " << v.first.index() << ").");
-        typename Container::iterator accessed_node = values_.begin() + v.first.index() + 1;
+        cpprob_check_debug(v.first.value_ + 1 < values_.size(),"DiscreteRandomVariableMap: Element assignment failed due to inconsistent indices (name: " << v.first.name() << ", range size: " << v.first.value_range().size() << ", index: " << v.first.value_ << ").");
+        typename Container::iterator accessed_node = values_.begin() + v.first.value_ + 1;
 
         if (! is_linked(*accessed_node))
         {
