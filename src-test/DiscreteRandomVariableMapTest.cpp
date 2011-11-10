@@ -6,7 +6,6 @@
  */
 
 #include "../src-lib/DiscreteRandomVariableMap.hpp"
-#include "../src-lib/RandomBoolean.hpp"
 #include "../src-lib/RandomInteger.hpp"
 #include <boost/test/unit_test.hpp>
 
@@ -31,37 +30,29 @@ public:
   typedef DiscreteRandomVariableMap<float> MapType;
 
   DiscreteRandomVariableMapFixture()
-      : var("Var", 7, 0)
+      : var("Var", 7, 0), map_(
+        { //
+          ValueType(var.observation(1), 1.5), //
+          ValueType(var.observation(2), 2.5), //
+          ValueType(var.observation(3), 3.5), //
+          ValueType(var.observation(5), 5.5), //
+          ValueType(var.observation(6), 6.5) //
+          })
   {
-    typedef std::pair<DiscreteRandomVariable, float> V;
-    V a[5] =
-      { //
-        V(var.observation(1), 1.5), //
-        V(var.observation(2), 2.5), //
-        V(var.observation(3), 3.5), //
-        V(var.observation(5), 5.5), //
-        V(var.observation(6), 6.5) //
-        };
-
-    copy(a, a + array_size_, array_);
-
-    map_[var.observation(1)] = 1.5;
-    map_[var.observation(2)] = 2.5;
-    map_[var.observation(3)] = 3.5;
-    map_[var.observation(5)] = 5.5;
-    map_[var.observation(6)] = 6.5;
+    cpprob_check_debug(array_size_ == map_.size(), "DiscreteRandomVariableMapFixture: Inconsistent test data (array size: " << array_size_ << ", map size: " << map_.size() << ")");
+    copy(map_.begin(), map_.end(), array_);
   }
 
 protected:
 
-  static const size_t array_size_;
+  static const size_t array_size_ = 5;
   RandomInteger var;
-  ValueType array_[5];
   DiscreteRandomVariableMap<float> map_;
+  ValueType array_[array_size_];
 
 };
 
-const size_t DiscreteRandomVariableMapFixture::array_size_ = 5;
+const size_t DiscreteRandomVariableMapFixture::array_size_;
 
 BOOST_FIXTURE_TEST_SUITE(DiscreteRandomVariableMapTest, DiscreteRandomVariableMapFixture)
 
@@ -138,7 +129,6 @@ BOOST_AUTO_TEST_CASE(Access)
 {
   MapType& m = map_;
   BOOST_CHECK_EQUAL(m.size(), array_size_);
-  cout << "Test map" << endl << m << endl;
 
   var.observation(1);
   BOOST_CHECK_EQUAL(m.at(var), 1.5);
@@ -172,7 +162,6 @@ BOOST_AUTO_TEST_CASE(Const_access)
 {
   const MapType& m = map_;
   BOOST_CHECK_EQUAL(m.size(), array_size_);
-  cout << "Test map" << endl << m << endl;
 
   var.observation(1);
   BOOST_CHECK_EQUAL(m.at(var), 1.5);
@@ -233,8 +222,6 @@ BOOST_AUTO_TEST_CASE(Assign)
 
 BOOST_AUTO_TEST_CASE(Capacity)
 {
-  RandomBoolean var("Var", false);
-
   MapType m;
   BOOST_CHECK_EQUAL(m.size(), 0);
   BOOST_CHECK(m.empty());
@@ -243,11 +230,10 @@ BOOST_AUTO_TEST_CASE(Capacity)
 
   m =
   {
-    { var, 0.4},
-    { var.observation(true), 0.6}
+    { var.observation(3), 0.4},
+    { var.observation(5), 0.6}
   };
   BOOST_CHECK_EQUAL(m.size(), 2);
-  cout << "Test map" << endl << m << endl;
   BOOST_CHECK(!m.empty());
   BOOST_CHECK_NE(m.max_size(), 0);
   BOOST_CHECK(++(++m.begin()) == m.end());
@@ -508,7 +494,6 @@ BOOST_AUTO_TEST_CASE(Iterators)
 
   MapType& m = map_;
   BOOST_CHECK_EQUAL(m.size(), array_size_);
-  cout << "Test map" << endl << m << endl;
 
   /* begin, end, rbegin, rend, operator-> and operator*. */
   BOOST_CHECK_EQUAL(distance(m.begin(), m.end()), array_size_);
@@ -528,7 +513,8 @@ BOOST_AUTO_TEST_CASE(Iterators)
 
   /* Comparison of const and non-const iterators. */
   BOOST_CHECK(j == i);
-  BOOST_CHECK(j == ci);
+  BOOST_CHECK(i == ci);
+  BOOST_CHECK(j == cj);
   ++j;
   BOOST_CHECK(j != i);
   BOOST_CHECK(j != ci);
@@ -572,7 +558,6 @@ BOOST_AUTO_TEST_CASE(Const_iterators)
 
   const MapType& m = map_;
   BOOST_CHECK_EQUAL(m.size(), array_size_);
-  cout << "Test map" << endl << m << endl;
 
   /* begin, end, rbegin, rend, operator-> and operator*. */
   BOOST_CHECK_EQUAL(distance(m.begin(), m.end()), array_size_);
