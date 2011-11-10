@@ -12,7 +12,6 @@
 #include "cont/vector.hpp"
 #include <iterator>
 #include <memory>
-#include <iostream>
 
 namespace cpprob
 {
@@ -182,6 +181,12 @@ namespace cpprob
         {
         }
 
+        bool
+        operator==(const Node& other) const
+        {
+          return prev_offset == other.prev_offset && next_offset == other.next_offset && data == other.data;
+        }
+
         std::ptrdiff_t prev_offset;
         std::ptrdiff_t next_offset;
         Data data;
@@ -196,7 +201,6 @@ namespace cpprob
       typedef T mapped_type;
       typedef std::pair<const DiscreteRandomVariable, T> value_type;
       typedef DiscreteRandomVariable::ValueLess key_compare;
-      typedef typename Container::allocator_type allocator_type;
       typedef value_type& reference;
       typedef const value_type& const_reference;
       typedef Iterator_<value_type, typename Container::iterator> iterator;
@@ -218,15 +222,25 @@ namespace cpprob
       {
       }
 
+      DiscreteRandomVariableMap(const Self& other)
+          : values_(other.values_), node_count_(other.node_count_)
+      {
+      }
+
+      DiscreteRandomVariableMap(Self&& other)
+      : values_(other.values_), node_count_(other.node_count_)
+      {
+      }
+
       template<class InputIterator>
-        DiscreteRandomVariableMap(InputIterator first, InputIterator last)
-            : node_count_(0)
-        {
-          copy(first, last);
-        }
+      DiscreteRandomVariableMap(InputIterator first, InputIterator last)
+      : node_count_(0)
+      {
+        copy(first, last);
+      }
 
       DiscreteRandomVariableMap(std::initializer_list<value_type> init_list)
-          : node_count_(0)
+      : node_count_(0)
       {
         copy(init_list.begin(), init_list.end());
       }
@@ -235,8 +249,7 @@ namespace cpprob
       operator=(const DiscreteRandomVariableMap& right)
       {
         if (this == &right)
-          return *this;
-        std::cout << "Copy assignment." << std::endl;
+        return *this;
 
         values_.clear();
         values_ = right.values_;
@@ -249,7 +262,6 @@ namespace cpprob
       {
         if (this == &right)
         return *this;
-        std::cout << "Move assignment." << std::endl;
 
         values_.clear();
         values_ = right.values_;
@@ -400,7 +412,6 @@ namespace cpprob
       std::pair<iterator, bool>
       insert(const value_type& v)
       {
-        std::cout << "Copy insert." << std::endl;
         resize(v.first.value_range());
         return do_insert(v);
       }
@@ -409,7 +420,6 @@ namespace cpprob
       std::pair<iterator, bool>
       insert(P&& x)
       {
-        std::cout << "Move insert." << std::endl;
         resize(x.first.value_range());
         return do_insert(x);
       }
@@ -460,11 +470,13 @@ namespace cpprob
        return last;
        }
        */
-//      void
-//      swap(DiscreteRandomVariableMap& other)
-//      {
-//        values_.swap(other.values_);
-//      }
+
+      void
+      swap(DiscreteRandomVariableMap& other)
+      {
+        std::swap(node_count_, other.node_count_);
+        values_.swap(other.values_);
+      }
 
       void
       clear()
@@ -509,17 +521,9 @@ namespace cpprob
         return (find(k) == end()) ? 0 : 1;
       }
 
-      bool
-      operator==(const DiscreteRandomVariableMap& right) const
-      {
-        return values_ == right.values_;
-      }
-
-      bool
-      operator!=(const DiscreteRandomVariableMap& right) const
-      {
-        return values_ != right.values_;
-      }
+      template<class U>
+      friend bool
+      operator==(const DiscreteRandomVariableMap<U>&, const DiscreteRandomVariableMap<U>&);
 
     private:
 
@@ -706,6 +710,29 @@ namespace cpprob
         , const Iterator_<ValueType, NodeIterator>& y)
     {
       return x.node_ != y.node_;
+    }
+
+  template<class T>
+    inline void
+    swap(DiscreteRandomVariableMap<T>& x, DiscreteRandomVariableMap<T>& y)
+    {
+      x.swap(y);
+    }
+
+  template<class T>
+    inline bool
+    operator==(const DiscreteRandomVariableMap<T>& x,
+        const DiscreteRandomVariableMap<T>& y)
+    {
+      return x.values_ == y.values_;
+    }
+
+  template<class T>
+    inline bool
+    operator!=(const DiscreteRandomVariableMap<T>& x,
+        const DiscreteRandomVariableMap<T>& y)
+    {
+      return !(x == y);
     }
 
 } /* namespace cpprob */
