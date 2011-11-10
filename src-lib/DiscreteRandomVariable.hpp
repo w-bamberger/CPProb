@@ -237,6 +237,16 @@ namespace cpprob
     {
     }
 
+    DiscreteRandomVariable(const DiscreteRandomVariable& other)
+        : characteristics_(other.characteristics_), value_(other.value_)
+    {
+    }
+
+    DiscreteRandomVariable(DiscreteRandomVariable&& other)
+    : characteristics_(other.characteristics_), value_(other.value_)
+    {
+    }
+
     /**
      * Cleans up.
      */
@@ -246,454 +256,475 @@ namespace cpprob
     }
 
     // Documented in the base class.
-    virtual void
-    assign_random_value(RandomNumberEngine& rng);
+        virtual void
+        assign_random_value(RandomNumberEngine& rng);
 
-    // Documented in the base class.
-    const std::string&
-    name() const
-    {
-      if (characteristics_ != characteristics_table_.end())
-        return characteristics_->first;
-      else
-        return empty_string_;
-    }
+        // Documented in the base class.
+        const std::string&
+        name() const
+        {
+          if (characteristics_ != characteristics_table_.end())
+          return characteristics_->first;
+          else
+          return empty_string_;
+        }
 
-    /**
-     * Decrements the value of this variable. This method walks in descending
-     * order through the set of outcomes. It provides a reference to @c *this.
-     *
-     * @par Requires:
-     * - This variable must be associated with a set of outcomes.
-     * - The value of this variable may not be the first element in the ordered
-     *   set of outcomes.
-     *
-     * @par Ensures:
-     * - <tt>%DiscreteRandomVariable y = --x</tt> is the same as
-     *   <tt>x--; %DiscreteRandomVariable y = x;</tt>.
-     * - <tt>--x; ++x</tt> leaves @c x unchanged.
-     *
-     * @return a reference to this changed variable
-     * @throw None
-     * @see operator--(int)
-     */
-    virtual DiscreteRandomVariable&
-    operator--()
-    {
-      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
-          "DiscreteRandomVariable: Cannot decrement an empty random variable.");
-      cpprob_check_debug( value_ > 0,
-          "DiscreteRandomVariable: Cannot decrement the value " << value_ //
-          << " of the variable " << name() << " below 0.");
+        /**
+         * Decrements the value of this variable. This method walks in descending
+         * order through the set of outcomes. It provides a reference to @c *this.
+         *
+         * @par Requires:
+         * - This variable must be associated with a set of outcomes.
+         * - The value of this variable may not be the first element in the ordered
+         *   set of outcomes.
+         *
+         * @par Ensures:
+         * - <tt>%DiscreteRandomVariable y = --x</tt> is the same as
+         *   <tt>x--; %DiscreteRandomVariable y = x;</tt>.
+         * - <tt>--x; ++x</tt> leaves @c x unchanged.
+         *
+         * @return a reference to this changed variable
+         * @throw None
+         * @see operator--(int)
+         */
+        virtual DiscreteRandomVariable&
+        operator--()
+        {
+          cpprob_check_debug(characteristics_ != characteristics_table_.end(),
+              "DiscreteRandomVariable: Cannot decrement an empty random variable.");
+          cpprob_check_debug( value_ > 0,
+              "DiscreteRandomVariable: Cannot decrement the value " << value_ //
+              << " of the variable " << name() << " below 0.");
 
-      --value_;
-      return *this;
-    }
+          --value_;
+          return *this;
+        }
 
-    /**
-     * Decrements the value of this variable. This method walks in descending
-     * order through the set of outcomes. It provides the old value of the
-     * variable.
-     *
-     * @par Requires:
-     * - This variable must be associated with a set of outcomes.
-     * - The value of this variable may not be the first element in the ordered
-     *   set of outcomes.
-     *
-     * @par Ensures:
-     * - <tt>%DiscreteRandomVariable y = x--</tt> is the same as
-     *   <tt>%DiscreteRandomVariable y = x; --x</tt>.
-     * - <tt>x--; x++</tt> leaves @c x unchanged.
-     *
-     * @return a variable with the value before the decrement
-     * @throw None
-     * @see #operator--()
-     */
-    virtual DiscreteRandomVariable
-    operator--(int)
-    {
-      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
-          "DiscreteRandomVariable: Cannot decrement an empty random variable.");
-      cpprob_check_debug( value_ > 0,
-          "DiscreteRandomVariable: Cannot decrement the value " << value_ //
-          << " of the variable " << name() << " below 0.");
+        /**
+         * Decrements the value of this variable. This method walks in descending
+         * order through the set of outcomes. It provides the old value of the
+         * variable.
+         *
+         * @par Requires:
+         * - This variable must be associated with a set of outcomes.
+         * - The value of this variable may not be the first element in the ordered
+         *   set of outcomes.
+         *
+         * @par Ensures:
+         * - <tt>%DiscreteRandomVariable y = x--</tt> is the same as
+         *   <tt>%DiscreteRandomVariable y = x; --x</tt>.
+         * - <tt>x--; x++</tt> leaves @c x unchanged.
+         *
+         * @return a variable with the value before the decrement
+         * @throw None
+         * @see #operator--()
+         */
+        virtual DiscreteRandomVariable
+        operator--(int)
+        {
+          cpprob_check_debug(characteristics_ != characteristics_table_.end(),
+              "DiscreteRandomVariable: Cannot decrement an empty random variable.");
+          cpprob_check_debug( value_ > 0,
+              "DiscreteRandomVariable: Cannot decrement the value " << value_ //
+              << " of the variable " << name() << " below 0.");
 
-      DiscreteRandomVariable tmp = *this;
-      --value_;
-      return tmp;
-    }
+          DiscreteRandomVariable tmp = *this;
+          --value_;
+          return tmp;
+        }
 
-    /**
-     * Increments the value of this variable. This method walks in ascending
-     * order through the set of outcomes. It provides a reference to @c *this.
-     *
-     * @par Requires:
-     * - This variable must be associated with a set of outcomes.
-     * - The value of this variable may not be the element behind the last
-     *   element in the ordered set of outcomes.
-     *
-     * @par Ensures:
-     * - <tt>%DiscreteRandomVariable y = ++x</tt> is the same as
-     *   <tt>x++; %DiscreteRandomVariable y = x;</tt>.
-     * - <tt>++x; --x</tt> leaves @c x unchanged.
-     *
-     * @return a reference to this changed variable
-     * @throw None
-     * @see operator++(int)
-     */
-    virtual DiscreteRandomVariable&
-    operator++()
-    {
-      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
-          "DiscreteRandomVariable: Cannot increment an empty random variable.");
-      cpprob_check_debug( value_ < characteristics_->second.size_,
-          "DiscreteRandomVariable: Cannot increment the value " << value_ //
-          << " of the variable " << name() << " above the maximum "//
-          << characteristics_->second.size_ << ".");
+        /**
+         * Increments the value of this variable. This method walks in ascending
+         * order through the set of outcomes. It provides a reference to @c *this.
+         *
+         * @par Requires:
+         * - This variable must be associated with a set of outcomes.
+         * - The value of this variable may not be the element behind the last
+         *   element in the ordered set of outcomes.
+         *
+         * @par Ensures:
+         * - <tt>%DiscreteRandomVariable y = ++x</tt> is the same as
+         *   <tt>x++; %DiscreteRandomVariable y = x;</tt>.
+         * - <tt>++x; --x</tt> leaves @c x unchanged.
+         *
+         * @return a reference to this changed variable
+         * @throw None
+         * @see operator++(int)
+         */
+        virtual DiscreteRandomVariable&
+        operator++()
+        {
+          cpprob_check_debug(characteristics_ != characteristics_table_.end(),
+              "DiscreteRandomVariable: Cannot increment an empty random variable.");
+          cpprob_check_debug( value_ < characteristics_->second.size_,
+              "DiscreteRandomVariable: Cannot increment the value " << value_ //
+              << " of the variable " << name() << " above the maximum "//
+              << characteristics_->second.size_ << ".");
 
-      ++value_;
-      return *this;
-    }
+          ++value_;
+          return *this;
+        }
 
-    /**
-     * Increments the value of this variable. This method walks in ascending
-     * order through the set of outcomes. It provides the old value of the
-     * variable.
-     *
-     * @par Requires:
-     * - This variable must be associated with a set of outcomes.
-     * - The value of this variable may not be the element behind the last
-     *   element in the ordered set of outcomes.
-     *
-     * @par Ensures:
-     * - <tt>%DiscreteRandomVariable y = x++</tt> is the same as
-     *   <tt>%DiscreteRandomVariable y = x; ++x</tt>.
-     * - <tt>x++; x--</tt> leaves @c x unchanged.
-     *
-     * @return a variable with the value before the increment
-     * @throw None
-     * @see operator++()
-     */
-    virtual DiscreteRandomVariable
-    operator++(int)
-    {
-      cpprob_check_debug(characteristics_ != characteristics_table_.end(),
-          "DiscreteRandomVariable: Cannot increment an empty random variable.");
-      cpprob_check_debug( value_ < characteristics_->second.size_,
-          "DiscreteRandomVariable: Cannot increment the value " << value_ //
-          << " of the variable " << name() << " above the maximum "//
-          << characteristics_->second.size_ << ".");
+        /**
+         * Increments the value of this variable. This method walks in ascending
+         * order through the set of outcomes. It provides the old value of the
+         * variable.
+         *
+         * @par Requires:
+         * - This variable must be associated with a set of outcomes.
+         * - The value of this variable may not be the element behind the last
+         *   element in the ordered set of outcomes.
+         *
+         * @par Ensures:
+         * - <tt>%DiscreteRandomVariable y = x++</tt> is the same as
+         *   <tt>%DiscreteRandomVariable y = x; ++x</tt>.
+         * - <tt>x++; x--</tt> leaves @c x unchanged.
+         *
+         * @return a variable with the value before the increment
+         * @throw None
+         * @see operator++()
+         */
+        virtual DiscreteRandomVariable
+        operator++(int)
+        {
+          cpprob_check_debug(characteristics_ != characteristics_table_.end(),
+              "DiscreteRandomVariable: Cannot increment an empty random variable.");
+          cpprob_check_debug( value_ < characteristics_->second.size_,
+              "DiscreteRandomVariable: Cannot increment the value " << value_ //
+              << " of the variable " << name() << " above the maximum "//
+              << characteristics_->second.size_ << ".");
 
-      DiscreteRandomVariable tmp = *this;
-      ++value_;
-      return tmp;
-    }
+          DiscreteRandomVariable tmp = *this;
+          ++value_;
+          return tmp;
+        }
 
-    /**
-     * Compares two discrete random variables for equality. @c *this and @c i
-     * are equal if they are associated with the same name and have the same
-     * value. Two variables that are both not associated with a set of outcomes
-     * are equal as well.
-     *
-     * @par Ensures:
-     * - After the assignment <tt>*this = i</tt>, the comparison
-     *   <tt>*this == i</tt> is true.
-     *
-     * @param i the variable to compare with
-     * @return true if @c *this and @c i are equal; otherwise false
-     * @throw None
-     */
-    bool
-    operator==(const DiscreteRandomVariable& i) const
-    {
-      if (characteristics_ == characteristics_table_.end()
-          || i.characteristics_ == characteristics_table_.end())
-        return characteristics_ == i.characteristics_;
-      else
-        return value_ == i.value_ && characteristics_ == i.characteristics_;
-    }
+        /**
+         * Compares two discrete random variables for equality. @c *this and @c i
+         * are equal if they are associated with the same name and have the same
+         * value. Two variables that are both not associated with a set of outcomes
+         * are equal as well.
+         *
+         * @par Ensures:
+         * - After the assignment <tt>*this = i</tt>, the comparison
+         *   <tt>*this == i</tt> is true.
+         *
+         * @param i the variable to compare with
+         * @return true if @c *this and @c i are equal; otherwise false
+         * @throw None
+         */
+        bool
+        operator==(const DiscreteRandomVariable& i) const
+        {
+          if (characteristics_ == characteristics_table_.end()
+              || i.characteristics_ == characteristics_table_.end())
+          return characteristics_ == i.characteristics_;
+          else
+          return value_ == i.value_ && characteristics_ == i.characteristics_;
+        }
 
-    /**
-     * Compares two discrete random variables for inequality.
-     *
-     * @par Ensures:
-     * - <tt>this->operator!=(i) == (! this->operator==(i))</tt>
-     *
-     * @param i the variable to compare with
-     * @return true if @c i and @c *this are different; otherwise false
-     * @throw None
-     * @see #operator==
-     */
-    bool
-    operator!=(const DiscreteRandomVariable& i) const
-    {
-      if (characteristics_ == characteristics_table_.end()
-          || i.characteristics_ == characteristics_table_.end())
-        return characteristics_ != i.characteristics_;
-      else
-        return value_ != i.value_ || characteristics_ != i.characteristics_;
-    }
+        /**
+         * Compares two discrete random variables for inequality.
+         *
+         * @par Ensures:
+         * - <tt>this->operator!=(i) == (! this->operator==(i))</tt>
+         *
+         * @param i the variable to compare with
+         * @return true if @c i and @c *this are different; otherwise false
+         * @throw None
+         * @see #operator==
+         */
+        bool
+        operator!=(const DiscreteRandomVariable& i) const
+        {
+          if (characteristics_ == characteristics_table_.end()
+              || i.characteristics_ == characteristics_table_.end())
+          return characteristics_ != i.characteristics_;
+          else
+          return value_ != i.value_ || characteristics_ != i.characteristics_;
+        }
 
-    /**
-     * Determines if this variable is lower than the given variable @c var
-     * following the implicit ordering of the set of outcomes.
-     *
-     * @par Requries:
-     * - Both variables must belong to the same set of outcomes
-     *   (<tt>%name() == var.%name()</tt>). (Only checked in debug mode.)
-     *
-     * @par Ensures:
-     * - <tt>(*this < var) == (var > *this)</tt>.
-     * - Only one of the operations @c >, @c < and @c == is true.
-     *
-     * @param var the variable to compare with
-     * @return true if this variable is lower than @c var; otherwise false.
-     */
-    bool
-    operator<(const DiscreteRandomVariable& var) const
-    {
-      cpprob_check_debug(
-          characteristics_ == var.characteristics_,
-          "DiscreteRandomVariable: Can only compare outcomes of the same kind of random variable.");
-      return value_ < var.value_;
-    }
+        /**
+         * Determines if this variable is lower than the given variable @c var
+         * following the implicit ordering of the set of outcomes.
+         *
+         * @par Requries:
+         * - Both variables must belong to the same set of outcomes
+         *   (<tt>%name() == var.%name()</tt>). (Only checked in debug mode.)
+         *
+         * @par Ensures:
+         * - <tt>(*this < var) == (var > *this)</tt>.
+         * - Only one of the operations @c >, @c < and @c == is true.
+         *
+         * @param var the variable to compare with
+         * @return true if this variable is lower than @c var; otherwise false.
+         */
+        bool
+        operator<(const DiscreteRandomVariable& var) const
+        {
+          cpprob_check_debug(
+              characteristics_ == var.characteristics_,
+              "DiscreteRandomVariable: Can only compare outcomes of the same kind of random variable, but found the two types " << characteristics_->first << " and " << var.characteristics_->first);
+          return value_ < var.value_;
+        }
 
-    /**
-     * Determines if this variable is greater than the given variable @c var
-     * following the implicit ordering of the set of outcomes.
-     *
-     * @par Requries:
-     * - Both variables must belong to the same set of outcomes
-     *   (<tt>%name() == var.%name()</tt>). (Only checked in debug mode.)
-     *
-     * @par Ensures:
-     * - <tt>(*this > var) == (var < *this)</tt>.
-     * - Only one of the operations @c >, @c < and @c == is true.
-     *
-     * @param var the variable to compare with
-     * @return true if this variable is greater than @c var; otherwise false.
-     */
-    bool
-    operator>(const DiscreteRandomVariable& var) const
-    {
-      cpprob_check_debug(
-          characteristics_ == var.characteristics_,
-          "DiscreteRandomVariable: Can only compare outcomes of the same kind of random variable.");
-      return value_ > var.value_;
-    }
+        /**
+         * Determines if this variable is greater than the given variable @c var
+         * following the implicit ordering of the set of outcomes.
+         *
+         * @par Requries:
+         * - Both variables must belong to the same set of outcomes
+         *   (<tt>%name() == var.%name()</tt>). (Only checked in debug mode.)
+         *
+         * @par Ensures:
+         * - <tt>(*this > var) == (var < *this)</tt>.
+         * - Only one of the operations @c >, @c < and @c == is true.
+         *
+         * @param var the variable to compare with
+         * @return true if this variable is greater than @c var; otherwise false.
+         */
+        bool
+        operator>(const DiscreteRandomVariable& var) const
+        {
+          cpprob_check_debug(
+              characteristics_ == var.characteristics_,
+              "DiscreteRandomVariable: Can only compare outcomes of the same kind of random variable.");
+          return value_ > var.value_;
+        }
 
-    /**
-     * Assigns the value of another variable to this variable. Only variables
-     * of the same kind (i.e., with the same entry in the characteristics
-     * table) may be assigned to each other. The only exception is variable that
-     * is not associated with set of outcomes (the variable is default
-     * constructed). Such a variable may receive the value of any other
-     * discrete random variable. And in this case, it also inherits the set of
-     * outcome of @c var.
-     *
-     * @par Requires:
-     * - This variable is not associated with a set of outcomes or both
-     *   sets are the same (<tt>var.name() == this->%name()</tt>). This
-     *   requirement is only checked in debug mode.
-     * - @c var must be associated with a set of outcomes. This
-     *   requirement is only checked in debug mode.
-     *
-     * @par Ensures:
-     * - <tt>*this == var</tt>
-     *
-     * @param var the variable whose value is assigned to this variable
-     * @return a reference to @c *this
-     * @throw None
-     */
-    virtual DiscreteRandomVariable&
-    operator=(const DiscreteRandomVariable& var);
+        /**
+         * Assigns the value of another variable to this variable. Only variables
+         * of the same kind (i.e., with the same entry in the characteristics
+         * table) may be assigned to each other. The only exception is variable that
+         * is not associated with set of outcomes (the variable is default
+         * constructed). Such a variable may receive the value of any other
+         * discrete random variable. And in this case, it also inherits the set of
+         * outcome of @c var.
+         *
+         * @par Requires:
+         * - This variable is not associated with a set of outcomes or both
+         *   sets are the same (<tt>var.name() == this->%name()</tt>). This
+         *   requirement is only checked in debug mode.
+         * - @c var must be associated with a set of outcomes. This
+         *   requirement is only checked in debug mode.
+         *
+         * @par Ensures:
+         * - <tt>*this == var</tt>
+         *
+         * @param var the variable whose value is assigned to this variable
+         * @return a reference to @c *this
+         * @throw None
+         */
+        virtual DiscreteRandomVariable&
+        operator=(const DiscreteRandomVariable& var);
 
-    /**
-     * Provides a range object that allows to enumerate all outcomes of this
-     * variable. If the variable is not associated with a set of outcomes,
-     * the provided range is empty. (An associated variable may also
-     * have an empty range if the set of outcomes is empty.)
-     *
-     * @return the range of this random variable
-     * @throw None
-     */
-    Range
-    value_range() const
-    {
-      return Range(characteristics_);
-    }
+        virtual DiscreteRandomVariable&
+        operator=(DiscreteRandomVariable&& var);
 
-  protected:
+        /**
+         * Puts out the value of a random variable in the form @em name:value.
+         * The exact form depends on the value. For example, random vectors need
+         * a more extended syntax for their output.
+         *
+         * This method allow polymorphic output streaming. So every random
+         * variable can be streamed out without knowing its exact type.
+         *
+         * @param os the output stream to use
+         * @param r the random variable the value of which is printed out
+         * @return the output stream given as the first argument
+         */
+        friend std::ostream&
+        operator<<(std::ostream& os, const DiscreteRandomVariable& r)
+        {
+          return r.put_out(os);
+        }
 
-    /**
-     * Type of an entry in the characteristics table.
-     *
-     * @see #CharacteristicsTable
-     */
-    struct Characteristics
-    {
-      Characteristics(std::size_t size)
+        /**
+         * Provides a range object that allows to enumerate all outcomes of this
+         * variable. If the variable is not associated with a set of outcomes,
+         * the provided range is empty. (An associated variable may also
+         * have an empty range if the set of outcomes is empty.)
+         *
+         * @return the range of this random variable
+         * @throw None
+         */
+        Range
+        value_range() const
+        {
+          return Range(characteristics_);
+        }
+
+      protected:
+
+        /**
+         * Type of an entry in the characteristics table.
+         *
+         * @see #CharacteristicsTable
+         */
+        struct Characteristics
+        {
+          Characteristics(std::size_t size)
           : size_(size)
-      {
-      }
+          {
+          }
 
-      std::size_t size_;
-    };
+          std::size_t size_;
+        };
 
-    /**
-     * Type of the table that stores the names and sizes of all discrete
-     * random variables. The name of a random variable might be something like
-     * @em FirstDie, @em SecondDice, @em Flavor, @em Wrapper etc. They represent
-     * what is measured from an experiment's outcome. These names are mostly
-     * used for to generate understandable output.
-     *
-     * In addition, the name of a random variable refers to a set of possible
-     * outcome values. The variable can only take on values of this set. For
-     * example, if one variable with the name GreenWrapper is a boolean variable
-     * (set of outcomes Ω = {true, false}), then another variable with the
-     * same name refers to the same set of outcomes. But there may be several
-     * more variables with the same set of outcomes (boolean) but different
-     * names. The set of outcomes is described here by the size of the index
-     * set.
-     *
-     */
-    typedef cont::map<std::string, Characteristics> CharacteristicsTable;
+        /**
+         * Type of the table that stores the names and sizes of all discrete
+         * random variables. The name of a random variable might be something like
+         * @em FirstDie, @em SecondDice, @em Flavor, @em Wrapper etc. They represent
+         * what is measured from an experiment's outcome. These names are mostly
+         * used for to generate understandable output.
+         *
+         * In addition, the name of a random variable refers to a set of possible
+         * outcome values. The variable can only take on values of this set. For
+         * example, if one variable with the name GreenWrapper is a boolean variable
+         * (set of outcomes Ω = {true, false}), then another variable with the
+         * same name refers to the same set of outcomes. But there may be several
+         * more variables with the same set of outcomes (boolean) but different
+         * names. The set of outcomes is described here by the size of the index
+         * set.
+         *
+         */
+        typedef cont::map<std::string, Characteristics> CharacteristicsTable;
 
-    /**
-     * String that is used as the name of an uninitialized variable. Since
-     * the method #name returns a reference to a string, there must be a string
-     * in the memory for uninitialized variables.
-     */
-    const static std::string empty_string_;
+        /**
+         * String that is used as the name of an uninitialized variable. Since
+         * the method #name returns a reference to a string, there must be a string
+         * in the memory for uninitialized variables.
+         */
+        const static std::string empty_string_;
 
-    /**
-     * Table that stores the names and sizes of all discrete random variables.
-     *
-     * @see #CharacteristicsTable
-     */
-    static CharacteristicsTable characteristics_table_;
+        /**
+         * Table that stores the names and sizes of all discrete random variables.
+         *
+         * @see #CharacteristicsTable
+         */
+        static CharacteristicsTable characteristics_table_;
 
-    /**
-     * Iterator to the entry in the characteristics table that describes this
-     * discrete random variable. Through this iterator, the variable knows its
-     * name and its size.
-     *
-     * @see #CharacteristicsTable
-     */
-    CharacteristicsTable::iterator characteristics_;
+        /**
+         * Iterator to the entry in the characteristics table that describes this
+         * discrete random variable. Through this iterator, the variable knows its
+         * name and its size.
+         *
+         * @see #CharacteristicsTable
+         */
+        CharacteristicsTable::iterator characteristics_;
 
-    /**
-     * Index that represents the value of this discrete random variable. To
-     * implement discrete random variables in a form independent of the type
-     * of outcome, each elementary outcome in the sample space is associated
-     * with an index. This index is stored in @c value_ instead of the outcome.
-     */
-    std::size_t value_;
+        /**
+         * Index that represents the value of this discrete random variable. To
+         * implement discrete random variables in a form independent of the type
+         * of outcome, each elementary outcome in the sample space is associated
+         * with an index. This index is stored in @c value_ instead of the outcome.
+         */
+        std::size_t value_;
 
-    /**
-     * Creates a new random variable associated with a certain entry in the
-     * characteristics table. This constructor gives the chance to specify
-     * the name and size of the random variable directly by the pointer to the
-     * entry in the characteristics table. So this constructor avoid a search
-     * in the characteristics table.
-     *
-     * @param characteristics an iterator to the name and size in the
-     *             characteristics table
-     * @param value the index that represent the outcome stored in this variable
-     * @throw None
-     */
-    DiscreteRandomVariable(
-        const CharacteristicsTable::iterator& characteristics,
-        std::size_t value)
+        /**
+         * Creates a new random variable associated with a certain entry in the
+         * characteristics table. This constructor gives the chance to specify
+         * the name and size of the random variable directly by the pointer to the
+         * entry in the characteristics table. So this constructor avoid a search
+         * in the characteristics table.
+         *
+         * @param characteristics an iterator to the name and size in the
+         *             characteristics table
+         * @param value the index that represent the outcome stored in this variable
+         * @throw None
+         */
+        DiscreteRandomVariable(
+            const CharacteristicsTable::iterator& characteristics,
+            std::size_t value)
         : characteristics_(characteristics), value_(value)
-    {
-    }
+        {
+        }
 
-    /**
-     * Creates a new random variable from the given data of the characteristics
-     * table and from the value. If an entry in the characteristics table
-     * exists for the given name, the new discrete random variable uses it.
-     * Otherwise a new entry is created with the given name and the given size.
-     *
-     * @param name the name associated with the random variable
-     * @param size the number of elements in the sample space
-     * @param value the index that represent the outcome stored in this variable
-     * @throw None
-     * @see #set_up_characteristics
-     */
-    DiscreteRandomVariable(const std::string& name, std::size_t size,
-        std::size_t value)
+        /**
+         * Creates a new random variable from the given data of the characteristics
+         * table and from the value. If an entry in the characteristics table
+         * exists for the given name, the new discrete random variable uses it.
+         * Otherwise a new entry is created with the given name and the given size.
+         *
+         * @param name the name associated with the random variable
+         * @param size the number of elements in the sample space
+         * @param value the index that represent the outcome stored in this variable
+         * @throw None
+         * @see #set_up_characteristics
+         */
+        DiscreteRandomVariable(const std::string& name, std::size_t size,
+            std::size_t value)
         : value_(value)
-    {
-      set_up_characteristics(name, size);
+        {
+          set_up_characteristics(name, size);
+        }
+
+        // Documented in the base class.
+        virtual std::ostream&
+        put_out(std::ostream& os) const;
+
+        /**
+         * Prints the characteristics table to the given stream. This is for
+         * debugging purposes.
+         *
+         * @param os the stream to which the characteristics table should be written
+         * @return the stream provided by the parameter @c os
+         * @throw ios_base::failure Streaming errors may be reported as exceptions
+         *            if the stream is configure to do so
+         */
+        virtual std::ostream&
+        put_out_characteristics_table(std::ostream& os) const;
+
+        /**
+         * Configures the characteristics data structure and iterator. This method
+         * looks for an entry in the characteristics table with the same name as
+         * the given name. If this entry is found, #characteristics_ is set to
+         * point to this entry. If no entry with the given name is found, a new
+         * entry is added to the characteristics table. The new entry has the
+         * given name and the given size property.
+         *
+         * Note: If an entry with the given name already exists in the
+         * characteristics table, the @c size parameter is ignored.
+         *
+         * @param name the name of this random random variable
+         * @param size the size of the value range of this random variable
+         * @throw None
+         */
+        void
+        set_up_characteristics(const std::string& name, std::size_t size);
+
+      private:
+
+        friend class DiscreteJointRandomVariable;
+        friend class DiscreteRandomReferences;
+        template<class T>
+        friend class DiscreteRandomVariableMap;
+      };
+
     }
 
-    // Documented in the base class.
-    virtual std::ostream&
-    put_out(std::ostream& os) const;
-
-    /**
-     * Prints the characteristics table to the given stream. This is for
-     * debugging purposes.
-     *
-     * @param os the stream to which the characteristics table should be written
-     * @return the stream provided by the parameter @c os
-     * @throw ios_base::failure Streaming errors may be reported as exceptions
-     *            if the stream is configure to do so
-     */
-    virtual std::ostream&
-    put_out_characteristics_table(std::ostream& os) const;
-
-    /**
-     * Configures the characteristics data structure and iterator. This method
-     * looks for an entry in the characteristics table with the same name as
-     * the given name. If this entry is found, #characteristics_ is set to
-     * point to this entry. If no entry with the given name is found, a new
-     * entry is added to the characteristics table. The new entry has the
-     * given name and the given size property.
-     *
-     * Note: If an entry with the given name already exists in the
-     * characteristics table, the @c size parameter is ignored.
-     *
-     * @param name the name of this random random variable
-     * @param size the size of the value range of this random variable
-     * @throw None
-     */
-    void
-    set_up_characteristics(const std::string& name, std::size_t size);
-
-  private:
-
-    friend class DiscreteJointRandomVariable;
-    friend class DiscreteRandomReferences;
-    template<class T>
-    friend class DiscreteRandomVariableMap;
-  };
-
-}
-
-namespace std
-{
-
-  /**
-   * Defines DiscreteRandomVariable as an arithmetic type.
-   * std::variate_generator expects that the type of an distribution
-   * sample is an arithmetic type (integral or floating). This restricts
-   * the sample type to the built-in types. To let DiscreteRandomVariable
-   * be the result of a sampling operation, this hack is necessary. It defines
-   * DiscreteRandomVariable as a integral type (comparable to int). From its
-   * meaning, DiscreteRandomVariable is indeed an integral type.
-   *
-   * Nonetheless, the following definition is not standard conform as I modify
-   * the namespace std. But it is the only solution I know to sample complex
-   * objects.
-   */
-  template<>
-    struct is_integral<cpprob::DiscreteRandomVariable> : public integral_constant<
-        bool, true>
+    namespace std
     {
-    };
 
-}
+      /**
+       * Defines DiscreteRandomVariable as an arithmetic type.
+       * std::variate_generator expects that the type of an distribution
+       * sample is an arithmetic type (integral or floating). This restricts
+       * the sample type to the built-in types. To let DiscreteRandomVariable
+       * be the result of a sampling operation, this hack is necessary. It defines
+       * DiscreteRandomVariable as a integral type (comparable to int). From its
+       * meaning, DiscreteRandomVariable is indeed an integral type.
+       *
+       * Nonetheless, the following definition is not standard conform as I modify
+       * the namespace std. But it is the only solution I know to sample complex
+       * objects.
+       */
+      template<>
+        struct is_integral<cpprob::DiscreteRandomVariable> : public integral_constant<
+            bool, true>
+        {
+        };
+
+    }
 
 #endif /* DISCRETERANDOMVARIABLE_HPP_ */

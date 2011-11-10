@@ -47,6 +47,22 @@ namespace cpprob
     return *this;
   }
 
+  DiscreteRandomVariable&
+  DiscreteRandomVariable::operator=(DiscreteRandomVariable&& var)
+  {
+    cpprob_check_debug(var.characteristics_ != characteristics_table_.end(),
+        "DiscreteRandomVariable: Cannot assign from empty random variable.");
+    cpprob_check_debug(
+        characteristics_ == characteristics_table_.end() || characteristics_ == var.characteristics_,
+        "DiscreteRandomVariable: Cannot assign random variable " //
+        + var.characteristics_->first + " to random variable "//
+        + characteristics_->first);
+
+    characteristics_ = var.characteristics_;
+    value_ = var.value_;
+    return *this;
+  }
+
   ostream&
   DiscreteRandomVariable::put_out(ostream& os) const
   {
