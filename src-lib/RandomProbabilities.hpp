@@ -27,9 +27,8 @@
 #ifndef RANDOMPROBABILITIES_HPP_
 #define RANDOMPROBABILITIES_HPP_
 
-#include "DiscreteRandomVariable.hpp"
-#include "Error.hpp"
-#include <set>
+#include "DiscreteRandomVariableMap.hpp"
+#include "cont/set.hpp"
 
 namespace cpprob
 {
@@ -78,7 +77,7 @@ namespace cpprob
   class RandomProbabilities : public RandomVariable
   {
 
-    typedef std::map<DiscreteRandomVariable, float> ProbabilityTable;
+    typedef DiscreteRandomVariableMap<float> ProbabilityTable;
 
   public:
 
@@ -190,14 +189,9 @@ namespace cpprob
      * @throw std::out_of_range if @c var is not found in the probability table.
      */
     const float&
-    at(const DiscreteRandomVariable& var) const
+    at(const DiscreteRandomVariable& k) const
     {
-      ProbabilityTable::const_iterator find_it = pt_.find(var);
-      if (find_it == pt_.end())
-        cpprob_throw_out_of_range(
-            "RandomProbabilities: Unknown variable value " << var << ".");
-
-      return find_it->second;
+      return pt_.at(k);
     }
 
     /**
@@ -215,14 +209,9 @@ namespace cpprob
      * @throw std::out_of_range if @c var is not found in the probability table.
      */
     float&
-    at(const DiscreteRandomVariable& var)
+    at(const DiscreteRandomVariable& k)
     {
-      ProbabilityTable::iterator find_it = pt_.find(var);
-      if (find_it == pt_.end())
-        cpprob_throw_out_of_range(
-            "RandomProbabilities: Unknown variable value " << var << ".");
-
-      return find_it->second;
+      return pt_.at(k);
     }
 
     /**
@@ -492,7 +481,7 @@ namespace cpprob
 
   private:
 
-    typedef std::set<std::string> Names;
+    typedef cont::set<std::string> Names;
 
     static Names names_;
     Names::const_iterator name_;

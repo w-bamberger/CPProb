@@ -34,7 +34,7 @@ namespace cpprob
   class RandomConditionalProbabilities : public RandomVariable
   {
 
-    typedef std::map<DiscreteRandomVariable, RandomProbabilities> ConditionalProbabilityTable;
+    typedef DiscreteRandomVariableMap<RandomProbabilities> ConditionalProbabilityTable;
 
   public:
 

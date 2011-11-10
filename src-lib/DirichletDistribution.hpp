@@ -18,7 +18,7 @@ namespace cpprob
 
   public:
 
-    typedef std::map<DiscreteRandomVariable, float> Parameters;
+    typedef DiscreteRandomVariableMap<float> Parameters;
     typedef std::gamma_distribution<float>::input_type input_type;
     typedef RandomProbabilities result_type;
 

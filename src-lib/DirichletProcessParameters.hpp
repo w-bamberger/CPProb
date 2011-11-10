@@ -8,7 +8,7 @@
 #ifndef DIRICHLETPROCESSPARAMETERS_HPP_
 #define DIRICHLETPROCESSPARAMETERS_HPP_
 
-#include "DiscreteRandomVariable.hpp"
+#include "DiscreteRandomVariableMap.hpp"
 #include "cont/list.hpp"
 #include <boost/range/adaptor/indirected.hpp>
 #include <string>
@@ -38,7 +38,7 @@ namespace cpprob
 
   public:
 
-    typedef cont::map<DiscreteRandomVariable, std::size_t> ComponentCounters;
+    typedef DiscreteRandomVariableMap<std::size_t> ComponentCounters;
     typedef boost::indirected_range<const ManagedNodes> ConstManagedNodeRange;
     typedef boost::indirected_range<ManagedNodes> ManagedNodeRange;
 
@@ -110,7 +110,7 @@ namespace cpprob
 
     float
     prior_probability_of_managed_node(const ConditionalDirichletNode& node,
-        cont::map<DiscreteRandomVariable, size_t> counters) const;
+        ComponentCounters counters) const;
 
     float
     prior_probability_of_managed_nodes(
@@ -119,7 +119,7 @@ namespace cpprob
     void
     sample_managed_node(ConditionalDirichletNode& node,
         const DiscreteRandomVariable& component,
-        cont::map<DiscreteRandomVariable, ConstChildren>& children_of_node);
+        DiscreteRandomVariableMap<ConstChildren>& children_of_node);
 
     void
     sample_managed_nodes(const DiscreteRandomVariable& component,

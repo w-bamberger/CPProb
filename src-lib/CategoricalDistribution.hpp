@@ -8,7 +8,7 @@
 #ifndef CATEGORICALDISTRIBUTION_HPP_
 #define CATEGORICALDISTRIBUTION_HPP_
 
-#include "DiscreteRandomVariable.hpp"
+#include "DiscreteRandomVariableMap.hpp"
 
 namespace cpprob
 {
@@ -16,7 +16,7 @@ namespace cpprob
   class CategoricalDistribution
   {
 
-    typedef std::map<DiscreteRandomVariable, float> ProbabilityTable;
+    typedef DiscreteRandomVariableMap<float> ProbabilityTable;
 
   public:
 
@@ -77,12 +77,6 @@ namespace cpprob
       return pt_.end();
     }
 
-    void
-    erase(iterator entry)
-    {
-      pt_.erase(entry);
-    }
-
     const_iterator
     find(const key_type& var) const
     {
@@ -114,9 +108,10 @@ namespace cpprob
       result_type
       operator()(_RandomNumberGenerator& rng)
       {
+        cpprob_check_debug(pt_.size() != 0, "CategoricalDistribution: Cannot sample from an empty probability table.");
         input_type cum(0);
         const input_type r = rng();
-        ProbabilityTable::const_iterator it = pt_.begin();
+        iterator it = pt_.begin();
 
         /* This loop is necessary in the case that r == 0 and
          * the first row(s) in the probability table have probability 0. */

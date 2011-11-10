@@ -39,6 +39,15 @@ put_out_map(ostream& os, const cont::map<K, V>& m)
   return os;
 }
 
+template<class V>
+ostream&
+put_out_map(ostream& os, const DiscreteRandomVariableMap<V>& m)
+{
+  for (auto it = m.begin(); it != m.end(); ++it)
+    os << it->first << ", " << it->second << "\n";
+  return os;
+}
+
 BOOST_AUTO_TEST_CASE(Parameters)
 {
   /* Test construction.

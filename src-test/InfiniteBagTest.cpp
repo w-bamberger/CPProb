@@ -155,6 +155,15 @@ public:
       return os;
     }
 
+  template<class V>
+    ostream&
+    put_out_map(ostream& os, const DiscreteRandomVariableMap<V>& m)
+    {
+      for (auto it = m.begin(); it != m.end(); ++it)
+        os << it->first << ", " << it->second << "\n";
+      return os;
+    }
+
 protected:
 
   const float alpha;

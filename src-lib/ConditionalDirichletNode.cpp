@@ -108,7 +108,7 @@ namespace cpprob
         "ConditionalDirichletNode: Cannot sample a conditional Dirichlet node (name: " + value_.name() + ") without children.");
 
     /* Set up the counters and initialize them with the Dirichlet prior. */
-    map<DiscreteRandomVariable, Parameters> counters;
+    DiscreteRandomVariableMap<Parameters> counters;
     DiscreteRandomVariable::Range condition_range =
         children().begin()->condition().joint_value().value_range();
     for (auto condition = condition_range.begin();

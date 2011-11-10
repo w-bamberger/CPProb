@@ -150,6 +150,7 @@ namespace cpprob
         RandomInteger old_condition(new_condition);
         old_condition.observation(old_value);
         RandomConditionalProbabilities& probability_table = node.value();
+        /* @todo Better with swap? */
         probability_table[new_condition] = probability_table[old_condition];
       }
 
@@ -223,7 +224,7 @@ namespace cpprob
     for (auto node = managed_nodes_.begin(); node != managed_nodes_.end();
         ++node)
     {
-      cont::map<DiscreteRandomVariable, size_t> child_counters;
+      ComponentCounters child_counters;
       for (auto child = children_of_component.begin();
           child != children_of_component.end(); ++child)
       {
@@ -238,7 +239,7 @@ namespace cpprob
   float
   DirichletProcessParameters::prior_probability_of_managed_node(
       const ConditionalDirichletNode& node,
-      cont::map<DiscreteRandomVariable, size_t> counters) const
+      ComponentCounters counters) const
   {
     float sum_parameters = 0.0;
     size_t sum_counters = 0;
@@ -270,7 +271,7 @@ namespace cpprob
   void
   DirichletProcessParameters::sample_managed_node(
       ConditionalDirichletNode& node, const DiscreteRandomVariable& component,
-      cont::map<DiscreteRandomVariable, ConstChildren>& children_of_node)
+      DiscreteRandomVariableMap<ConstChildren>& children_of_node)
   {
     /* Check requirements. */
     cpprob_check_debug(
@@ -316,7 +317,7 @@ namespace cpprob
     for (auto node = managed_nodes_.begin(); node != managed_nodes_.end();
         ++node)
     {
-      cont::map<DiscreteRandomVariable, ConstChildren> children_of_node;
+      DiscreteRandomVariableMap<ConstChildren> children_of_node;
       for (auto child = children_of_component.begin();
           child != children_of_component.end(); ++child)
       {

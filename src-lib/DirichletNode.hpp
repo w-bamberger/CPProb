@@ -48,7 +48,7 @@ namespace cpprob
 
     typedef boost::indirected_range<const Children> ConstChildRange;
     typedef boost::indirected_range<Children> ChildRange;
-    typedef cont::map<DiscreteRandomVariable, float> Parameters;
+    typedef DiscreteRandomVariableMap<float> Parameters;
 
     DirichletNode(const RandomProbabilities& value, float alpha);
 
