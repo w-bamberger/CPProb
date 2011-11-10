@@ -69,13 +69,13 @@ namespace cpprob
       ValueType&
       operator*() const
       {
-        return reinterpret_cast<ValueType&>(node_->data);
+        return node_->data;
       }
 
       ValueType*
       operator->() const
       {
-        return reinterpret_cast<ValueType*>(&(node_->data));
+        return &(node_->data);
       }
 
       NodeIterator node_;
@@ -146,13 +146,13 @@ namespace cpprob
       ValueType&
       operator*() const
       {
-        return reinterpret_cast<ValueType&>(node_->data);
+        return node_->data;
       }
 
       ValueType*
       operator->() const
       {
-        return reinterpret_cast<ValueType*>(&(node_->data));
+        return &(node_->data);
       }
 
       NodeIterator node_;
@@ -169,22 +169,33 @@ namespace cpprob
       struct Node
       {
 
-        typedef std::pair<DiscreteRandomVariable, T> Data;
+        typedef std::pair<const DiscreteRandomVariable, T> Data;
 
         Node()
             : prev_offset(0), next_offset(0), data()
         {
         }
 
-        Node(const Data& data_)
-            : prev_offset(0), next_offset(0), data(data_)
+        Node(const DiscreteRandomVariable& key)
+            : prev_offset(0), next_offset(0), data(Data(key, T()))
         {
         }
 
         bool
         operator==(const Node& other) const
         {
-          return prev_offset == other.prev_offset && next_offset == other.next_offset && data == other.data;
+          return prev_offset == other.prev_offset
+              && next_offset == other.next_offset && data == other.data;
+        }
+
+        Node&
+        operator=(const Node& other)
+        {
+          prev_offset = other.prev_offset;
+          next_offset = other.next_offset;
+          const_cast<DiscreteRandomVariable&>(data.first) = other.data.first;
+          data.second = other.data.second;
+          return *this;
         }
 
         std::ptrdiff_t prev_offset;
@@ -234,13 +245,13 @@ namespace cpprob
 
       template<class InputIterator>
       DiscreteRandomVariableMap(InputIterator first, InputIterator last)
-      : node_count_(0)
+      : values_(1), node_count_(0)
       {
         copy(first, last);
       }
 
       DiscreteRandomVariableMap(std::initializer_list<value_type> init_list)
-      : node_count_(0)
+      : values_(1), node_count_(0)
       {
         copy(init_list.begin(), init_list.end());
       }
@@ -451,25 +462,6 @@ namespace cpprob
       {
         copy(init_list.begin(), init_list.end());
       }
-      /*
-       iterator
-       erase(const_iterator position)
-       {
-       return values_.begin() + (++position - values_.begin());
-       }
-
-       size_type
-       erase(const key_type&)
-       {
-       return 1;
-       }
-
-       iterator
-       erase(const_iterator first, const_iterator last)
-       {
-       return last;
-       }
-       */
 
       void
       swap(DiscreteRandomVariableMap& other)
@@ -590,7 +582,7 @@ namespace cpprob
       bool
       is_linked(const Node& node) const
       {
-        cpprob_check_debug(size() == 0 || (node.prev_offset == 0 && node.next_offset == 0) || (size() != 0 && node.prev_offset != 0 && node.next_offset != 0), "DiscreteRandomVariableMap: Found an inconsistent data structure (prev: " << node.prev_offset << ", next: " << node.next_offset);
+        cpprob_check_debug(size() == 0 || (node.prev_offset == 0 && node.next_offset == 0) || (size() != 0 && node.prev_offset != 0 && node.next_offset != 0), "DiscreteRandomVariableMap: Found an inconsistent data structure (prev: " << node.prev_offset << ", next: " << node.next_offset << ")");
         return (node.prev_offset != 0);
       }
 
@@ -632,8 +624,7 @@ namespace cpprob
         /*
          * Ensure the invisible base element exists.
          */
-        if (values_.size() == 0)
-          values_.push_back(Node());
+        cpprob_check_debug(values_.size() != 0, "DiscreteRandomVariableMap: The base element is missing in the map (inconsistent data structure).");
 
         /*
          * Extend the vectors to contain all elements
@@ -652,10 +643,10 @@ namespace cpprob
         }
         for (; new_key != value_range.end(); ++new_key)
         {
-          values_.push_back(std::make_pair(new_key, mapped_type()));
+          values_.push_back(Node(new_key));
         }
         // The vector must also contain value_range.end().
-        values_.push_back(std::make_pair(new_key, mapped_type()));
+        values_.push_back(Node(new_key));
       }
 
     };
