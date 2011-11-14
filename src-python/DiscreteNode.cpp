@@ -12,14 +12,8 @@ namespace cpprob
     void
     export_discrete_node()
     {
-      bool
-      (DiscreteNode::*get_is_evidence)() const = &DiscreteNode::is_evidence;
+      class_ < DiscreteNode, boost::noncopyable > ("DiscreteNode", no_init);
 
-      void
-      (DiscreteNode::*set_is_evidence)(bool) = &DiscreteNode::is_evidence;
-
-      class_ < DiscreteNode, boost::noncopyable > ("DiscreteNode", no_init) //
-      .add_property("is_evidence", get_is_evidence, set_is_evidence);
       ListListConverter<DiscreteNode*>();
     }
 

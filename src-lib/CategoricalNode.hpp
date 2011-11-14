@@ -28,6 +28,7 @@
 #ifndef CATEGORICALNODE_HPP_
 #define CATEGORICALNODE_HPP_
 
+#include "CategoricalDistribution.hpp"
 #include "DiscreteNode.hpp"
 #include "RandomProbabilities.hpp"
 
@@ -47,14 +48,26 @@ namespace cpprob
     virtual
     ~CategoricalNode();
 
-    virtual float
+    float
     at_references() const
     {
       return probabilities_.at(value_);
     }
 
-    virtual void
+    void
     init_sampling();
+
+    bool
+    is_evidence() const
+    {
+      return is_evidence_;
+    }
+
+    void
+    is_evidence(bool value_is_evidence)
+    {
+      is_evidence_ = value_is_evidence;
+    }
 
     RandomProbabilities&
     probabilities()
@@ -68,11 +81,15 @@ namespace cpprob
       return probabilities_;
     }
 
-    virtual void
+    void
     sample();
 
   private:
 
+    // Variables in common with ConditionalCategoricalNode.
+    bool is_evidence_;
+    std::variate_generator<RandomNumberEngine&, CategoricalDistribution> sampling_variate_;
+    // Variables specific to this class.
     RandomProbabilities& probabilities_;
 
     friend std::ostream&

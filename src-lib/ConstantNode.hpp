@@ -8,6 +8,8 @@
 #ifndef CONSTANTNODE_HPP_
 #define CONSTANTNODE_HPP_
 
+#include "DiscreteNode.hpp"
+
 namespace cpprob
 {
 
@@ -29,10 +31,10 @@ namespace cpprob
       }
 
       template<class N>
-      void
-      add_child(N& child)
-      {
-      }
+        void
+        add_child(N& child)
+        {
+        }
 
       float
       at_references() const
@@ -69,6 +71,31 @@ namespace cpprob
       T value_;
 
     };
+
+  template<>
+  class ConstantNode<DiscreteRandomVariable> : public DiscreteNode
+  {
+
+  public:
+
+    ConstantNode(const DiscreteRandomVariable& v)
+        : DiscreteNode(v)
+    {
+    }
+
+    float
+    at_references() const
+    {
+      return 1.0;
+    }
+
+    bool
+    is_evidence() const
+    {
+      return true;
+    }
+
+  };
 
   template<class T>
     inline std::ostream&

@@ -85,26 +85,6 @@ namespace cpprob
         return new_node;
       }
 
-    template<class N>
-      ConditionalCategoricalNode&
-      add_conditional_categorical(const DiscreteRandomVariable& value,
-          const cont::list<DirichletProcessNode*> condition_nodes,
-          N& parameter_node)
-      {
-        DiscreteRandomReferences condition;
-        for (auto n = condition_nodes.begin(); n != condition_nodes.end(); ++n)
-          condition.insert((*n)->value());
-
-        ConditionalCategoricalNode& new_node = insert_conditional_categorical(
-            value, condition, parameter_node.value());
-
-        parameter_node.add_child(new_node);
-        for (auto n = condition_nodes.begin(); n != condition_nodes.end(); ++n)
-          (*n)->add_child(new_node);
-
-        return new_node;
-      }
-
     ConditionalDirichletNode&
     add_conditional_dirichlet(const RandomConditionalProbabilities& value,
         float alpha);

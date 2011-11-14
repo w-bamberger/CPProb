@@ -20,7 +20,6 @@ namespace cpprob
       class_ < CategoricalDistribution
           > ("CategoricalDistribution") //
           .def(self_ns::str(self_ns::self)) //
-          .def("__delitem__", &MapHelper < CategoricalDistribution > ::del) //
           .def("__getitem__", &MapHelper < CategoricalDistribution > ::get,
               return_value_policy<copy_non_const_reference>()) //
           .def("__len__", &CategoricalDistribution::size) //

@@ -40,7 +40,7 @@ namespace cpprob
   /**
    * Implements the Pólya urn scheme. So it realizes a chain of nodes.
    */
-  class DirichletProcessNode
+  class DirichletProcessNode : public DiscreteNode
   {
 
     typedef DirichletProcessParameters::Children Children;
@@ -54,24 +54,6 @@ namespace cpprob
 
     ~DirichletProcessNode()
     {
-    }
-
-    void
-    add_child(ConditionalCategoricalNode& child)
-    {
-      children_.push_back(&child);
-    }
-
-    ChildRange
-    children()
-    {
-      return ChildRange(children_);
-    }
-
-    ConstChildRange
-    children() const
-    {
-      return ConstChildRange(children_);
     }
 
     void
@@ -98,20 +80,12 @@ namespace cpprob
     void
     sample();
 
-    const DiscreteRandomVariable&
-    value() const
-    {
-      return value_;
-    }
-
   private:
 
     friend std::ostream&
     operator<<(std::ostream& os, const DirichletProcessNode& node);
 
-    Children children_;
     DirichletProcessParameters& parameters_;
-    DiscreteRandomVariable value_;
 
   };
 

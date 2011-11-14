@@ -33,7 +33,7 @@ namespace cpprob
     string prefix;
     for (DiscreteRandomReferences::const_iterator c = node.condition().begin();
         c != node.condition().end(); ++c)
-        {
+    {
       os << prefix << c->name() << " (at " << &(*c) << ")";
       prefix = ", ";
     }
@@ -41,7 +41,8 @@ namespace cpprob
 
     os << "  Children: ";
     prefix = "";
-    for (ConditionalCategoricalNode::Children::const_iterator child = node.children_.begin(); child != node.children_.end(); ++child)
+    for (ConditionalCategoricalNode::Children::const_iterator child =
+        node.children_.begin(); child != node.children_.end(); ++child)
     {
       os << prefix << (*child)->value().name() << " (at " << *child << ")";
       prefix = ", ";
@@ -55,7 +56,9 @@ namespace cpprob
       const DiscreteRandomVariable& value,
       const DiscreteRandomReferences& condition,
       RandomConditionalProbabilities& cpt)
-      : DiscreteNode(value), condition_(condition), probabilities_(cpt)
+      : DiscreteNode(value), is_evidence_(false), sampling_variate_(
+          random_number_engine, CategoricalDistribution()), condition_(
+          condition), probabilities_(cpt)
   {
   }
 
@@ -89,7 +92,7 @@ namespace cpprob
       float p = at_references();
       for (Children::const_iterator d = children_.begin(); d != children_.end();
           ++d)
-          {
+      {
         p *= (*d)->at_references();
       }
 

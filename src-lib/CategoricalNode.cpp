@@ -33,7 +33,7 @@ namespace cpprob
     string prefix;
     for (CategoricalNode::Children::const_iterator c = node.children_.begin();
         c != node.children_.end(); ++c)
-        {
+    {
       os << prefix << (*c)->value().name() << "(at " << *c << ")";
       prefix = ", ";
     }
@@ -44,7 +44,9 @@ namespace cpprob
 
   CategoricalNode::CategoricalNode(const DiscreteRandomVariable& value,
       RandomProbabilities& probabilities)
-      : DiscreteNode(value), probabilities_(probabilities)
+      : DiscreteNode(value), is_evidence_(false), sampling_variate_(
+          random_number_engine, CategoricalDistribution()), probabilities_(
+          probabilities)
   {
   }
 
@@ -77,7 +79,7 @@ namespace cpprob
       float p = at_references();
       for (Children::const_iterator d = children_.begin(); d != children_.end();
           ++d)
-          {
+      {
         p *= (*d)->at_references();
       }
 

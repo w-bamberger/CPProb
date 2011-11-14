@@ -28,7 +28,7 @@
 #ifndef DISCRETENODE_HPP_
 #define DISCRETENODE_HPP_
 
-#include "CategoricalDistribution.hpp"
+#include "DiscreteRandomVariable.hpp"
 #include "cont/list.hpp"
 #include <boost/range/adaptor/indirected.hpp>
 
@@ -53,8 +53,7 @@ namespace cpprob
     typedef boost::indirected_range<Children> ChildRange;
 
     DiscreteNode(const DiscreteRandomVariable& value)
-        : is_evidence_(false), value_(value), sampling_variate_(
-            random_number_engine, CategoricalDistribution())
+        : value_(value)
     {
     }
 
@@ -75,15 +74,6 @@ namespace cpprob
     ConstChildRange
     children() const;
 
-    virtual float
-    at_references() const = 0;
-
-    virtual void
-    init_sampling() = 0;
-
-    virtual void
-    sample() = 0;
-
     DiscreteRandomVariable&
     value()
     {
@@ -96,24 +86,10 @@ namespace cpprob
       return value_;
     }
 
-    bool
-    is_evidence() const
-    {
-      return is_evidence_;
-    }
-
-    void
-    is_evidence(bool value_is_evidence)
-    {
-      is_evidence_ = value_is_evidence;
-    }
-
   protected:
 
-    bool is_evidence_;
-    DiscreteRandomVariable value_;
     Children children_;
-    std::variate_generator<RandomNumberEngine&, CategoricalDistribution> sampling_variate_;
+    DiscreteRandomVariable value_;
 
   };
 

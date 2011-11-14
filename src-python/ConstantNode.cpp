@@ -12,7 +12,7 @@ namespace cpprob
     void
     export_constant_node()
     {
-      class_ < ConstantNode<DiscreteRandomVariable>
+      class_ < ConstantNode<DiscreteRandomVariable>, bases<DiscreteNode>
           > ("ConstantDiscreteRandomVariableNode", no_init);
     }
 
