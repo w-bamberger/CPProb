@@ -9,19 +9,22 @@ namespace cpprob
   {
 
     void
+    random_integer_set_observation(RandomInteger& ri, std::size_t value)
+    {
+      ri.observation(value);
+    }
+
+    void
     export_random_integer()
     {
       std::size_t
       (RandomInteger::*get_observation)(
           void) const = &RandomInteger::observation;
 
-      void
-      (RandomInteger::*set_observation)(
-          std::size_t) = &RandomInteger::observation;
-
       class_ < RandomInteger, bases<DiscreteRandomVariable>
           > ("RandomInteger", init<std::string, std::size_t, std::size_t>()) //
-          .add_property("observation", get_observation, set_observation);
+          .add_property("observation", get_observation,
+              &random_integer_set_observation);
     }
 
   }
