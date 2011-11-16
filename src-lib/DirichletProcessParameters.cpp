@@ -23,7 +23,11 @@ namespace cpprob
     return os << parameters.name() << ":" << parameters.concentration();
   }
 
-  DirichletProcessParameters::~DirichletProcessParameters()
+  DirichletProcessParameters::DirichletProcessParameters(
+      const std::string& name, float concentration,
+      std::initializer_list<ConditionalDirichletNode*> managed_nodes)
+      : concentration_(concentration), managed_nodes_(managed_nodes.begin(),
+          managed_nodes.end()), name_(name)
   {
   }
 
@@ -43,14 +47,14 @@ namespace cpprob
     for (auto node = managed_nodes_.begin(); node != managed_nodes_.end();
         ++node)
     {
-      cont::map<DiscreteRandomVariable, ConstChildren, DiscreteRandomVariable::NameLess> children_of_node;
+      ChildrenOfComponent children_of_node;
       for (auto child = children_of_component.begin();
           child != children_of_component.end(); ++child)
       {
-        if (&(*child)->probabilities() == &(*node)->value())
+        if (&child->probabilities() == &node->value())
           children_of_node[new_component].push_back(*child);
       }
-      extend_managed_node(**node, old_range, new_range, children_of_node);
+      extend_managed_node(*node, old_range, new_range, children_of_node);
     }
     return new_component;
   }
@@ -60,7 +64,7 @@ namespace cpprob
       ConditionalDirichletNode& node,
       const DiscreteRandomVariable::Range& old_range,
       const DiscreteRandomVariable::Range& new_range,
-      const cont::map<DiscreteRandomVariable, ConstChildren, DiscreteRandomVariable::NameLess>& children_of_node)
+      const ChildrenOfComponent& children_of_node)
   {
     /**
      * @todo Refactor around children_of_node.
@@ -137,7 +141,7 @@ namespace cpprob
       {
         auto found_children = children_of_node.find(*new_self_condition);
         if (found_children == children_of_node.end())
-          node.sample(new_condition, ConstChildren());
+          node.sample(new_condition, Children());
         else
           node.sample(new_condition, found_children->second);
       }
@@ -187,18 +191,6 @@ namespace cpprob
           component_counters_.size());
   }
 
-  DirichletProcessParameters::ConstManagedNodeRange
-  DirichletProcessParameters::managed_nodes() const
-  {
-    return ConstManagedNodeRange(managed_nodes_);
-  }
-
-  DirichletProcessParameters::ManagedNodeRange
-  DirichletProcessParameters::managed_nodes()
-  {
-    return ManagedNodeRange(managed_nodes_);
-  }
-
   DiscreteRandomVariable
   DirichletProcessParameters::next_component(
       const Children& children_of_component)
@@ -228,10 +220,10 @@ namespace cpprob
       for (auto child = children_of_component.begin();
           child != children_of_component.end(); ++child)
       {
-        if (&(*child)->probabilities() == &(*node)->value())
-          child_counters[(*child)->value()] += 1;
+        if (&child->probabilities() == &node->value())
+          child_counters[child->value()] += 1;
       }
-      p *= prior_probability_of_managed_node(**node, child_counters);
+      p *= prior_probability_of_managed_node(*node, child_counters);
     }
     return p;
   }
@@ -271,7 +263,7 @@ namespace cpprob
   void
   DirichletProcessParameters::sample_managed_node(
       ConditionalDirichletNode& node, const DiscreteRandomVariable& component,
-      DiscreteRandomVariableMap<ConstChildren>& children_of_node)
+      DiscreteRandomVariableMap<Children>& children_of_node)
   {
     /* Check requirements. */
     cpprob_check_debug(
@@ -317,14 +309,14 @@ namespace cpprob
     for (auto node = managed_nodes_.begin(); node != managed_nodes_.end();
         ++node)
     {
-      DiscreteRandomVariableMap<ConstChildren> children_of_node;
+      DiscreteRandomVariableMap<Children> children_of_node;
       for (auto child = children_of_component.begin();
           child != children_of_component.end(); ++child)
       {
-        if (&(*child)->probabilities() == &(*node)->value())
+        if (&child->probabilities() == &node->value())
           children_of_node[component].push_back(*child);
       }
-      sample_managed_node(**node, component, children_of_node);
+      sample_managed_node(*node, component, children_of_node);
     }
   }
 

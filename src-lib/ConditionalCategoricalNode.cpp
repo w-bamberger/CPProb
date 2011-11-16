@@ -41,10 +41,9 @@ namespace cpprob
 
     os << "  Children: ";
     prefix = "";
-    for (ConditionalCategoricalNode::Children::const_iterator child =
-        node.children_.begin(); child != node.children_.end(); ++child)
+    for (auto c = node.children_.begin(); c != node.children_.end(); ++c)
     {
-      os << prefix << (*child)->value().name() << " (at " << *child << ")";
+      os << prefix << c->value().name() << " (at " << &(*c) << ")";
       prefix = ", ";
     }
     os << "\n";
@@ -90,10 +89,9 @@ namespace cpprob
     for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
     {
       float p = at_references();
-      for (Children::const_iterator d = children_.begin(); d != children_.end();
-          ++d)
+      for (auto c = children_.begin(); c != children_.end(); ++c)
       {
-        p *= (*d)->at_references();
+        p *= c->at_references();
       }
 
       sampling_distribution[value_] = p;

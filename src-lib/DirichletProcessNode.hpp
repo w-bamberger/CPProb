@@ -28,11 +28,8 @@
 #ifndef DIRICHLETPROCESSNODE_HPP_
 #define DIRICHLETPROCESSNODE_HPP_
 
-#include "DiscreteRandomVariable.hpp"
 #include "ConditionalCategoricalNode.hpp"
 #include "DirichletProcessParameters.hpp"
-#include "cont/vector.hpp"
-#include <boost/range/adaptor/indirected.hpp>
 
 namespace cpprob
 {
@@ -46,9 +43,6 @@ namespace cpprob
     typedef DirichletProcessParameters::Children Children;
 
   public:
-
-    typedef boost::indirected_range<const Children> ConstChildRange;
-    typedef boost::indirected_range<Children> ChildRange;
 
     DirichletProcessNode(DirichletProcessParameters& parameters);
 

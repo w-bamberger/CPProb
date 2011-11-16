@@ -63,37 +63,31 @@ BOOST_AUTO_TEST_CASE(Parameters)
   RandomInteger value1("Value1", 5, 0);
   RandomBoolean value2("Value2", false);
   BayesianNetwork bn;
-  typedef cont::map<
-      DiscreteRandomVariable,
-      DirichletProcessParameters::ConstChildren,
-      DiscreteRandomVariable::NameLess> ChildLists;
-  ChildLists child_lists1;
-  ChildLists child_lists2;
+  DirichletProcessParameters::ChildrenOfComponent child_lists1;
+  DirichletProcessParameters::ChildrenOfComponent child_lists2;
 
   auto probabilities_node1 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value1, condition1), 1);
   auto probabilities_node2 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value2, condition12), 1);
 
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
-      cont::vector<ConditionalDirichletNode*>(
-          { &probabilities_node1, &probabilities_node2}));
+          { &probabilities_node1, &probabilities_node2});
   auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
-      cont::vector<ConditionalDirichletNode*>(
-          { &probabilities_node2}));
+          { &probabilities_node2});
 
   auto infinite_mixture_node11 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node12 = bn.add_dirichlet_process(dp_parameters_node2);
   auto child1_node1 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node11}, probabilities_node1);
-  child_lists1[infinite_mixture_node11.value()].push_back(&child1_node1);
+  child_lists1[infinite_mixture_node11.value()].push_back(child1_node1);
   auto child2_node1 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node11, &infinite_mixture_node12}, probabilities_node2);
-  child_lists2[infinite_mixture_node11.value()].push_back(&child2_node1);
-  child_lists2[infinite_mixture_node12.value()].push_back(&child2_node1);
+  child_lists2[infinite_mixture_node11.value()].push_back(child2_node1);
+  child_lists2[infinite_mixture_node12.value()].push_back(child2_node1);
 
   auto infinite_mixture_node21 = bn.add_dirichlet_process(dp_parameters_node1);
   auto child1_node2 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node21}, probabilities_node1);
-  child_lists1[infinite_mixture_node21.value()].push_back(&child1_node2);
+  child_lists1[infinite_mixture_node21.value()].push_back(child1_node2);
 
   ++value1;
   ++(++value2);
@@ -101,21 +95,21 @@ BOOST_AUTO_TEST_CASE(Parameters)
   auto infinite_mixture_node32 = bn.add_dirichlet_process(dp_parameters_node2);
   auto child1_node3 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node31}, probabilities_node1);
-  child_lists1[infinite_mixture_node31.value()].push_back(&child1_node3);
+  child_lists1[infinite_mixture_node31.value()].push_back(child1_node3);
   auto child2_node3 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node31, &infinite_mixture_node32}, probabilities_node2);
-  child_lists2[infinite_mixture_node31.value()].push_back(&child2_node3);
-  child_lists2[infinite_mixture_node32.value()].push_back(&child2_node3);
+  child_lists2[infinite_mixture_node31.value()].push_back(child2_node3);
+  child_lists2[infinite_mixture_node32.value()].push_back(child2_node3);
 
   auto infinite_mixture_node41 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node42 = bn.add_dirichlet_process(dp_parameters_node2);
   auto child1_node4 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node41}, probabilities_node1);
-  child_lists1[infinite_mixture_node41.value()].push_back(&child1_node4);
+  child_lists1[infinite_mixture_node41.value()].push_back(child1_node4);
   auto child2_node4 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node41, &infinite_mixture_node42}, probabilities_node2);
-  child_lists2[infinite_mixture_node41.value()].push_back(&child2_node4);
-  child_lists2[infinite_mixture_node42.value()].push_back(&child2_node4);
+  child_lists2[infinite_mixture_node41.value()].push_back(child2_node4);
+  child_lists2[infinite_mixture_node42.value()].push_back(child2_node4);
 
   cout << bn;
 

@@ -8,14 +8,10 @@
 #ifndef BAYESIANNETWORK_HPP_
 #define BAYESIANNETWORK_HPP_
 
-#include "CategoricalDistribution.hpp"
-#include "CategoricalNode.hpp"
-#include "ConditionalCategoricalNode.hpp"
 #include "ConditionalDirichletNode.hpp"
-#include "ConstantNode.hpp"
 #include "DirichletNode.hpp"
-#include "DirichletProcessNode.hpp"
 #include "NodeUtils.hpp"
+#include "cont/list.hpp"
 #include <boost/variant/get.hpp>
 #include <boost/variant/variant.hpp>
 
@@ -28,10 +24,10 @@ namespace cpprob
   public:
 
     typedef boost::variant<CategoricalNode, ConditionalCategoricalNode,
-        ConditionalDirichletNode, ConstantNode<DirichletProcessParameters>,
-        ConstantNode<DiscreteRandomVariable>,
-        ConstantNode<RandomConditionalProbabilities>,
-        ConstantNode<RandomProbabilities>, DirichletNode, DirichletProcessNode> Node;
+        ConditionalDirichletNode, ConstantDirichletProcessParametersNode,
+        ConstantDiscreteRandomVariableNode,
+        ConstantRandomConditionalProbabilitiesNode,
+        ConstantRandomProbabilitiesNode, DirichletNode, DirichletProcessNode> Node;
 
   private:
 
@@ -57,30 +53,30 @@ namespace cpprob
       {
         CategoricalNode& new_node = insert_categorical(value,
             parameter_node.value());
-        parameter_node.add_child(new_node);
+        parameter_node.children().push_back(new_node);
         return new_node;
       }
 
     ConditionalCategoricalNode&
     add_conditional_categorical(const DiscreteRandomVariable& value,
-        const cont::list<DiscreteNode*>& condition_nodes);
+        const cont::RefVector<DiscreteNode>& condition_nodes);
 
     template<class N>
       ConditionalCategoricalNode&
       add_conditional_categorical(const DiscreteRandomVariable& value,
-          const cont::list<DiscreteNode*>& condition_nodes, N& parameter_node)
+          const cont::RefVector<DiscreteNode>& condition_nodes,
+          N& parameter_node)
       {
         DiscreteRandomReferences condition;
-        cont::list<DiscreteNode*>::const_iterator n = condition_nodes.begin();
-        for (; n != condition_nodes.end(); ++n)
-          condition.insert((*n)->value());
+        for (auto n = condition_nodes.begin(); n != condition_nodes.end(); ++n)
+          condition.insert(n->value());
 
-        ConditionalCategoricalNode& new_node = insert_conditional_categorical(
-            value, condition, parameter_node.value());
+        auto& new_node = insert_conditional_categorical(value, condition,
+            parameter_node.value());
 
-        parameter_node.add_child(new_node);
-        for (n = condition_nodes.begin(); n != condition_nodes.end(); ++n)
-          (*n)->add_child(new_node);
+        parameter_node.children().push_back(new_node);
+        for (auto n = condition_nodes.begin(); n != condition_nodes.end(); ++n)
+          n->children().push_back(new_node);
 
         return new_node;
       }
@@ -89,32 +85,40 @@ namespace cpprob
     add_conditional_dirichlet(const RandomConditionalProbabilities& value,
         float alpha);
 
-    template<class V>
-      ConstantNode<V>&
-      add_constant(const V& value)
-      {
-        iterator new_node = vertices_.insert(end(), ConstantNode<V>(value));
-        return boost::get<ConstantNode<V> >(*new_node);
-      }
+    ConstantDirichletProcessParametersNode&
+    add_constant(const DirichletProcessParameters& value);
+
+    ConstantDiscreteRandomVariableNode&
+    add_constant(const DiscreteRandomVariable& value);
+
+    ConstantRandomConditionalProbabilitiesNode&
+    add_constant(const RandomConditionalProbabilities& value);
+
+    ConstantRandomProbabilitiesNode&
+    add_constant(const RandomProbabilities& value);
 
     DirichletNode&
     add_dirichlet(const RandomProbabilities& value, float alpha);
 
     DirichletProcessNode&
-    add_dirichlet_process(ConstantNode<DirichletProcessParameters>& parent);
+    add_dirichlet_process(ConstantDirichletProcessParametersNode& parent);
+
+    ConstantDirichletProcessParametersNode&
+    add_dirichlet_process_parameters(const std::string& name,
+        float concentration,
+        const std::initializer_list<ConditionalDirichletNode*>& managed_nodes);
 
     template<class NodeList>
-      ConstantNode<DirichletProcessParameters>&
+      ConstantDirichletProcessParametersNode&
       add_dirichlet_process_parameters(const std::string& name,
           float concentration, const NodeList& managed_nodes)
       {
-        typedef ConstantNode<DirichletProcessParameters> NodeType;
         iterator new_node = vertices_.insert(
             end(),
-            NodeType(
+            ConstantDirichletProcessParametersNode(
                 DirichletProcessParameters(name, concentration,
                     managed_nodes)));
-        return boost::get<NodeType>(*new_node);
+        return boost::get<ConstantDirichletProcessParametersNode>(*new_node);
       }
 
     iterator

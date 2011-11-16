@@ -175,18 +175,18 @@ namespace cpprob
     assign_random_value(RandomNumberEngine& rne);
 
     /**
-     * Provides a reference to the probability assigned with the value of @c var.
+     * Provides a reference to the probability assigned with the value of @c k.
      *
      * @par Requires:
-     * - The value @c var is listed in the probability table.
+     * - The value @c k is listed in the probability table.
      *
      * @par Ensures:
-     * - <tt>at(var) == *find(var)->second</tt>, if <tt>find(var) != %end()</tt>.
-     * - The @c out_of_range exception is thrown, if <tt>find(var) == %end()</tt>.
+     * - <tt>at(k) == *find(k)->second</tt>, if <tt>find(var) != %end()</tt>.
+     * - The @c out_of_range exception is thrown, if <tt>find(k) == %end()</tt>.
      *
-     * @param var the outcome for which the probability should be returned
-     * @return the probability of the outcome @c var
-     * @throw std::out_of_range if @c var is not found in the probability table.
+     * @param k the outcome for which the probability should be returned
+     * @return the probability of the outcome @c k
+     * @throw std::out_of_range if @c k is not found in the probability table.
      */
     const float&
     at(const DiscreteRandomVariable& k) const
@@ -195,18 +195,18 @@ namespace cpprob
     }
 
     /**
-     * Provides a reference to the probability assigned with the value of @c var.
+     * Provides a reference to the probability assigned with the value of @c k.
      *
      * @par Requires:
-     * - The value @c var is listed in the probability table.
+     * - The value @c k is listed in the probability table.
      *
      * @par Ensures:
-     * - <tt>at(var) == *find(var)->second</tt>, if <tt>find(var) != %end()</tt>.
-     * - The @c out_of_range exception is thrown, if <tt>find(var) == %end()</tt>.
+     * - <tt>at(k) == *find(k)->second</tt>, if <tt>find(k) != %end()</tt>.
+     * - The @c out_of_range exception is thrown, if <tt>find(k) == %end()</tt>.
      *
-     * @param var the outcome for which the probability should be returned
-     * @return the probability of the outcome @c var
-     * @throw std::out_of_range if @c var is not found in the probability table.
+     * @param k the outcome for which the probability should be returned
+     * @return the probability of the outcome @c k
+     * @throw std::out_of_range if @c k is not found in the probability table.
      */
     float&
     at(const DiscreteRandomVariable& k)

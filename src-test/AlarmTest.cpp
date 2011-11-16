@@ -63,7 +63,7 @@ gen_alarm_net()
       DiscreteJointRandomVariable(burglary, earthquake), 0.001);
   alarm_params.set(alarm.observation(false),
       DiscreteJointRandomVariable(burglary, earthquake), 0.999);
-  ConstantNode<RandomConditionalProbabilities>& alarm_params_node =
+  ConstantRandomConditionalProbabilitiesNode& alarm_params_node =
       bn.add_constant(alarm_params);
 
   ConditionalCategoricalNode& alarm_node = bn.add_conditional_categorical(

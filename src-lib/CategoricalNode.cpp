@@ -31,10 +31,9 @@ namespace cpprob
         << &node.probabilities() << ")\n";
     os << "  Children: ";
     string prefix;
-    for (CategoricalNode::Children::const_iterator c = node.children_.begin();
-        c != node.children_.end(); ++c)
+    for (auto c = node.children_.begin(); c != node.children_.end(); ++c)
     {
-      os << prefix << (*c)->value().name() << "(at " << *c << ")";
+      os << prefix << c->value().name() << "(at " << &(*c) << ")";
       prefix = ", ";
     }
     os << "\n";
@@ -77,10 +76,9 @@ namespace cpprob
     for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
     {
       float p = at_references();
-      for (Children::const_iterator d = children_.begin(); d != children_.end();
-          ++d)
+      for (auto c = children_.begin(); c != children_.end(); ++c)
       {
-        p *= (*d)->at_references();
+        p *= c->at_references();
       }
 
       sampling_distribution[value_] = p;

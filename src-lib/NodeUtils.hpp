@@ -8,6 +8,7 @@
 #ifndef NODEUTILS_HPP_
 #define NODEUTILS_HPP_
 
+#include "ConstantNode.hpp"
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
 #include <typeinfo>
@@ -93,7 +94,7 @@ namespace cpprob
     }
 
     DiscreteRandomVariable*
-    operator()(ConstantNode<DiscreteRandomVariable>& node) const
+    operator()(ConstantDiscreteRandomVariableNode& node) const
     {
       return &node.value();
     }
@@ -112,9 +113,9 @@ namespace cpprob
 
   public:
 
-    template<class V>
+    template<class V, class C>
       void
-      operator()(ConstantNode<V>) const
+      operator()(ConstantNode<V, C>) const
       {
       }
 
@@ -182,9 +183,9 @@ namespace cpprob
             << typeid(T).name() << ".");
       }
 
-    template<class V>
+    template<class V, class C>
       float
-      operator()(const ConstantNode<V>&) const
+      operator()(const ConstantNode<V, C>&) const
       {
         return 1.0;
       }
@@ -196,9 +197,9 @@ namespace cpprob
 
   public:
 
-    template<class V>
+    template<class V, class C>
       void
-      operator()(ConstantNode<V>&) const
+      operator()(ConstantNode<V, C>&) const
       {
       }
 

@@ -9,9 +9,7 @@
 #define DIRICHLETPROCESSPARAMETERS_HPP_
 
 #include "DiscreteRandomVariableMap.hpp"
-#include "cont/list.hpp"
-#include <boost/range/adaptor/indirected.hpp>
-#include <string>
+#include "cont/RefVector.hpp"
 
 namespace DirichletProcessTest
 {
@@ -34,13 +32,14 @@ namespace cpprob
   class DirichletProcessParameters
   {
 
-    typedef cont::list<ConditionalDirichletNode*> ManagedNodes;
 
   public:
 
     typedef DiscreteRandomVariableMap<std::size_t> ComponentCounters;
-    typedef boost::indirected_range<const ManagedNodes> ConstManagedNodeRange;
-    typedef boost::indirected_range<ManagedNodes> ManagedNodeRange;
+    typedef cont::RefVector<ConditionalDirichletNode> ManagedNodes;
+
+    DirichletProcessParameters(const std::string& name, float concentration,
+        std::initializer_list<ConditionalDirichletNode*> managed_nodes);
 
     template<class NodeList>
       DirichletProcessParameters(const std::string& name, float concentration,
@@ -49,8 +48,6 @@ namespace cpprob
               managed_nodes.end()), name_(name)
       {
       }
-
-    ~DirichletProcessParameters();
 
     float
     concentration() const
@@ -64,11 +61,17 @@ namespace cpprob
       return component_counters_;
     }
 
-    ConstManagedNodeRange
-    managed_nodes() const;
+    const ManagedNodes&
+    managed_nodes() const
+    {
+      return managed_nodes_;
+    }
 
-    ManagedNodeRange
-    managed_nodes();
+    ManagedNodes&
+    managed_nodes()
+    {
+      return managed_nodes_;
+    }
 
     const std::string&
     name() const
@@ -81,8 +84,9 @@ namespace cpprob
     friend class DirichletProcessNode;
     friend class ::DirichletProcessTest::Parameters;
     friend class ::DirichletProcessTest::Node;
-    typedef cont::list<ConditionalCategoricalNode*> Children;
-    typedef cont::list<const ConditionalCategoricalNode*> ConstChildren;
+    typedef cont::RefVector<ConditionalCategoricalNode> Children;
+    typedef cont::map<DiscreteRandomVariable, Children,
+        DiscreteRandomVariable::NameLess> ChildrenOfComponent;
 
     ComponentCounters component_counters_;
     float concentration_;
@@ -93,11 +97,10 @@ namespace cpprob
     create_component(const Children& children_of_component);
 
     void
-    extend_managed_node(
-        ConditionalDirichletNode& node,
+    extend_managed_node(ConditionalDirichletNode& node,
         const DiscreteRandomVariable::Range& old_range,
         const DiscreteRandomVariable::Range& new_range,
-        const cont::map<DiscreteRandomVariable, ConstChildren, DiscreteRandomVariable::NameLess>& children_of_component);
+        const ChildrenOfComponent& children_of_component);
 
     DiscreteRandomVariable
     next_component(const Children& children_of_component);
@@ -119,7 +122,7 @@ namespace cpprob
     void
     sample_managed_node(ConditionalDirichletNode& node,
         const DiscreteRandomVariable& component,
-        DiscreteRandomVariableMap<ConstChildren>& children_of_node);
+        DiscreteRandomVariableMap<Children>& children_of_node);
 
     void
     sample_managed_nodes(const DiscreteRandomVariable& component,

@@ -8,18 +8,31 @@
 #ifndef CONSTANTNODE_HPP_
 #define CONSTANTNODE_HPP_
 
-#include "DiscreteNode.hpp"
+#include "CategoricalNode.hpp"
+#include "DirichletProcessNode.hpp"
 
 namespace cpprob
 {
 
+  template<class T, class Child>
+    class ConstantNode;
+
+  typedef ConstantNode<DirichletProcessParameters, DirichletProcessNode> ConstantDirichletProcessParametersNode;
+  typedef ConstantNode<DiscreteRandomVariable, ConditionalCategoricalNode> ConstantDiscreteRandomVariableNode;
+  typedef ConstantNode<RandomConditionalProbabilities,
+      ConditionalCategoricalNode> ConstantRandomConditionalProbabilitiesNode;
+  typedef ConstantNode<RandomProbabilities, CategoricalNode> ConstantRandomProbabilitiesNode;
+
   /*
    *
    */
-  template<class T>
+  template<class T, class Child>
     class ConstantNode
     {
+
     public:
+
+      typedef cont::RefVector<Child> Children;
 
       ConstantNode(const T& value)
           : value_(value)
@@ -30,11 +43,17 @@ namespace cpprob
       {
       }
 
-      template<class N>
-        void
-        add_child(N& child)
-        {
-        }
+      Children&
+      children()
+      {
+        return children_;
+      }
+
+      const Children&
+      children() const
+      {
+        return children_;
+      }
 
       float
       at_references() const
@@ -68,38 +87,39 @@ namespace cpprob
 
     private:
 
+      Children children_;
       T value_;
 
     };
 
   template<>
-  class ConstantNode<DiscreteRandomVariable> : public DiscreteNode
-  {
-
-  public:
-
-    ConstantNode(const DiscreteRandomVariable& v)
-        : DiscreteNode(v)
+    class ConstantNode<DiscreteRandomVariable, ConditionalCategoricalNode> : public DiscreteNode
     {
-    }
 
-    float
-    at_references() const
-    {
-      return 1.0;
-    }
+    public:
 
-    bool
-    is_evidence() const
-    {
-      return true;
-    }
+      ConstantNode(const DiscreteRandomVariable& v)
+          : DiscreteNode(v)
+      {
+      }
 
-  };
+      float
+      at_references() const
+      {
+        return 1.0;
+      }
 
-  template<class T>
+      bool
+      is_evidence() const
+      {
+        return true;
+      }
+
+    };
+
+  template<class T, class C>
     inline std::ostream&
-    operator<<(std::ostream& os, const ConstantNode<T>& node)
+    operator<<(std::ostream& os, const ConstantNode<T, C>& node)
     {
       return os << "Constant node " << node.value().name() << " with value\n"
           << "  " << node.value() << "\n";

@@ -68,10 +68,6 @@ namespace cpprob
       parameters_[v_it->first] = alpha;
   }
 
-  ConditionalDirichletNode::~ConditionalDirichletNode()
-  {
-  }
-
   void
   ConditionalDirichletNode::init_sampling()
   {
@@ -120,9 +116,9 @@ namespace cpprob
     /* Count the child values. */
     for (auto child = children_.begin(); child != children_.end(); ++child)
     {
-      const DiscreteRandomVariable& child_var = (*child)->value();
+      const DiscreteRandomVariable& child_var = child->value();
       const DiscreteRandomVariable& child_condition =
-          (*child)->condition().joint_value();
+          child->condition().joint_value();
       counters[child_condition][child_var] += 1.0;
     }
 
@@ -140,14 +136,14 @@ namespace cpprob
 
   void
   ConditionalDirichletNode::sample(const DiscreteRandomVariable& condition,
-      const ConstChildren& children)
+      const Children& children)
   {
     /* Set up the counters and initialize them with the Dirichlet prior. */
     Parameters counters = parameters_;
 
     /* Count the child value. */
     for (auto child = children.begin(); child != children.end(); ++child)
-      counters[(*child)->value()] += 1.0;
+      counters[child->value()] += 1.0;
 
     /* Set up the sampling distribution and draw from it. */
     DirichletDistribution sample_distribution(counters.begin(), counters.end());

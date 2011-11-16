@@ -24,17 +24,16 @@ namespace cpprob
   {
 
     typedef variant<CategoricalNode*, ConditionalCategoricalNode*,
-        ConditionalDirichletNode*, ConstantNode<DirichletProcessParameters>*,
-        ConstantNode<DiscreteRandomVariable>*,
-        ConstantNode<RandomConditionalProbabilities>*,
-        ConstantNode<RandomProbabilities>*, DirichletNode*,
-        DirichletProcessNode*> NodePointer;
+        ConditionalDirichletNode*, ConstantDirichletProcessParametersNode*,
+        ConstantDiscreteRandomVariableNode*,
+        ConstantRandomConditionalProbabilitiesNode*,
+        ConstantRandomProbabilitiesNode*, DirichletNode*, DirichletProcessNode*> NodePointer;
     typedef variant<const CategoricalNode*, const ConditionalCategoricalNode*,
         const ConditionalDirichletNode*,
-        const ConstantNode<DirichletProcessParameters>*,
-        const ConstantNode<DiscreteRandomVariable>*,
-        const ConstantNode<RandomConditionalProbabilities>*,
-        const ConstantNode<RandomProbabilities>*, const DirichletNode*,
+        const ConstantDirichletProcessParametersNode*,
+        const ConstantDiscreteRandomVariableNode*,
+        const ConstantRandomConditionalProbabilitiesNode*,
+        const ConstantRandomProbabilitiesNode*, const DirichletNode*,
         const DirichletProcessNode*> ConstNodePointer;
     typedef variant<const DirichletProcessParameters*,
         const DiscreteRandomVariable*, const RandomConditionalProbabilities*,
@@ -69,8 +68,7 @@ namespace cpprob
         node_node_table[&old_node] = &new_node;
         value_node_table[&old_node.value()] = &new_node;
       }
-      else if (ConstantNode < RandomProbabilities > **new_constant = get<
-      ConstantNode<RandomProbabilities>*>(
+      else if (ConstantRandomProbabilitiesNode **new_constant = get<ConstantRandomProbabilitiesNode*>(
           &new_probabilities_node->second))
       {
         CategoricalNode& new_node = new_network_.add_categorical(
@@ -91,7 +89,7 @@ namespace cpprob
         cpprob_throw_logic_error(
             "BayesianNetwork: Could not copy the network because of an inconsistent structure.");
 
-      list<DiscreteNode*> new_condition_nodes;
+      cont::RefVector<DiscreteNode> new_condition_nodes;
       for (DiscreteRandomReferences::const_iterator c =
           old_node.condition().begin(); c != old_node.condition().end(); ++c)
       {
@@ -102,10 +100,10 @@ namespace cpprob
               "BayesianNetwork: Could not copy the network because of an inconsistent structure.");
 
         if (CategoricalNode** new_categorical = get<CategoricalNode*>(&new_condition_node->second))
-          new_condition_nodes.push_back(*new_categorical);
+          new_condition_nodes.push_back(**new_categorical);
 
         else if (ConditionalCategoricalNode** new_conditional_categorical = get<ConditionalCategoricalNode*>(&new_condition_node->second))
-          new_condition_nodes.push_back(*new_conditional_categorical);
+          new_condition_nodes.push_back(**new_conditional_categorical);
 
         else
           cpprob_throw_logic_error(
@@ -121,7 +119,7 @@ namespace cpprob
         node_node_table[&old_node] = &new_node;
         value_node_table[&old_node.value()] = &new_node;
       }
-      else if (ConstantNode<RandomConditionalProbabilities>** new_constant = get<ConstantNode<RandomConditionalProbabilities>*>(&new_probabilities_node->second))
+      else if (ConstantRandomConditionalProbabilitiesNode** new_constant = get<ConstantRandomConditionalProbabilitiesNode*>(&new_probabilities_node->second))
       {
         ConditionalCategoricalNode& new_node =
             new_network_.add_conditional_categorical(old_node.value(),
@@ -154,13 +152,13 @@ namespace cpprob
     }
 
     void
-    operator()(const ConstantNode<DirichletProcessParameters>& old_node)
+    operator()(const ConstantDirichletProcessParametersNode& old_node)
     {
-      typedef ConstantNode<DirichletProcessParameters> NodeType;
+      typedef ConstantDirichletProcessParametersNode NodeType;
       const auto& old_value = old_node.value();
 
       // Translate the Dirichlet nodes managed by the Dirichlet process.
-      cont::list<ConditionalDirichletNode*> managed_nodes;
+      DirichletProcessParameters::ManagedNodes managed_nodes;
       auto old_managed_nodes = old_value.managed_nodes();
       for (auto node_it = old_managed_nodes.begin();
           node_it != old_managed_nodes.end(); ++node_it)
@@ -168,7 +166,7 @@ namespace cpprob
         ConditionalDirichletNode* old_managed_node = &(*node_it);
         ConditionalDirichletNode* new_managed_node = get<
             ConditionalDirichletNode*>(node_node_table.at(old_managed_node));
-        managed_nodes.push_back(new_managed_node);
+        managed_nodes.push_back(*new_managed_node);
       }
 
       // Create the new node for the Dirichlet process parameters.
@@ -181,20 +179,20 @@ namespace cpprob
     void
     operator()(const DirichletProcessNode& old_node)
     {
-      auto* new_parameters_node =
-          get<ConstantNode<DirichletProcessParameters>*>(
-              value_node_table.at(&old_node.parameters()));
+      auto* new_parameters_node = get<ConstantDirichletProcessParametersNode*>(
+          value_node_table.at(&old_node.parameters()));
 
       auto& new_node = new_network_.add_dirichlet_process(*new_parameters_node);
       node_node_table[&old_node] = &new_node;
       value_node_table[&old_node.value()] = &new_node;
     }
 
-    template<class V>
+    template<class V, class C>
       void
-      operator()(const ConstantNode<V>& old_node)
+      operator()(const ConstantNode<V, C>& old_node)
       {
-        ConstantNode<V>& new_node = new_network_.add_constant(old_node.value());
+        ConstantNode<V, C>& new_node = new_network_.add_constant(
+            old_node.value());
         node_node_table[&old_node] = &new_node;
         value_node_table[&old_node.value()] = &new_node;
       }
@@ -240,9 +238,8 @@ namespace cpprob
           inserter(probabilities, probabilities.begin()));
 
       /* Add the likelihood to the counters. */
-      DirichletNode::ChildRange children = node.children();
-      for (DirichletNode::ChildRange::iterator child = children.begin();
-          child != children.end(); ++child)
+      auto& children = node.children();
+      for (auto child = children.begin(); child != children.end(); ++child)
       {
         if (child->is_evidence())
           probabilities[child->value()] += 1.0;
@@ -295,9 +292,8 @@ namespace cpprob
       }
 
       /* Add the likelihood to the counters. */
-      ConditionalDirichletNode::ChildRange children = node.children();
-      for (ConditionalDirichletNode::ChildRange::iterator child =
-          children.begin(); child != children.end(); ++child)
+      auto& children = node.children();
+      for (auto child = children.begin(); child != children.end(); ++child)
       {
         if (child->is_evidence())
         {
@@ -360,7 +356,7 @@ namespace cpprob
   CategoricalNode&
   BayesianNetwork::add_categorical(const DiscreteRandomVariable& value)
   {
-    ConstantNode<RandomProbabilities>& parameter_node = add_constant(
+    ConstantRandomProbabilitiesNode& parameter_node = add_constant(
         RandomProbabilities(value));
     return add_categorical(value, parameter_node);
   }
@@ -368,14 +364,13 @@ namespace cpprob
   ConditionalCategoricalNode&
   BayesianNetwork::add_conditional_categorical(
       const DiscreteRandomVariable& value,
-      const cont::list<DiscreteNode*>& condition_nodes)
+      const cont::RefVector<DiscreteNode>& condition_nodes)
   {
     DiscreteRandomReferences condition;
-    cont::list<DiscreteNode*>::const_iterator n = condition_nodes.begin();
-    for (; n != condition_nodes.end(); ++n)
-      condition.insert((*n)->value());
+    for (auto n = condition_nodes.begin(); n != condition_nodes.end(); ++n)
+      condition.insert(n->value());
 
-    ConstantNode<RandomConditionalProbabilities>& parameter_node = add_constant(
+    ConstantRandomConditionalProbabilitiesNode& parameter_node = add_constant(
         RandomConditionalProbabilities(value, condition.joint_value()));
     return add_conditional_categorical(value, condition_nodes, parameter_node);
   }
@@ -389,6 +384,38 @@ namespace cpprob
     return get<ConditionalDirichletNode>(*new_node);
   }
 
+  ConstantDirichletProcessParametersNode&
+  BayesianNetwork::add_constant(const DirichletProcessParameters& value)
+  {
+    iterator new_node = vertices_.insert(end(),
+        ConstantDirichletProcessParametersNode(value));
+    return boost::get<ConstantDirichletProcessParametersNode>(*new_node);
+  }
+
+  ConstantDiscreteRandomVariableNode&
+  BayesianNetwork::add_constant(const DiscreteRandomVariable& value)
+  {
+    iterator new_node = vertices_.insert(end(),
+        ConstantDiscreteRandomVariableNode(value));
+    return boost::get<ConstantDiscreteRandomVariableNode>(*new_node);
+  }
+
+  ConstantRandomConditionalProbabilitiesNode&
+  BayesianNetwork::add_constant(const RandomConditionalProbabilities& value)
+  {
+    iterator new_node = vertices_.insert(end(),
+        ConstantRandomConditionalProbabilitiesNode(value));
+    return boost::get<ConstantRandomConditionalProbabilitiesNode>(*new_node);
+  }
+
+  ConstantRandomProbabilitiesNode&
+  BayesianNetwork::add_constant(const RandomProbabilities& value)
+  {
+    iterator new_node = vertices_.insert(end(),
+        ConstantRandomProbabilitiesNode(value));
+    return boost::get<ConstantRandomProbabilitiesNode>(*new_node);
+  }
+
   DirichletNode&
   BayesianNetwork::add_dirichlet(const RandomProbabilities& value, float alpha)
   {
@@ -398,11 +425,23 @@ namespace cpprob
 
   DirichletProcessNode&
   BayesianNetwork::add_dirichlet_process(
-      ConstantNode<DirichletProcessParameters>& parent)
+      ConstantDirichletProcessParametersNode& parent)
   {
     iterator new_node = vertices_.insert(end(),
         DirichletProcessNode(parent.value()));
     return get<DirichletProcessNode>(*new_node);
+  }
+
+  ConstantDirichletProcessParametersNode&
+  BayesianNetwork::add_dirichlet_process_parameters(const std::string& name,
+      float concentration,
+      const std::initializer_list<ConditionalDirichletNode*>& managed_nodes)
+  {
+    iterator new_node = vertices_.insert(
+        end(),
+        ConstantDirichletProcessParametersNode(
+            DirichletProcessParameters(name, concentration, managed_nodes)));
+    return boost::get<ConstantDirichletProcessParametersNode>(*new_node);
   }
 
   CategoricalDistribution

@@ -30,9 +30,6 @@
 #define CONDITIONALDIRICHLETNODE_HPP_
 
 #include "ConditionalCategoricalNode.hpp"
-#include "RandomConditionalProbabilities.hpp"
-#include "cont/list.hpp"
-#include "cont/map.hpp"
 
 namespace cpprob
 {
@@ -42,33 +39,22 @@ namespace cpprob
 
   public:
 
-    typedef cont::list<ConditionalCategoricalNode*> Children;
-    typedef cont::list<const ConditionalCategoricalNode*> ConstChildren;
-    typedef boost::indirected_range<const Children> ConstChildRange;
-    typedef boost::indirected_range<Children> ChildRange;
+    typedef cont::RefVector<ConditionalCategoricalNode> Children;
     typedef DiscreteRandomVariableMap<float> Parameters;
 
     ConditionalDirichletNode(const RandomConditionalProbabilities& value,
         float alpha);
 
-    ~ConditionalDirichletNode();
-
-    void
-    add_child(ConditionalCategoricalNode& child)
-    {
-      children_.push_back(&child);
-    }
-
-    ChildRange
+    Children&
     children()
     {
-      return boost::adaptors::indirect(children_);
+      return children_;
     }
 
-    ConstChildRange
+    const Children&
     children() const
     {
-      return boost::adaptors::indirect(children_);
+      return children_;
     }
 
     void
@@ -91,7 +77,7 @@ namespace cpprob
 
     void
     sample(const DiscreteRandomVariable& condition,
-        const ConstChildren& children);
+        const Children& children);
 
     RandomConditionalProbabilities&
     value()

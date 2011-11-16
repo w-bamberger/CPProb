@@ -29,7 +29,7 @@ namespace cpprob
     string prefix;
     for (auto c = node.children_.begin(); c != node.children_.end(); ++c)
     {
-      os << prefix << (*c)->value().name() << " (at " << *c << ")";
+      os << prefix << c->value().name() << " (at " << &(*c) << ")";
       prefix = ", ";
     }
     os << "\n";
@@ -68,10 +68,9 @@ namespace cpprob
 
       // The factors of the posterior update
       value_ = count->first;
-      for (Children::const_iterator d = children_.begin(); d != children_.end();
-          ++d)
+      for (auto c = children_.begin(); c != children_.end(); ++c)
       {
-        p *= (*d)->at_references();
+        p *= c->at_references();
       }
 
       auto insert_result = distribution.insert(make_pair(count->first, p));

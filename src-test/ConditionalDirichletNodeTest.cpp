@@ -17,7 +17,7 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(ConditionalDirichletNodeTest)
 
-string formated_counts_list(const cont::map<DiscreteRandomVariable, ConditionalDirichletNode::ConstChildren>& child_lists)
+string formated_counts_list(const cont::map<DiscreteRandomVariable, ConditionalDirichletNode::Children>& child_lists)
 {
   ostringstream oss;
   cont::map<DiscreteRandomVariable, cont::map<DiscreteRandomVariable, size_t> > counters;
@@ -26,7 +26,7 @@ string formated_counts_list(const cont::map<DiscreteRandomVariable, ConditionalD
   {
     for (auto value_it = lists_it->second.begin(); value_it != lists_it->second.end(); ++value_it)
     {
-      counters[lists_it->first][(*value_it)->value()] += 1;
+      counters[lists_it->first][value_it->value()] += 1;
     }
   }
 
@@ -52,34 +52,34 @@ BOOST_AUTO_TEST_CASE(sampling)
   RandomBoolean child_value_false("Child", false);
 
   BayesianNetwork bn;
-  cont::map<DiscreteRandomVariable, ConditionalDirichletNode::ConstChildren> child_lists;
+  cont::map<DiscreteRandomVariable, ConditionalDirichletNode::Children> child_lists;
   auto probabilities_node = bn.add_conditional_dirichlet(
       RandomConditionalProbabilities(child_value_true, parent_value1), 1);
 
   auto parent_node1 = bn.add_categorical(parent_value1);
   auto child_node1 = bn.add_conditional_categorical(child_value_true,
       { &parent_node1}, probabilities_node);
-  child_lists[parent_node1.value()].push_back(&child_node1);
+  child_lists[parent_node1.value()].push_back(child_node1);
 
   auto parent_node2 = bn.add_categorical(parent_value2);
   auto child_node2 = bn.add_conditional_categorical(child_value_false,
       { &parent_node2}, probabilities_node);
-  child_lists[parent_node2.value()].push_back(&child_node2);
+  child_lists[parent_node2.value()].push_back(child_node2);
 
   auto parent_node3 = bn.add_categorical(parent_value2);
   auto child_node3 = bn.add_conditional_categorical(child_value_false,
       { &parent_node3}, probabilities_node);
-  child_lists[parent_node3.value()].push_back(&child_node3);
+  child_lists[parent_node3.value()].push_back(child_node3);
 
   auto parent_node4 = bn.add_categorical(parent_value1);
   auto child_node4 = bn.add_conditional_categorical(child_value_false,
       { &parent_node4}, probabilities_node);
-  child_lists[parent_node4.value()].push_back(&child_node4);
+  child_lists[parent_node4.value()].push_back(child_node4);
 
   auto parent_node5 = bn.add_categorical(parent_value1);
   auto child_node5 = bn.add_conditional_categorical(child_value_true,
       { &parent_node5}, probabilities_node);
-  child_lists[parent_node5.value()].push_back(&child_node5);
+  child_lists[parent_node5.value()].push_back(child_node5);
 
   /* Sample the regular probability table with the three possible conditions. */
   random_number_engine.seed();

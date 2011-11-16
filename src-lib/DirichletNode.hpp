@@ -29,9 +29,6 @@
 #define DIRICHLETNODE_HPP_
 
 #include "CategoricalNode.hpp"
-#include "RandomProbabilities.hpp"
-#include "cont/list.hpp"
-#include "cont/map.hpp"
 
 namespace cpprob
 {
@@ -42,34 +39,24 @@ namespace cpprob
   class DirichletNode
   {
 
-    typedef cont::list<CategoricalNode*> Children;
 
   public:
 
-    typedef boost::indirected_range<const Children> ConstChildRange;
-    typedef boost::indirected_range<Children> ChildRange;
+    typedef cont::RefVector<CategoricalNode> Children;
     typedef DiscreteRandomVariableMap<float> Parameters;
 
     DirichletNode(const RandomProbabilities& value, float alpha);
 
-    ~DirichletNode();
-
-    void
-    add_child(CategoricalNode& child)
-    {
-      children_.push_back(&child);
-    }
-
-    ChildRange
+    Children&
     children()
     {
-      return boost::adaptors::indirect(children_);
+      return children_;
     }
 
-    ConstChildRange
+    const Children&
     children() const
     {
-      return boost::adaptors::indirect(children_);
+      return children_;
     }
 
     void

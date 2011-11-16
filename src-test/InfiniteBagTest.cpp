@@ -113,7 +113,7 @@ public:
         bag);
     params_table.insert(
         make_pair("Hole", &bn.add_conditional_dirichlet(hole_params, alpha)));
-    ConstantNode<DirichletProcessParameters>& bag_params_node =
+    ConstantDirichletProcessParametersNode& bag_params_node =
         bn.add_dirichlet_process_parameters(bag.name(), 5.0,
             boost::adaptors::values(params_table));
 
@@ -195,8 +195,8 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
    * An additional hole and wrapper node serves as evidence for an unknown
    * flavor node.
    */
-  ConstantNode<DirichletProcessParameters>& bag_params = bn.find<
-      ConstantNode<DirichletProcessParameters> >("Bag");
+  ConstantDirichletProcessParametersNode& bag_params = bn.find<
+      ConstantDirichletProcessParametersNode>("Bag");
   DirichletProcessNode& bag_v = bn.add_dirichlet_process(bag_params);
 
   ConditionalDirichletNode& hole_params_v = bn.find<ConditionalDirichletNode>(

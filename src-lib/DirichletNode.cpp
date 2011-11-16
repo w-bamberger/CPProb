@@ -59,10 +59,6 @@ namespace cpprob
     }
   }
 
-  DirichletNode::~DirichletNode()
-  {
-  }
-
   void
   DirichletNode::init_sampling()
   {
@@ -80,10 +76,9 @@ namespace cpprob
     DirichletDistribution sample_distribution(parameters_.begin(),
         parameters_.end());
 
-    for (Children::const_iterator c = children_.begin(); c != children_.end();
-        ++c)
+    for (auto c = children_.begin(); c != children_.end(); ++c)
     {
-      const DiscreteRandomVariable & c_var = (*c)->value();
+      const DiscreteRandomVariable& c_var = c->value();
       sample_distribution.parameters()[c_var] += 1.0;
     }
 

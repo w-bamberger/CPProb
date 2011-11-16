@@ -29,8 +29,7 @@
 #define DISCRETENODE_HPP_
 
 #include "DiscreteRandomVariable.hpp"
-#include "cont/list.hpp"
-#include <boost/range/adaptor/indirected.hpp>
+#include "cont/RefVector.hpp"
 
 namespace cpprob
 {
@@ -45,12 +44,9 @@ namespace cpprob
 
   protected:
 
-    typedef cont::list<ConditionalCategoricalNode*> Children;
+    typedef cont::RefVector<ConditionalCategoricalNode> Children;
 
   public:
-
-    typedef boost::indirected_range<const Children> ConstChildRange;
-    typedef boost::indirected_range<Children> ChildRange;
 
     DiscreteNode(const DiscreteRandomVariable& value)
         : value_(value)
@@ -58,21 +54,19 @@ namespace cpprob
     }
 
     virtual
-    ~DiscreteNode()
+    ~DiscreteNode() = 0;
+
+    Children&
+    children()
     {
+      return children_;
     }
 
-    void
-    add_child(ConditionalCategoricalNode& child)
+    const Children&
+    children() const
     {
-      children_.push_back(&child);
+      return children_;
     }
-
-    ChildRange
-    children();
-
-    ConstChildRange
-    children() const;
 
     DiscreteRandomVariable&
     value()
@@ -92,6 +86,11 @@ namespace cpprob
     DiscreteRandomVariable value_;
 
   };
+
+  inline
+  DiscreteNode::~DiscreteNode()
+  {
+  }
 
 } /* namespace cpprob */
 
