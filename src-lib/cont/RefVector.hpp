@@ -139,6 +139,19 @@ namespace cpprob
           return const_reverse_iterator(const_iterator(pointers_.cend()));
         }
 
+        /*
+         * Capacity
+         */
+        void
+        reserve(size_type n)
+        {
+          pointers_.reserve(n);
+        }
+
+        /*
+         * Modifiers.
+         */
+
         void
         push_back(reference x)
         {

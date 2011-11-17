@@ -1,4 +1,5 @@
 #include "ListListConverter.hpp"
+#include "ListRefVectorConverter.hpp"
 #include <boost/python/class.hpp>
 #include <cpprob/DiscreteNode.hpp>
 
@@ -15,6 +16,7 @@ namespace cpprob
       class_ < DiscreteNode, boost::noncopyable > ("DiscreteNode", no_init);
 
       ListListConverter<DiscreteNode*>();
+      ListRefVectorConverter<DiscreteNode>();
     }
 
   }

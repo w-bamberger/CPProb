@@ -24,10 +24,10 @@ namespace cpprob
       ConditionalCategoricalNode&
       (BayesianNetwork::*add_conditional_categorical_with_dirichlet)(
           const DiscreteRandomVariable&,
-          const std::list<DiscreteNode*>&,
+          const cont::RefVector<DiscreteNode>&,
           ConditionalDirichletNode&) = &BayesianNetwork::add_conditional_categorical;
 
-      ConstantNode<DiscreteRandomVariable>&
+      ConstantDiscreteRandomVariableNode&
       (BayesianNetwork::*add_constant_discrete_random_variable)(
           const DiscreteRandomVariable&) = &BayesianNetwork::add_constant;
 
