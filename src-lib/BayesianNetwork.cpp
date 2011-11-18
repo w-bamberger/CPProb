@@ -6,13 +6,6 @@
  */
 
 #include "BayesianNetwork.hpp"
-#include "Error.hpp"
-#include "IoUtils.hpp"
-#include "NodeUtils.hpp"
-#include <algorithm>
-#include <ostream>
-#include <tuple>
-#include <typeinfo>
 
 using namespace boost;
 using namespace std;
@@ -142,16 +135,6 @@ namespace cpprob
     }
 
     void
-    operator()(const DirichletNode& old_node)
-    {
-      DirichletNode& new_node = new_network_.add_dirichlet(old_node.value(),
-          old_node.parameters().begin()->second);
-      new_node.is_evidence(old_node.is_evidence());
-      node_node_table[&old_node] = &new_node;
-      value_node_table[&old_node.value()] = &new_node;
-    }
-
-    void
     operator()(const ConstantDirichletProcessParametersNode& old_node)
     {
       typedef ConstantDirichletProcessParametersNode NodeType;
@@ -174,6 +157,16 @@ namespace cpprob
           old_value.name(), old_value.concentration(), managed_nodes);
       node_node_table[&old_node] = &new_node;
       value_node_table[&old_value] = &new_node;
+    }
+
+    void
+    operator()(const DirichletNode& old_node)
+    {
+      DirichletNode& new_node = new_network_.add_dirichlet(old_node.value(),
+          old_node.parameters().begin()->second);
+      new_node.is_evidence(old_node.is_evidence());
+      node_node_table[&old_node] = &new_node;
+      value_node_table[&old_node.value()] = &new_node;
     }
 
     void
@@ -209,45 +202,6 @@ namespace cpprob
   {
 
   public:
-
-    /**
-     * Learns a parameter of type RandomProbabilities that is Dirichlet
-     * distributed. So this method learns the maximum a posteriori probabilities
-     * given the data and the Dirichlet prior. To get the maximum likelihood
-     * probabilities, just set the Dirichlet parameters to 0.
-     *
-     * @param node the parameter node to learn
-     * @throw Any #learn() catches all exceptions and maps them appropriately
-     *     for its interface.
-     */
-    void
-    operator()(DirichletNode& node) const
-    {
-      if (node.is_evidence())
-        return;
-
-      /* Clear the target variable. I use it for counters and normalize it
-       * in the end. */
-      RandomProbabilities& probabilities = node.value();
-      probabilities.clear();
-
-      /* Initialize the counters with the parameter values of the Dirichlet
-       * prior values. Without this pre-initialization, the remaining
-       * algorithm performs just maximum likelihood learning. */
-      copy(node.parameters().begin(), node.parameters().end(),
-          inserter(probabilities, probabilities.begin()));
-
-      /* Add the likelihood to the counters. */
-      auto& children = node.children();
-      for (auto child = children.begin(); child != children.end(); ++child)
-      {
-        if (child->is_evidence())
-          probabilities[child->value()] += 1.0;
-      }
-
-      /* Normalize the counters to probabilities. */
-      probabilities.normalize();
-    }
 
     /**
      * Learns a parameter of type RandomConditionalProbabilities that is
@@ -308,6 +262,45 @@ namespace cpprob
       probabilities.normalize();
     }
 
+    /**
+     * Learns a parameter of type RandomProbabilities that is Dirichlet
+     * distributed. So this method learns the maximum a posteriori probabilities
+     * given the data and the Dirichlet prior. To get the maximum likelihood
+     * probabilities, just set the Dirichlet parameters to 0.
+     *
+     * @param node the parameter node to learn
+     * @throw Any #learn() catches all exceptions and maps them appropriately
+     *     for its interface.
+     */
+    void
+    operator()(DirichletNode& node) const
+    {
+      if (node.is_evidence())
+        return;
+
+      /* Clear the target variable. I use it for counters and normalize it
+       * in the end. */
+      RandomProbabilities& probabilities = node.value();
+      probabilities.clear();
+
+      /* Initialize the counters with the parameter values of the Dirichlet
+       * prior values. Without this pre-initialization, the remaining
+       * algorithm performs just maximum likelihood learning. */
+      copy(node.parameters().begin(), node.parameters().end(),
+          inserter(probabilities, probabilities.begin()));
+
+      /* Add the likelihood to the counters. */
+      auto& children = node.children();
+      for (auto child = children.begin(); child != children.end(); ++child)
+      {
+        if (child->is_evidence())
+          probabilities[child->value()] += 1.0;
+      }
+
+      /* Normalize the counters to probabilities. */
+      probabilities.normalize();
+    }
+
     template<class N>
       void
       operator()(N&) const
@@ -329,8 +322,8 @@ namespace cpprob
 
     for (BayesianNetwork::const_iterator n = bn.begin(); n != bn.end(); ++n)
     {
-      bool node_is_evidence = apply_visitor(is_evidence_visitor, *n);
-      if (node_is_evidence && is_large_network)
+      bool is_node_evidence = apply_visitor(is_evidence_visitor, *n);
+      if (is_node_evidence && is_large_network)
         continue;
 
       os << *n;
@@ -340,17 +333,15 @@ namespace cpprob
   }
 
   BayesianNetwork::BayesianNetwork()
+      : vertices_()
   {
   }
 
   BayesianNetwork::BayesianNetwork(const BayesianNetwork& other_hbn)
+      : vertices_()
   {
     for_each(other_hbn.begin(), other_hbn.end(),
         make_apply_visitor_delayed(CopyNode(*this)));
-  }
-
-  BayesianNetwork::~BayesianNetwork()
-  {
   }
 
   CategoricalNode&
@@ -574,14 +565,21 @@ namespace cpprob
     return get<ConditionalCategoricalNode>(*new_node);
   }
 
+  void
+  BayesianNetwork::learn()
+  {
+    for_each(begin(), end(), make_apply_visitor_delayed(LearnParameters()));
+  }
+
   CategoricalDistribution
   BayesianNetwork::sample(const DiscreteNode& X,
       unsigned int burn_in_iterations, unsigned int collect_iterations)
   {
     const DiscreteRandomVariable& x = X.value();
     CategoricalDistribution X_distribution;
-	for (auto x_value = x.value_range().begin(); x_value != x.value_range().end(); ++x_value)
-	  X_distribution[x_value] = 0.0;
+    for (auto x_value = x.value_range().begin();
+        x_value != x.value_range().end(); ++x_value)
+      X_distribution[x_value] = 0.0;
 
     for_each(begin(), end(), make_apply_visitor_delayed(InitSamplingOfNode()));
 
@@ -604,12 +602,6 @@ namespace cpprob
 
     X_distribution.normalize();
     return X_distribution;
-  }
-
-  void
-  BayesianNetwork::learn()
-  {
-    for_each(begin(), end(), make_apply_visitor_delayed(LearnParameters()));
   }
 
 }
