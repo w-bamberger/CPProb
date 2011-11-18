@@ -46,6 +46,9 @@ namespace cpprob
         throw exception_name(oss.str().c_str()); \
    } while (false)
 
+#define cpprob_throw_invalid_argument(msg) \
+    cpprob_throw(std::invalid_argument, msg)
+
 #define cpprob_throw_logic_error(msg) \
     cpprob_throw(std::logic_error, msg)
 

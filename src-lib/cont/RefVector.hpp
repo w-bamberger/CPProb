@@ -34,8 +34,9 @@ namespace cpprob
         typedef typename Pointers::difference_type difference_type;
         typedef value_type* pointer;
         typedef const value_type* const_pointer;
-        typedef std::reverse_iterator<iterator> reverse_iterator;
-        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef boost::indirect_iterator<typename Pointers::reverse_iterator> reverse_iterator;
+        typedef boost::indirect_iterator<
+            typename Pointers::const_reverse_iterator> const_reverse_iterator;
 
         /*
          * Construction and assignment
@@ -142,6 +143,12 @@ namespace cpprob
         /*
          * Capacity
          */
+        size_type
+        size() const
+        {
+          return pointers_.size();
+        }
+
         void
         reserve(size_type n)
         {
@@ -151,6 +158,20 @@ namespace cpprob
         /*
          * Modifiers.
          */
+
+        // C++11 requires const_iterator argument. But libstdc++ uses iterator.
+        // Needs fix.
+        iterator
+        erase(iterator position)
+        {
+          return pointers_.erase(position.base());
+        }
+
+        void
+        pop_back()
+        {
+          pointers_.pop_back();
+        }
 
         void
         push_back(reference x)

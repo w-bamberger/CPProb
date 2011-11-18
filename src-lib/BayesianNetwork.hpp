@@ -248,6 +248,51 @@ namespace cpprob
     void
     learn();
 
+    /**
+     * Removes the given node from the network. This method erases exactly
+     * the single node that is at the address given by the argument reference.
+     * It does not consider the name or values of the node. In addition, the
+     * method removes all child references of its parent nodes.
+     *
+     * If the referenced node is found, it is removed. In this case, this
+     * method returns 1. If the node is not found, 0 is returned.
+     *
+     * This method is very slow. It must walk through the whole network to
+     * find all the references to the node. To save memory and speed up
+     * computations, there are no data structures for finding these references.
+     * Erasing is considered to be very unimportant and rarely used.
+     *
+     * The node to erase may not have children any more. If it has some though,
+     * this method throws an @c std::invalid_argument exception.
+     */
+    template<class Node>
+      std::size_t
+      erase(const Node& node)
+      {
+        cpprob_check_debug(&node != 0,
+            "BayesianNetwork: Cannot erase node at address 0.");
+
+        if (node.children().size() != 0)
+          cpprob_throw_invalid_argument(
+              "BayesianNetwork: Cannot erase a node with children (node " << node.value().name() << ").");
+
+        size_t erase_count = 0;
+        EraseHelper erase_helper(&node);
+        for (auto n = begin(); n != end();)
+        {
+          if (boost::apply_visitor(erase_helper, *n))
+          {
+            n = vertices_.erase(n);
+            ++erase_count;
+          }
+          else
+          {
+            ++n;
+          }
+        }
+        return erase_count;
+      }
+
     std::size_t
     size() const
     {
@@ -258,6 +303,40 @@ namespace cpprob
 
     class CopyNode;
     class LearnParameters;
+
+    class EraseHelper : public boost::static_visitor<bool>
+    {
+
+    public:
+
+      EraseHelper(const void* node_address)
+          : erase_node_address_(node_address)
+      {
+      }
+
+      template<class Node>
+        bool
+        operator()(Node& node)
+        {
+          if (&node == erase_node_address_)
+            return true;
+
+          auto& children = node.children();
+          for (auto c = children.begin(); c != children.end();)
+          {
+            if (&(*c) == erase_node_address_)
+              c = children.erase(c);
+            else
+              ++c;
+          }
+          return false;
+        }
+
+    private:
+
+      const void* erase_node_address_;
+
+    };
 
     NodeList vertices_;
 
