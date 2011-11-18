@@ -54,6 +54,7 @@ namespace cpprob
 
         template<class InputIterator>
           RefVector(InputIterator begin, InputIterator end)
+              : pointers_()
           {
             size_type size = std::distance(begin, end);
             pointers_.reserve(size);

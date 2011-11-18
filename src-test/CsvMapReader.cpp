@@ -17,11 +17,13 @@ namespace cpprob
 {
 
   CsvMapReader::CsvMapReader(const string& file_name)
+      : is()
   {
     is.exceptions(ifstream::badbit);
     is.open(file_name.c_str());
     if (!is)
-      cpprob_throw_runtime_error("Could not open the file " << file_name << ".");
+      cpprob_throw_runtime_error(
+          "Could not open the file " << file_name << ".");
   }
 
   CsvMapReader::~CsvMapReader()

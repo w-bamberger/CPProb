@@ -44,7 +44,7 @@ public:
 
   template<class N>
     void
-    operator()(const N& node)
+    operator()(const N&)
     {
     }
 
@@ -58,7 +58,6 @@ BayesianNetwork
 gen_bag_net(float alpha, bool fully_observed, size_t lines_of_evidence =
     std::numeric_limits<std::size_t>::max())
 {
-  const DiscreteRandomReferences no_condition;
   BayesianNetwork bn;
 
   // Set up the parameter vertices

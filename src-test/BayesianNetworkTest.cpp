@@ -16,11 +16,19 @@ using namespace std;
 class BayesianNetworkFixture
 {
 
+public:
+
+  virtual
+  ~BayesianNetworkFixture()
+  {
+  }
+
 protected:
 
   BayesianNetwork test_network_;
 
   BayesianNetworkFixture()
+      : test_network_()
   {
     float alpha = 5.0;
 

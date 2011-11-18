@@ -86,21 +86,24 @@ namespace cpprob
 
   //----------------------------------------------------------------------------
 
-  void
+  DiscreteRandomVariable::CharacteristicsTable::iterator
   DiscreteRandomVariable::set_up_characteristics(const string& name,
       size_t size)
   {
-    characteristics_ = characteristics_table_.lower_bound(name);
-    if (characteristics_ == characteristics_table_.end()
-        || characteristics_->first != name)
+    auto characteristics = characteristics_table_.lower_bound(name);
+
+    if (characteristics == characteristics_table_.end()
+        || characteristics->first != name)
     {
-      if (characteristics_ == characteristics_table_.begin())
-        characteristics_ = characteristics_table_.insert(
+      if (characteristics == characteristics_table_.begin())
+        return characteristics_table_.insert(
             make_pair(name, Characteristics(size))).first;
       else
-        characteristics_ = characteristics_table_.insert(--characteristics_,
+        return characteristics_table_.insert(--characteristics,
             make_pair(name, Characteristics(size)));
     }
+
+    return characteristics;
   }
 
 }

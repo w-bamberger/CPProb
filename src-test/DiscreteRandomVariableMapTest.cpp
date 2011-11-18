@@ -26,8 +26,20 @@ class DiscreteRandomVariableMapFixture
 
 public:
 
+  virtual
+  ~DiscreteRandomVariableMapFixture()
+  {
+  }
+
+protected:
+
   typedef std::pair<DiscreteRandomVariable, float> ValueType;
   typedef DiscreteRandomVariableMap<float> MapType;
+
+  static const size_t array_size_ = 5;
+  RandomInteger var;
+  DiscreteRandomVariableMap<float> map_;
+  ValueType array_[array_size_];
 
   DiscreteRandomVariableMapFixture()
       : var("Var", 7, 0), map_(
@@ -42,13 +54,6 @@ public:
     cpprob_check_debug(array_size_ == map_.size(), "DiscreteRandomVariableMapFixture: Inconsistent test data (array size: " << array_size_ << ", map size: " << map_.size() << ")");
     copy(map_.begin(), map_.end(), array_);
   }
-
-protected:
-
-  static const size_t array_size_ = 5;
-  RandomInteger var;
-  DiscreteRandomVariableMap<float> map_;
-  ValueType array_[array_size_];
 
 };
 

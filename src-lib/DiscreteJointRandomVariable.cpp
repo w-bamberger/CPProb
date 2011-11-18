@@ -285,7 +285,7 @@ namespace cpprob
 
     if (characteristics_ == characteristics_table_.end()
         || new_name != characteristics_->first)
-      set_up_characteristics(new_name, new_size);
+      characteristics_ = set_up_characteristics(new_name, new_size);
     characteristics_->second.size_ = new_size;
   }
 

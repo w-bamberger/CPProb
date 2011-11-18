@@ -84,11 +84,28 @@ namespace cpprob
 
   public:
 
-    class NameLess : public std::binary_function<DiscreteRandomVariable,
-        DiscreteRandomVariable, bool>
+    class NameLess
     {
 
     public:
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the first argument of operator().
+       */
+      typedef DiscreteRandomVariable first_argument_type;
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the second argument of operator().
+       */
+      typedef DiscreteRandomVariable second_argument_type;
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the result of operator().
+       */
+      typedef bool result_type;
 
       bool
       operator()(const DiscreteRandomVariable& var1,
@@ -102,11 +119,28 @@ namespace cpprob
 
     };
 
-    class NameValueLess : public std::binary_function<DiscreteRandomVariable,
-        DiscreteRandomVariable, bool>
+    class NameValueLess
     {
 
     public:
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the first argument of operator().
+       */
+      typedef DiscreteRandomVariable first_argument_type;
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the second argument of operator().
+       */
+      typedef DiscreteRandomVariable second_argument_type;
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the result of operator().
+       */
+      typedef bool result_type;
 
       /**
        * This comparison works for variables with the same or different sets
@@ -140,11 +174,28 @@ namespace cpprob
 
     };
 
-    class ValueLess : public std::binary_function<DiscreteRandomVariable,
-        DiscreteRandomVariable, bool>
+    class ValueLess
     {
 
     public:
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the first argument of operator().
+       */
+      typedef DiscreteRandomVariable first_argument_type;
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the second argument of operator().
+       */
+      typedef DiscreteRandomVariable second_argument_type;
+
+      /**
+       * Typedef for the concept of a binary function object. It gives the
+       * type of the result of operator().
+       */
+      typedef bool result_type;
 
       bool
       operator()(const DiscreteRandomVariable& var1,
@@ -654,9 +705,8 @@ namespace cpprob
          */
         DiscreteRandomVariable(const std::string& name, std::size_t size,
             std::size_t value)
-        : value_(value)
+        : characteristics_(set_up_characteristics(name, size)), value_(value)
         {
-          set_up_characteristics(name, size);
         }
 
         // Documented in the base class.
@@ -690,7 +740,7 @@ namespace cpprob
          * @param size the size of the value range of this random variable
          * @throw None
          */
-        void
+        static CharacteristicsTable::iterator
         set_up_characteristics(const std::string& name, std::size_t size);
 
       private:

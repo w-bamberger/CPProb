@@ -49,7 +49,7 @@ namespace cpprob
   public:
 
     DiscreteNode(const DiscreteRandomVariable& value)
-        : value_(value)
+        : children_(), value_(value)
     {
     }
 

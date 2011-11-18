@@ -25,8 +25,19 @@ class InfiniteBagFixture
 
 public:
 
+  virtual
+  ~InfiniteBagFixture()
+  {
+  }
+
+protected:
+
+  const float alpha;
+  CategoricalDistribution correct_flavor_distribution_;
+  string data_file_;
+
   InfiniteBagFixture()
-      : alpha(5.0)
+      : alpha(5.0), correct_flavor_distribution_(), data_file_()
   {
     BOOST_REQUIRE_MESSAGE(options_map.count("data-file") == 1,
         "Please provide test data with the option --data-file.");
@@ -163,12 +174,6 @@ public:
         os << it->first << ", " << it->second << "\n";
       return os;
     }
-
-protected:
-
-  const float alpha;
-  CategoricalDistribution correct_flavor_distribution_;
-  string data_file_;
 
 };
 

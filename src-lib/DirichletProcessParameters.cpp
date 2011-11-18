@@ -26,8 +26,8 @@ namespace cpprob
   DirichletProcessParameters::DirichletProcessParameters(
       const std::string& name, float concentration,
       std::initializer_list<ConditionalDirichletNode*> managed_nodes)
-      : concentration_(concentration), managed_nodes_(managed_nodes.begin(),
-          managed_nodes.end()), name_(name)
+      : component_counters_(), concentration_(concentration), managed_nodes_(
+          managed_nodes.begin(), managed_nodes.end()), name_(name)
   {
   }
 
@@ -63,18 +63,17 @@ namespace cpprob
   DirichletProcessParameters::extend_managed_node(
       ConditionalDirichletNode& node,
       const DiscreteRandomVariable::Range& old_range,
-      const DiscreteRandomVariable::Range& new_range,
+      const DiscreteRandomVariable::Range&,
       const ChildrenOfComponent& children_of_node)
   {
     /**
      * @todo Refactor around children_of_node.
      * It is a map of which only one value is taken!
+     *
+     * Third parameter is unused!
      */
 
     /* Check requirements. */
-    cpprob_check_debug(
-        old_range.size() < new_range.size(),
-        "DirichletProcessParameters: To extend the condition range, the old range (size " << old_range.size() << ") must be smaller than the new range (size " << new_range.size() << ").");
     cpprob_check_debug(
         node.children().begin() != node.children().end(),
         "DirichletProcessParameters: Cannot extend a ConditionalDirichletNode without children.");

@@ -101,7 +101,7 @@ namespace cpprob
 
     template<class N>
       DiscreteRandomVariable*
-      operator()(N& node) const
+      operator()(N&) const
       {
         return 0;
       }
@@ -176,7 +176,7 @@ namespace cpprob
 
     template<class T>
       float
-      operator()(const T& node) const
+      operator()(const T&) const
       {
         cpprob_throw_network_error(
             "ProbabilityOfNode: Cannot request a probability from a node of type " //

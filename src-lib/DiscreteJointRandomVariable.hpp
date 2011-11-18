@@ -115,8 +115,8 @@ namespace cpprob
     /**
      * Block the usage of this operator. It is invalid.
      */
-    virtual DiscreteRandomVariable&
-    operator=(const DiscreteRandomVariable& v)
+    virtual DiscreteJointRandomVariable&
+    operator=(const DiscreteRandomVariable&)
     {
       return *this;
     }

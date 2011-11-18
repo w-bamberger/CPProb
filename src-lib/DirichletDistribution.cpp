@@ -22,10 +22,6 @@ namespace cpprob
       parameters_.insert(make_pair(p->first, alpha));
   }
 
-  DirichletDistribution::~DirichletDistribution()
-  {
-  }
-
   ostream&
   operator<<(ostream& os, const DirichletDistribution& dd)
   {
