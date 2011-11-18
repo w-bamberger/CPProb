@@ -172,12 +172,12 @@ BOOST_AUTO_TEST_CASE( bag_test )
 
   cout << "Extend the network for prediction\n";
 
-  DirichletNode& bag_params_v = bn_map_full.find<DirichletNode>(
+  DirichletNode& bag_params_v = bn_map_full.at<DirichletNode>(
       "ProbabilitiesBag");
   RandomBoolean bag("Bag", true);
   CategoricalNode& bag_v = bn_map_full.add_categorical(bag, bag_params_v);
 
-  ConditionalDirichletNode& hole_params_v = bn_map_full.find<
+  ConditionalDirichletNode& hole_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
   ConditionalCategoricalNode& hole_v = bn_map_full.add_conditional_categorical(
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
         { &bag_v }, hole_params_v);
   hole_v.is_evidence(true);
 
-  ConditionalDirichletNode& wrapper_params_v = bn_map_full.find<
+  ConditionalDirichletNode& wrapper_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
   ConditionalCategoricalNode& wrapper_v =
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
         { &bag_v }, wrapper_params_v);
   wrapper_v.is_evidence(true);
 
-  ConditionalDirichletNode& flavor_params_v = bn_map_full.find<
+  ConditionalDirichletNode& flavor_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
   ConditionalCategoricalNode& flavor_v =

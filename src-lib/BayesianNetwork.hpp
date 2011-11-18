@@ -121,6 +121,30 @@ namespace cpprob
         return boost::get<ConstantDirichletProcessParametersNode>(*new_node);
       }
 
+    template<class N>
+      N&
+      at(const std::string& name)
+      {
+        auto find_it = std::find_if(begin(), end(),
+            make_delayed_compare_node_name(name));
+        if (find_it == end())
+          cpprob_throw_out_of_range(
+              "BayesianNetwork: Could not find the node " + name + ".");
+        return boost::get<N>(*find_it);
+      }
+
+    template<class N>
+      const N&
+      at(const std::string& name) const
+      {
+        auto find_it = std::find_if(begin(), end(),
+            make_delayed_compare_node_name(name));
+        if (find_it == end())
+          cpprob_throw_out_of_range(
+              "BayesianNetwork: Could not find the node " + name + ".");
+        return boost::get<N>(*find_it);
+      }
+
     iterator
     begin()
     {
@@ -181,22 +205,6 @@ namespace cpprob
 
     CategoricalDistribution
     enumerate(ConditionalCategoricalNode& X_n);
-
-    template<class N>
-      N&
-      find(const std::string& name)
-      {
-        return boost::get<N>(
-            *std::find_if(begin(), end(), make_delayed_compare_node_name(name)));
-      }
-
-    template<class N>
-      const N&
-      find(const std::string& name) const
-      {
-        return boost::get<N>(
-            *std::find_if(begin(), end(), make_delayed_compare_node_name(name)));
-      }
 
     friend std::ostream&
     operator<<(std::ostream& os, const BayesianNetwork& hbn);

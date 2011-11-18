@@ -37,11 +37,11 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
   if (options_map["with-debug-output"].as<bool>())
     cout << bn << endl;
 
-  DirichletNode& bag_params_v = bn.find<DirichletNode>("ProbabilitiesBag");
+  DirichletNode& bag_params_v = bn.at<DirichletNode>("ProbabilitiesBag");
   RandomBoolean bag("Bag", true);
   CategoricalNode& bag_v = bn.add_categorical(bag, bag_params_v);
 
-  ConditionalDirichletNode& hole_params_v = bn.find<ConditionalDirichletNode>(
+  ConditionalDirichletNode& hole_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
@@ -49,14 +49,14 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
   hole_v.is_evidence(true);
 
   ConditionalDirichletNode& wrapper_params_v =
-      bn.find<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
+      bn.at<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
       wrapper,
         { &bag_v }, wrapper_params_v);
   wrapper_v.is_evidence(true);
 
-  ConditionalDirichletNode& flavor_params_v = bn.find<ConditionalDirichletNode>(
+  ConditionalDirichletNode& flavor_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,

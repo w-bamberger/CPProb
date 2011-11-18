@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE( alarm_test )
   if (options_map["with-debug-output"].as<bool>())
     cout << bn << endl;
 
-  CategoricalNode& burglary_node = bn.find<CategoricalNode>("Burglary");
+  CategoricalNode& burglary_node = bn.at<CategoricalNode>("Burglary");
 
   cout << "Enumerate\n";
   t.restart();

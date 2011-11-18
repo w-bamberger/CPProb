@@ -195,26 +195,26 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
    * An additional hole and wrapper node serves as evidence for an unknown
    * flavor node.
    */
-  ConstantDirichletProcessParametersNode& bag_params = bn.find<
+  ConstantDirichletProcessParametersNode& bag_params = bn.at<
       ConstantDirichletProcessParametersNode>("Bag");
   DirichletProcessNode& bag_v = bn.add_dirichlet_process(bag_params);
 
-  ConditionalDirichletNode& hole_params_v = bn.find<ConditionalDirichletNode>(
+  ConditionalDirichletNode& hole_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
     { &bag_v }, hole_params_v);
   hole_v.is_evidence(true);
 
-  ConditionalDirichletNode& wrapper_params_v =
-      bn.find<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
+  ConditionalDirichletNode& wrapper_params_v = bn.at<ConditionalDirichletNode>(
+      "ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
       wrapper,
         { &bag_v }, wrapper_params_v);
   wrapper_v.is_evidence(true);
 
-  ConditionalDirichletNode& flavor_params_v = bn.find<ConditionalDirichletNode>(
+  ConditionalDirichletNode& flavor_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
