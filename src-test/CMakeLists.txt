@@ -10,7 +10,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 # Source
 file(GLOB_RECURSE src_files *.?pp)
 if(CMAKE_COMPILER_IS_GNUCXX)
-  add_definitions(-std=c++0x)
+  add_definitions(-std=c++0x -Wall -Wextra)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # Target

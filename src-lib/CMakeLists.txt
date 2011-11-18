@@ -21,7 +21,7 @@ set_target_properties(cpprob_shared cpprob_static PROPERTIES
     VERSION ${CPProb_VERSION_MAJOR}.${CPProb_VERSION_MINOR}
     SOVERSION ${CPProb_VERSION_MAJOR})
 if(CMAKE_COMPILER_IS_GNUCXX)
-  add_definitions(-std=c++0x)
+  add_definitions(-std=c++0x -Wall -Wextra)
 endif(CMAKE_COMPILER_IS_GNUCXX)
         
 # Installation
