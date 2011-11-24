@@ -20,14 +20,14 @@ namespace cpprob
     size_t range_size = 1;
     size_t value = 0;
 
-    for (const_iterator it = begin(); it != end(); ++it)
+    for (auto it = references_.begin(); it != references_.end(); ++it)
     {
       cpprob_check_debug(
-          it->characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          (*it)->characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
           "DiscreteRandomReferences: Cannot join an empty random variable.");
 
-      value += range_size * it->value_;
-      range_size *= it->characteristics_->second.size_;
+      value += range_size * (*it)->value_;
+      range_size *= (*it)->characteristics_->second.size_;
     }
 
     if (characteristics_

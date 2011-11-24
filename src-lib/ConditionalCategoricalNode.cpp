@@ -81,18 +81,19 @@ namespace cpprob
   void
   ConditionalCategoricalNode::sample()
   {
-    CategoricalDistribution& sampling_distribution =
-        sampling_variate_.distribution();
+    // Call the expensive condition_.joint_value() only once per function call.
+    auto& conditioned_probabilities = probabilities_.at(
+        condition_.joint_value());
+    auto& sampling_distribution = sampling_variate_.distribution();
     sampling_distribution.clear();
 
     DiscreteRandomVariable::Range x_range = value_.value_range();
     for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
     {
-      float p = at_references();
+      float p = conditioned_probabilities.at(value_);
+
       for (auto c = children_.begin(); c != children_.end(); ++c)
-      {
         p *= c->at_references();
-      }
 
       sampling_distribution[value_] = p;
     }
