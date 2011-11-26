@@ -1,4 +1,5 @@
 #include <boost/python/class.hpp>
+#include <boost/python/operators.hpp>
 #include <cpprob/ConditionalCategoricalNode.hpp>
 
 using namespace boost::python;
@@ -21,7 +22,8 @@ namespace cpprob
 
       class_ < ConditionalCategoricalNode, bases<DiscreteNode>
           > ("ConditionalCategoricalNode", no_init) //
-          .add_property("is_evidence", get_is_evidence, set_is_evidence);
+		.add_property("is_evidence", get_is_evidence, set_is_evidence) //
+		.def(self_ns::str(self_ns::self));
     }
 
   }
