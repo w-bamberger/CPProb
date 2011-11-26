@@ -86,16 +86,17 @@ namespace cpprob
         condition_.joint_value());
     auto& sampling_distribution = sampling_variate_.distribution();
     sampling_distribution.clear();
-
     DiscreteRandomVariable::Range x_range = value_.value_range();
+
     for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
     {
-      float p = conditioned_probabilities.at(value_);
+      sampling_distribution[value_] = conditioned_probabilities.at(value_);
+    }
 
-      for (auto c = children_.begin(); c != children_.end(); ++c)
-        p *= c->at_references();
-
-      sampling_distribution[value_] = p;
+    for (auto c = children_.begin(); c != children_.end(); ++c)
+    {
+      for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
+        sampling_distribution[value_] *= c->at_references();
     }
 
     sampling_distribution.normalize();
