@@ -71,17 +71,22 @@ namespace cpprob
     CategoricalDistribution& sampling_distribution =
         sampling_variate_.distribution();
     sampling_distribution.clear();
-
     DiscreteRandomVariable::Range x_range = value_.value_range();
-    for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
-    {
-      float p = at_references();
-      for (auto c = children_.begin(); c != children_.end(); ++c)
-      {
-        p *= c->at_references();
-      }
 
-      sampling_distribution[value_] = p;
+    for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
+      sampling_distribution[value_] = probabilities_.at(value_);
+
+    auto d_end = sampling_distribution.end();
+    for (auto c = children_.begin(); c != children_.end(); ++c)
+    {
+      auto c_value = c->value();
+      auto& c_probabilities = c->probabilities();
+      auto d_it = sampling_distribution.begin();
+      auto c_condition = c->condition().sub_range(value_).begin();
+
+      for (; d_it != d_end; ++d_it, ++c_condition)
+        d_it->second *= c_probabilities.at(c_condition.joint_value()).at(
+            c_value);
     }
 
     sampling_distribution.normalize();

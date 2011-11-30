@@ -81,6 +81,8 @@ namespace cpprob
     typedef boost::indirect_iterator<Variables::const_iterator> const_iterator;
     typedef boost::indirect_iterator<Variables::iterator> iterator;
     typedef Variables::size_type size_type;
+    class SubRange;
+    class SubRangeEnumerator;
 
     DiscreteRandomReferences()
         : characteristics_(
@@ -153,6 +155,9 @@ namespace cpprob
       return references_.size();
     }
 
+    SubRange
+    sub_range(const DiscreteRandomVariable& var) const;
+
   private:
 
     mutable DiscreteRandomVariable::CharacteristicsTable::iterator characteristics_;
@@ -160,6 +165,172 @@ namespace cpprob
 
     void
     set_up_characteristics() const;
+
+  };
+
+  class DiscreteRandomReferences::SubRangeEnumerator
+  {
+
+  public:
+
+    SubRangeEnumerator()
+        : characteristics_(
+            DiscreteRandomVariable::characteristics_table_.end()), step_size_(
+            0), value_(0)
+    {
+    }
+
+    DiscreteRandomVariable
+    joint_value() const
+    {
+      cpprob_check_debug(
+          characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: Cannot compute the joint value of a singular sub range enumerator.");
+
+      return DiscreteRandomVariable(characteristics_, value_);
+    }
+
+    SubRangeEnumerator&
+    operator++()
+    {
+      cpprob_check_debug(
+          characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: Cannot increment a singular sub range enumerator.");
+      // The end value may be somewhere behind size_. But the previous value
+      // must be lower than size_.
+      cpprob_check_debug(
+          value_ < characteristics_->second.size_,
+          "DiscreteRandomReferences: Cannot increment a sub range enumerator past the end (value: " << value_ << ", step_size: " << step_size_ << ", max value: " << characteristics_->second.size_ << ").");
+
+      value_ += step_size_;
+      return *this;
+    }
+
+    SubRangeEnumerator
+    operator++(int)
+    {
+      cpprob_check_debug(
+          characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: Cannot increment a singular sub range enumerator.");
+      // The end value may be somewhere behind size_. But the previous value
+      // must be lower than size_.
+      cpprob_check_debug(
+          value_ < characteristics_->second.size_,
+          "DiscreteRandomReferences: Cannot increment a sub range enumerator past the end (value: " << value_ << ", step_size: " << step_size_ << ", max value: " << characteristics_->second.size_ << ").");
+
+      auto tmp = *this;
+      value_ += step_size_;
+      return tmp;
+    }
+
+    SubRangeEnumerator&
+    operator--()
+    {
+      cpprob_check_debug(
+          characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: Cannot decrement a singular sub range enumerator.");
+      cpprob_check_debug(
+          value_ >= step_size_,
+          "DiscreteRandomReferences: Cannot decrement a sub range enumerator below the begin (value: " << value_ << ", step_size: " << step_size_ << ").");
+
+      value_ -= step_size_;
+      return *this;
+    }
+
+    SubRangeEnumerator
+    operator--(int)
+    {
+      cpprob_check_debug(
+          characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: Cannot decrement a singular sub range enumerator.");
+      cpprob_check_debug(
+          value_ >= step_size_,
+          "DiscreteRandomReferences: Cannot decrement a sub range enumerator below the begin (value: " << value_ << ", step_size: " << step_size_ << ").");
+
+      auto tmp = *this;
+      value_ -= step_size_;
+      return tmp;
+    }
+
+  private:
+
+    typedef DiscreteRandomVariable::CharacteristicsTable::iterator CharacteristicsIterator;
+    friend class SubRange;
+
+    CharacteristicsIterator characteristics_;
+    std::size_t step_size_;
+    std::size_t value_;
+
+    SubRangeEnumerator(CharacteristicsIterator characteristics,
+        std::size_t step_size, std::size_t value)
+        : characteristics_(characteristics), step_size_(step_size), value_(
+            value)
+    {
+      cpprob_check_debug(
+          characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: A sub range enumerator has been initialized with an invalid characteristics entry.");
+      cpprob_check_debug(step_size_ != 0,
+          "DiscreteRandomReferences: The step size 0 is invalid.");
+      cpprob_check_debug(
+          value_ <= (characteristics_->second.size_ - 1 + step_size_),
+          "DiscreteRandomReferences: The value (" << value_ << ") must be within the value range of the random variable (" << characteristics_->second.size_ << ").");
+    }
+
+  };
+
+  class DiscreteRandomReferences::SubRange
+  {
+
+  public:
+
+    typedef DiscreteRandomReferences::SubRangeEnumerator iterator;
+    typedef DiscreteRandomReferences::SubRangeEnumerator const_iterator;
+
+    iterator
+    begin() const
+    {
+      return SubRangeEnumerator(characteristics_, step_size_, value_begin_);
+    }
+
+    iterator
+    end() const
+    {
+      return SubRangeEnumerator(characteristics_, step_size_, value_end_);
+    }
+
+    std::size_t
+    size() const
+    {
+      return (value_end_ - value_begin_) / step_size_;
+    }
+
+  private:
+
+    typedef DiscreteRandomVariable::CharacteristicsTable::iterator CharacteristicsIterator;
+    friend class DiscreteRandomReferences;
+
+    CharacteristicsIterator characteristics_;
+    std::size_t step_size_;
+    std::size_t value_begin_;
+    std::size_t value_end_;
+
+    SubRange(CharacteristicsIterator characteristics, std::size_t step_size,
+        std::size_t value_begin, std::size_t value_end)
+        : characteristics_(characteristics), step_size_(step_size), value_begin_(
+            value_begin), value_end_(value_end)
+    {
+      cpprob_check_debug(
+          characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: A sub range has been initialized with an invalid characteristics entry.");
+      cpprob_check_debug(step_size_ != 0,
+          "DiscreteRandomReferences: The step size 0 is invalid.");
+      cpprob_check_debug(
+          value_end_ <= (characteristics_->second.size_ - 1 + step_size_),
+          "DiscreteRandomReferences: The end value (" << value_end_ << ") must be within the value range of the random variable (" << characteristics_->second.size_ << ").");
+      cpprob_check_debug(
+          value_begin_ <= value_end_,
+          "DiscreteRandomReferences: The start value (" << value_begin_ << ") must be smaller than the end value (" << value_end_ << ").");
+    }
 
   };
 

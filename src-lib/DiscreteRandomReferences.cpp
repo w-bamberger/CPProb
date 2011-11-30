@@ -82,4 +82,44 @@ namespace cpprob
     }
   }
 
+  //---------------------------------------------------------------------------
+
+  DiscreteRandomReferences::SubRange
+  DiscreteRandomReferences::sub_range(const DiscreteRandomVariable& var) const
+  {
+    size_t range_size = 1;
+    size_t step_size = 0;
+    size_t start_value = 0;
+
+    for (auto it = references_.begin(); it != references_.end(); ++it)
+    {
+      cpprob_check_debug(
+          (*it)->characteristics_ != DiscreteRandomVariable::characteristics_table_.end(),
+          "DiscreteRandomReferences: Cannot join an empty random variable.");
+
+      if ((*it)->characteristics_ == var.characteristics_)
+        step_size = range_size;
+      else
+        start_value += range_size * (*it)->value_;
+
+      range_size *= (*it)->characteristics_->second.size_;
+    }
+
+    if (characteristics_
+        == DiscreteRandomVariable::characteristics_table_.end())
+      set_up_characteristics();
+
+    /* Reset the size of the range. This is necessary if any of the
+     * referenced variables has changed its size. This happens, for example,
+     * in the sampling of infinite mixtures.
+     *
+     * This action is rather cheap here and ensures that the resulting value
+     * is always correct. The user need not care about it. */
+    characteristics_->second.size_ = range_size;
+
+    size_t end_value = start_value
+        + var.characteristics_->second.size_ * step_size;
+    return SubRange(characteristics_, step_size, start_value, end_value);
+  }
+
 } /* namespace cpprob */
