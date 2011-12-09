@@ -68,38 +68,62 @@ namespace cpprob
   void
   ConditionalCategoricalNode::init_sampling()
   {
+    /* Check requirements before accessing probabilities_.begin()->second. */
+    cpprob_check_debug(
+        probabilities_.size() != 0,
+        "ConditionalCategoricalNode: Cannot initialize sampling from an empty conditional probability table.");
+
+    /* Initialize value_ by drawing from the distribution given by the first
+     * condition in probabilities_. This also initializes sampling_distribution.
+     * ConditionalCategoricalNode::sample requires it to contain all possible
+     * values of the DiscreteRandomVariable. */
     CategoricalDistribution& sampling_distribution =
         sampling_variate_.distribution();
     sampling_distribution.clear();
     RandomProbabilities& probabilities_subset = probabilities_.begin()->second;
-    RandomProbabilities::iterator p = probabilities_subset.begin();
-    for (; p != probabilities_subset.end(); ++p)
-      sampling_distribution[p->first] = p->second;
+    auto p_it = probabilities_subset.begin();
+    for (; p_it != probabilities_subset.end(); ++p_it)
+      sampling_distribution[p_it->first] = p_it->second;
     value_ = sampling_variate_();
   }
 
   void
   ConditionalCategoricalNode::sample()
   {
-    // Call the expensive condition_.joint_value() only once per function call.
+    /* Get the variables and references that are necessary for all block below.
+     * They come before the requirements tests because they are also needed
+     * for these tests. */
+    auto& sampling_distribution = sampling_variate_.distribution();
+    auto d_end = sampling_distribution.end();
     auto& conditioned_probabilities = probabilities_.at(
         condition_.joint_value());
-    auto& sampling_distribution = sampling_variate_.distribution();
-    sampling_distribution.clear();
-    DiscreteRandomVariable::Range x_range = value_.value_range();
 
-    for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
-    {
-      sampling_distribution[value_] = conditioned_probabilities.at(value_);
-    }
+    /* Check requirements. */
+    cpprob_check_debug(
+        sampling_distribution.size() == conditioned_probabilities.size(),
+        "ConditionalCategoricalNode: While sampling, the sampling distribution (size: " << sampling_distribution.size() << ") shows the wrong size compared to the conditional probability table(size: " << conditioned_probabilities.size() << ").");
 
+    /* Initialize the sampling distribution with the prior. */
+    auto d_it = sampling_distribution.begin();
+    auto p_it = conditioned_probabilities.begin();
+    for (; d_it != d_end; ++d_it, ++p_it)
+      d_it->second = p_it->second;
+
+    /* Update the sampling distribution with the likelihoods. */
     for (auto c = children_.begin(); c != children_.end(); ++c)
     {
-      for (value_ = x_range.begin(); value_ != x_range.end(); ++value_)
-        sampling_distribution[value_] *= c->at_references();
-    }
+      auto c_value = c->value();
+      auto& c_probabilities = c->probabilities();
+      auto c_condition = c->condition().sub_range(value_).begin();
+      d_it = sampling_distribution.begin();
 
+      for (; d_it != d_end; ++d_it, ++c_condition)
+        d_it->second *= c_probabilities.at(c_condition.joint_value()).at(
+            c_value);
+    }
     sampling_distribution.normalize();
+
+    /* Draw from the distribution. */
     value_ = sampling_variate_();
   }
 
