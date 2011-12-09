@@ -400,23 +400,30 @@ namespace cpprob
       operator[](const key_type& k)
       {
         resize(k.value_range());
-        return do_access(k, false);
+        cpprob_check_debug(k.value_ + 1 < values_.size(),"DiscreteRandomVariableMap: Element access failed due to inconsistent indices (name: " << k.name() << ", range size: " << k.value_range().size() << ", index: " << k.value_ << ", container size: " << values_.size() << ").");
+
+        auto accessed_node = values_.begin() + k.value_ + 1;
+        if (! is_linked(*accessed_node))
+            link_node(accessed_node);
+        return accessed_node->data.second;
       }
 
       T&
       at(const key_type& k)
       {
-        if (k.value_ + 1 >= values_.size())
-        cpprob_throw_out_of_range("DiscreteRandomVariableMap: key " << k <<" is not in the map.");
-        return do_access(k, true);
+        auto accessed_node = values_.begin() + k.value_ + 1;
+        if (accessed_node >= values_.end() || ! is_linked(*accessed_node))
+          cpprob_throw_out_of_range("DiscreteRandomVariableMap: Key " << k << " is not in the map.");
+        return accessed_node->data.second;
       }
 
       const T&
       at(const key_type& k) const
       {
-        if (k.value_ + 1 >= values_.size())
-          cpprob_throw_out_of_range("DiscreteRandomVariableMap: key " << k << " is not in the map.");
-        return do_access(k);
+        auto accessed_node = values_.begin() + k.value_ + 1;
+        if (accessed_node >= values_.end() || ! is_linked(*accessed_node))
+          cpprob_throw_out_of_range("DiscreteRandomVariableMap: Key " << k << " is not in the map.");
+        return accessed_node->data.second;
       }
 
       /*
@@ -535,35 +542,6 @@ namespace cpprob
           for (; first != last; ++first)
           do_insert(*first);
         }
-      }
-
-      mapped_type&
-      do_access(const key_type& k, bool throw_if_inexistent)
-      {
-        cpprob_check_debug(k.value_ + 1 < values_.size(),"DiscreteRandomVariableMap: Element access failed due to inconsistent indices (name: " << k.name() << ", range size: " << k.value_range().size() << ", index: " << k.value_ << ", container size: " << values_.size() << ").");
-        auto accessed_node = values_.begin() + k.value_ + 1;
-
-        if (! is_linked(*accessed_node))
-        {
-          if (throw_if_inexistent)
-            cpprob_throw_out_of_range("DiscreteRandomVariableMap: Key " << k << " is not in the map.");
-          else
-            link_node(accessed_node);
-        }
-
-        return accessed_node->data.second;
-      }
-
-      const mapped_type&
-      do_access(const key_type& k) const
-      {
-        cpprob_check_debug(k.value_ + 1 < values_.size(),"DiscreteRandomVariableMap: Element access failed due to inconsistent indices (name: " << k.name() << ", range size: " << k.value_range().size() << ", index: " << k.value_ << ", container size: " << values_.size() << ").");
-        auto accessed_node = values_.begin() + k.value_ + 1;
-
-        if (! is_linked(*accessed_node))
-          cpprob_throw_out_of_range("DiscreteRandomVariableMap: Key " << k << " is not in the map.");
-
-        return accessed_node->data.second;
       }
 
       std::pair<iterator, bool>
