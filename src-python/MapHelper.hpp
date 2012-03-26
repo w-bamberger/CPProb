@@ -36,6 +36,7 @@ namespace cpprob
             return search_it->second;
           PyErr_SetNone(PyExc_KeyError);
           boost::python::throw_error_already_set();
+          return *static_cast<mapped_type*>(NULL);
         }
 
         static boost::python::list

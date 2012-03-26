@@ -23,13 +23,24 @@ namespace cpprob
 
       ConditionalCategoricalNode&
       (BayesianNetwork::*add_conditional_categorical_with_dirichlet)(
-          const DiscreteRandomVariable&,
-          const cont::RefVector<DiscreteNode>&,
-          ConditionalDirichletNode&) = &BayesianNetwork::add_conditional_categorical;
+          const DiscreteRandomVariable&, const cont::RefVector<DiscreteNode>&,
+          ConditionalDirichletNode&) =
+          &BayesianNetwork::add_conditional_categorical;
+
+      ConditionalCategoricalNode&
+      (BayesianNetwork::*add_conditional_categorical_with_constant_node)(
+          const DiscreteRandomVariable&, const cont::RefVector<DiscreteNode>&,
+          ConstantRandomConditionalProbabilitiesNode&) =
+          &BayesianNetwork::add_conditional_categorical;
 
       ConstantDiscreteRandomVariableNode&
       (BayesianNetwork::*add_constant_discrete_random_variable)(
           const DiscreteRandomVariable&) = &BayesianNetwork::add_constant;
+
+      ConstantRandomConditionalProbabilitiesNode&
+      (BayesianNetwork::*add_constant_random_conditional_probabilities)(
+          const RandomConditionalProbabilities&) =
+          &BayesianNetwork::add_constant;
 
       std::size_t
       (BayesianNetwork::*erase_categorical)(
@@ -37,11 +48,13 @@ namespace cpprob
 
       std::size_t
       (BayesianNetwork::*erase_conditional_categorical)(
-          const ConditionalCategoricalNode&) = &BayesianNetwork::erase<ConditionalCategoricalNode>;
+          const ConditionalCategoricalNode&) =
+          &BayesianNetwork::erase<ConditionalCategoricalNode>;
 
       std::size_t
       (BayesianNetwork::*erase_conditional_dirichlet)(
-          const ConditionalDirichletNode&) = &BayesianNetwork::erase<ConditionalDirichletNode>;
+          const ConditionalDirichletNode&) =
+          &BayesianNetwork::erase<ConditionalDirichletNode>;
 
       std::size_t
       (BayesianNetwork::*erase_dirichlet)(
@@ -49,10 +62,10 @@ namespace cpprob
 
       class_ < BayesianNetwork
           > ("BayesianNetwork") //
-          .def(init<BayesianNetwork>())
+          .def(init<BayesianNetwork>()) //
           .def("sample", &BayesianNetwork::sample) //
           .def("__len__", &BayesianNetwork::size) //
-          .def(self_ns::str(self_ns::self))//
+          .def(self_ns::str(self_ns::self)) //
           .def("add_categorical", add_categorical,
               return_internal_reference<>()) //
           .def("add_categorical", add_categorical_with_dirichlet,
@@ -60,10 +73,15 @@ namespace cpprob
           .def("add_conditional_categorical",
               add_conditional_categorical_with_dirichlet,
               return_internal_reference<>()) //
+          .def("add_conditional_categorical",
+              add_conditional_categorical_with_constant_node,
+              return_internal_reference<>()) //
           .def("add_conditional_dirichlet",
               &BayesianNetwork::add_conditional_dirichlet,
               return_internal_reference<>()) //
           .def("add_constant", add_constant_discrete_random_variable,
+              return_internal_reference<>()) //
+          .def("add_constant", add_constant_random_conditional_probabilities,
               return_internal_reference<>()) //
           .def("add_dirichlet", &BayesianNetwork::add_dirichlet,
               return_internal_reference<>()) //

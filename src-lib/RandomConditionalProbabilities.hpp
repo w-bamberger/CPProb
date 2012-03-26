@@ -109,6 +109,18 @@ namespace cpprob
       return cpt_.end();
     }
 
+    const_iterator
+    find(const key_type& var) const
+    {
+      return cpt_.find(var);
+    }
+
+    iterator
+    find(const key_type& var)
+    {
+      return cpt_.find(var);
+    }
+
     iterator
     insert(iterator position, const value_type& v)
     {
