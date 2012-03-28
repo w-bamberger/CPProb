@@ -17,9 +17,13 @@ namespace cpprob
       void
       (CategoricalNode::*set_is_evidence)(bool) = &CategoricalNode::is_evidence;
 
+      DiscreteRandomVariable&
+      (CategoricalNode::*value)() = &CategoricalNode::value;
+
       class_ < CategoricalNode, bases<DiscreteNode>
           > ("CategoricalNode", no_init) //
-          .add_property("is_evidence", get_is_evidence, set_is_evidence);
+          .add_property("is_evidence", get_is_evidence, set_is_evidence) //
+          .def("value", value, return_internal_reference<>());
     }
 
   }

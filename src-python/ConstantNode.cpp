@@ -9,17 +9,17 @@ namespace cpprob
   namespace proby
   {
 
-    DiscreteRandomVariable&
-    (ConstantDiscreteRandomVariableNode::*discrete_random_variable_value)() =
-    &ConstantDiscreteRandomVariableNode::value;
-
-    RandomConditionalProbabilities&
-    (ConstantRandomConditionalProbabilitiesNode::*random_conditional_probabilities_value)() =
-    &ConstantRandomConditionalProbabilitiesNode::value;
-
     void
     export_constant_node()
     {
+      DiscreteRandomVariable&
+      (ConstantDiscreteRandomVariableNode::*discrete_random_variable_value)() =
+      &ConstantDiscreteRandomVariableNode::value;
+
+      RandomConditionalProbabilities&
+      (ConstantRandomConditionalProbabilitiesNode::*random_conditional_probabilities_value)() =
+      &ConstantRandomConditionalProbabilitiesNode::value;
+
       class_ < ConstantDiscreteRandomVariableNode, bases<DiscreteNode>
           > ("ConstantDiscreteRandomVariableNode", no_init) //
           .def("value", discrete_random_variable_value,

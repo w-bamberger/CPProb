@@ -11,7 +11,11 @@ namespace cpprob
     void
     export_conditional_dirichlet_node()
     {
-      class_ < ConditionalDirichletNode > ("ConditionalDirichletNode", no_init);
+      RandomConditionalProbabilities&
+      (ConditionalDirichletNode::*value)() = &ConditionalDirichletNode::value;
+
+      class_ < ConditionalDirichletNode > ("ConditionalDirichletNode", no_init) //
+      .def("value", value, return_internal_reference<>());
     }
 
   }

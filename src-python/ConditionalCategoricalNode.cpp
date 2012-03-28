@@ -20,10 +20,15 @@ namespace cpprob
       (ConditionalCategoricalNode::*set_is_evidence)(bool) =
       &ConditionalCategoricalNode::is_evidence;
 
+      DiscreteRandomVariable&
+      (ConditionalCategoricalNode::*value)() =
+      &ConditionalCategoricalNode::value;
+
       class_ < ConditionalCategoricalNode, bases<DiscreteNode>
           > ("ConditionalCategoricalNode", no_init) //
-		.add_property("is_evidence", get_is_evidence, set_is_evidence) //
-		.def(self_ns::str(self_ns::self));
+          .add_property("is_evidence", get_is_evidence, set_is_evidence) //
+          .def(self_ns::str(self_ns::self)) //
+          .def("value", value, return_internal_reference<>());
     }
 
   }

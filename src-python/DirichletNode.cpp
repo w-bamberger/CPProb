@@ -11,7 +11,11 @@ namespace cpprob
     void
     export_dirichlet_node()
     {
-      class_ < DirichletNode > ("DirichletNode", no_init);
+      RandomProbabilities&
+      (DirichletNode::*value)() = &DirichletNode::value;
+
+      class_ < DirichletNode > ("DirichletNode", no_init) //
+      .def("value", value, return_internal_reference<>());
     }
 
   }
