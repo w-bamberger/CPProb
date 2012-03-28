@@ -1,5 +1,6 @@
 #include <boost/python/class.hpp>
 #include <boost/python/copy_const_reference.hpp>
+#include <boost/python/list.hpp>
 #include <boost/python/operators.hpp>
 #include <cpprob/DiscreteRandomVariable.hpp>
 
@@ -10,6 +11,16 @@ namespace cpprob
   namespace proby
   {
 
+    boost::python::list
+    discrete_random_variable_value_range(const DiscreteRandomVariable var)
+    {
+      boost::python::list l;
+      for (auto v = var.value_range().begin(); v != var.value_range().end();
+          ++v)
+        l.append(v);
+      return l;
+    }
+
     void
     export_discrete_random_variable()
     {
@@ -19,7 +30,8 @@ namespace cpprob
               "name",
               make_function(&DiscreteRandomVariable::name,
                   return_value_policy<copy_const_reference>())) //
-          .def(self_ns::str(self_ns::self));
+          .def(self_ns::str(self_ns::self)) //
+          .def("value_range", &discrete_random_variable_value_range);
     }
 
   }
