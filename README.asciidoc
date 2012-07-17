@@ -1,0 +1,30 @@
+CPProb – Algorithms for Probabilistic Reasoning
+===============================================
+
+Introduction
+------------
+
+CPProb is a library for C++ and Python to perform probabilistic reasoning tasks. At the moment, it offers
+
+- exact Bayesian inference and Bayesian parameter learning;
+- approximate Bayesian inference using Gibbs sampling;
+- non-parametric models with Dirichlet processes; and
+- subjective logic, a probabilistic logic based on the Dempster-Shafer belief theory.
+
+We are open for any other algorithm or technique (like fuzzy sets and logic). Feel free to complement the library with the algorithms you need (see Extending the Library below).
+
+CPProb wants to support you, first, in using these algorithms in your own application. Probabilistic reasoning already left research towards real applications. Second, it helps you to develop new algorithms and compare them with the state of the art. Within the library, probabilistic models are described independently from the algorithm you run on the model. So it is easy to add a new algorithm and compare it with existing ones. Third, CPProb eases to learn and understand the implemented algorithms. Its well documented code helps to bridge the gap between the mathematical concepts described in common text books and actual implementations.
+
+Features
+--------
+
+CPProb offers the following features:
+
+- You can configure one probablistic model and run several algorithms on it.
+- It is continuously benchmarked, profiled (with OProfile) and memory checked (with Valgrind's Memcheck and Ptrcheck). So it is supposed to be fast and stable.
+- The classes and algorithms should be easy to use.
+
+Support for multi-threading with OpenMP will come soon.
+
+Installation
+------------
