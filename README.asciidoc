@@ -26,3 +26,10 @@ CPProb offers the following features:
 
 Installation
 ------------
+
+. Set up the Boost libraries for your compiler. To build the library, you only 
+  need header libraries. So you need not compile the Boost library.
+. Clone the git repository
+. Create a new build directory (build-lib).
+. Run CMake. Maybe you need to set the variable +BOOST_ROOT+.
+. Compile the library with your tool chain.
