@@ -48,8 +48,8 @@ BOOST_AUTO_TEST_CASE(sampling)
   CategoricalDistribution distribution;
   for (; var != var.value_range().end(); ++var)
   distribution[var] = 0.0;
-  distribution[var2] = 0.1;
-  distribution[var4] = 0.9;
+  distribution[var2] = 0.1f;
+  distribution[var4] = 0.9f;
   BOOST_TEST_MESSAGE("Test distribution:\n    " << distribution);
 
   RandomNumberGeneratorMock rng;

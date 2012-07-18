@@ -28,14 +28,14 @@ gen_alarm_net()
   RandomBoolean burglary("Burglary", true);
   CategoricalNode& burglary_node = bn.add_categorical(burglary);
   RandomProbabilities& burglary_probs = burglary_node.probabilities();
-  burglary_probs.set(burglary, 0.001);
-  burglary_probs.set(burglary.observation(false), 0.999);
+  burglary_probs.set(burglary, 0.001f);
+  burglary_probs.set(burglary.observation(false), 0.999f);
 
   RandomBoolean earthquake("Earthquake", true);
   CategoricalNode& earthquake_node = bn.add_categorical(earthquake);
   RandomProbabilities& earthquake_probs = earthquake_node.probabilities();
-  earthquake_probs.set(earthquake, 0.002);
-  earthquake_probs.set(earthquake.observation(false), 0.998);
+  earthquake_probs.set(earthquake, 0.002f);
+  earthquake_probs.set(earthquake.observation(false), 0.998f);
 
   RandomBoolean alarm("Alarm", true);
 
@@ -44,25 +44,25 @@ gen_alarm_net()
   burglary.observation(true);
   earthquake.observation(true);
   alarm_params.set(alarm.observation(true),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.95);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.95f);
   alarm_params.set(alarm.observation(false),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.05);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.05f);
   earthquake.observation(false);
   alarm_params.set(alarm.observation(true),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.94);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.94f);
   alarm_params.set(alarm.observation(false),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.06);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.06f);
   burglary.observation(false);
   earthquake.observation(true);
   alarm_params.set(alarm.observation(true),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.29);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.29f);
   alarm_params.set(alarm.observation(false),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.71);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.71f);
   earthquake.observation(false);
   alarm_params.set(alarm.observation(true),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.001);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.001f);
   alarm_params.set(alarm.observation(false),
-      DiscreteJointRandomVariable(burglary, earthquake), 0.999);
+      DiscreteJointRandomVariable(burglary, earthquake), 0.999f);
   ConstantRandomConditionalProbabilitiesNode& alarm_params_node =
       bn.add_constant(alarm_params);
 
@@ -77,11 +77,11 @@ gen_alarm_net()
   RandomConditionalProbabilities& john_calls_probs =
       john_calls_node.probabilities();
   alarm.observation(true);
-  john_calls_probs.set(john_calls.observation(true), alarm, 0.9);
-  john_calls_probs.set(john_calls.observation(false), alarm, 0.1);
+  john_calls_probs.set(john_calls.observation(true), alarm, 0.9f);
+  john_calls_probs.set(john_calls.observation(false), alarm, 0.1f);
   alarm.observation(false);
-  john_calls_probs.set(john_calls.observation(true), alarm, 0.05);
-  john_calls_probs.set(john_calls.observation(false), alarm, 0.95);
+  john_calls_probs.set(john_calls.observation(true), alarm, 0.05f);
+  john_calls_probs.set(john_calls.observation(false), alarm, 0.95f);
 
   RandomBoolean mary_calls("MaryCalls", true);
   ConditionalCategoricalNode& mary_calls_node =
@@ -90,11 +90,11 @@ gen_alarm_net()
   RandomConditionalProbabilities& mary_calls_probs =
       mary_calls_node.probabilities();
   alarm.observation(true);
-  mary_calls_probs.set(mary_calls.observation(true), alarm, 0.7);
-  mary_calls_probs.set(mary_calls.observation(false), alarm, 0.3);
+  mary_calls_probs.set(mary_calls.observation(true), alarm, 0.7f);
+  mary_calls_probs.set(mary_calls.observation(false), alarm, 0.3f);
   alarm.observation(false);
-  mary_calls_probs.set(mary_calls.observation(true), alarm, 0.01);
-  mary_calls_probs.set(mary_calls.observation(false), alarm, 0.99);
+  mary_calls_probs.set(mary_calls.observation(true), alarm, 0.01f);
+  mary_calls_probs.set(mary_calls.observation(false), alarm, 0.99f);
 
   return bn;
 }
