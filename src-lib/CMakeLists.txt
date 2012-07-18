@@ -26,12 +26,19 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCPPROB_DEBUG_MODE")
         
 # Installation
+if(WIN32)
+  set(shared_lib_destination "lib-shared")
+  set(static_lib_destination "lib-static")
+else(WIN32)
+  set(shared_lib_destination "lib")
+  set(static_lib_destination "lib")
+endif(WIN32)
 install(TARGETS cpprob_shared
-        LIBRARY DESTINATION lib 
-        ARCHIVE DESTINATION lib)
+        LIBRARY DESTINATION ${shared_lib_destination}
+        ARCHIVE DESTINATION ${shared_lib_destination})
 install(TARGETS cpprob_static
-        LIBRARY DESTINATION lib 
-        ARCHIVE DESTINATION lib)
+        LIBRARY DESTINATION ${static_lib_destination}
+        ARCHIVE DESTINATION ${static_lib_destination})
 install(FILES ${main_header_files} DESTINATION include/cpprob)
 install(FILES ${cont_header_files} DESTINATION include/cpprob/cont)
 install(FILES ${pkgconfig_files} DESTINATION lib/pkgconfig)
