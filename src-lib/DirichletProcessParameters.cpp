@@ -23,6 +23,7 @@ namespace cpprob
     return os << parameters.name() << ":" << parameters.concentration();
   }
 
+#ifdef __GNUC__
   DirichletProcessParameters::DirichletProcessParameters(
       const std::string& name, float concentration,
       std::initializer_list<ConditionalDirichletNode*> managed_nodes)
@@ -30,6 +31,7 @@ namespace cpprob
           managed_nodes.begin(), managed_nodes.end()), name_(name)
   {
   }
+#endif
 
   DiscreteRandomVariable
   DirichletProcessParameters::create_component(
@@ -172,7 +174,7 @@ namespace cpprob
     auto value_range =
         RandomInteger(name_, component_counters_.size(), 0).value_range();
     for (auto v = value_range.begin(); v != value_range.end(); ++v)
-      distribution[v] = component_counters_[v];
+      distribution[v] = static_cast<float>(component_counters_[v]);
     distribution[value_range.end()] = concentration();
     distribution.normalize();
 

@@ -423,6 +423,7 @@ namespace cpprob
     return get<DirichletProcessNode>(*new_node);
   }
 
+#ifdef __GNUC__
   ConstantDirichletProcessParametersNode&
   BayesianNetwork::add_dirichlet_process_parameters(const std::string& name,
       float concentration,
@@ -434,6 +435,7 @@ namespace cpprob
             DirichletProcessParameters(name, concentration, managed_nodes)));
     return boost::get<ConstantDirichletProcessParametersNode>(*new_node);
   }
+#endif
 
   CategoricalDistribution
   BayesianNetwork::enumerate(CategoricalNode& X_v)
@@ -510,7 +512,7 @@ namespace cpprob
         conditional_probability = apply_visitor(probability_visitor, *current);
         probability_sum += conditional_probability * enumerate_all(next, end);
       }
-      return probability_sum;
+      return static_cast<float>(probability_sum);
     }
   }
 
@@ -529,11 +531,11 @@ namespace cpprob
 
       X_distribution.normalize();
     }
-    catch (const NetworkError& e)
+    catch (const NetworkError&)
     {
       throw;
     }
-    catch (const std::bad_alloc& e)
+    catch (const std::bad_alloc&)
     {
       throw;
     }

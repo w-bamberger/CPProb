@@ -28,7 +28,7 @@
 #ifndef CPPROB_CONT_MAP_HPP_
 #define CPPROB_CONT_MAP_HPP_
 
-#ifdef CPPROB_DEBUG_MODE
+#if defined CPPROB_DEBUG_MODE && defined __GNUC__
 
 #include <debug/map>
 namespace cpprob

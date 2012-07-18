@@ -24,7 +24,5 @@ CPProb offers the following features:
 - It is continuously benchmarked, profiled (with OProfile) and memory checked (with Valgrind's Memcheck and Ptrcheck). So it is supposed to be fast and stable.
 - The classes and algorithms should be easy to use.
 
-Support for multi-threading with OpenMP will come soon.
-
 Installation
 ------------

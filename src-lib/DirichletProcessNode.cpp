@@ -64,7 +64,7 @@ namespace cpprob
     for (auto count = counters.begin(); count != counters.end(); ++count)
     {
       // The prior
-      p = count->second;
+      p = static_cast<float>(count->second);
 
       // The factors of the posterior update
       value_ = count->first;

@@ -80,7 +80,7 @@ namespace cpprob
 
   protected:
 
-    class Characteristics;
+    struct Characteristics;
 
   public:
 

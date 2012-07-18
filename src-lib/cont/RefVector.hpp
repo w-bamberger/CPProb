@@ -47,10 +47,12 @@ namespace cpprob
         {
         }
 
+#ifdef __GNUC__
         RefVector(std::initializer_list<pointer> init_list)
             : pointers_(init_list)
         {
         }
+#endif
 
         template<class InputIterator>
           RefVector(InputIterator begin, InputIterator end)
