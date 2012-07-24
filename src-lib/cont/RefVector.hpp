@@ -47,6 +47,11 @@ namespace cpprob
         {
         }
 
+        RefVector(size_type count, reference value)
+            :pointers_(count, &value)
+        {
+        }
+
 #ifdef __GNUC__
         RefVector(std::initializer_list<pointer> init_list)
             : pointers_(init_list)
@@ -180,6 +185,12 @@ namespace cpprob
         push_back(reference x)
         {
           pointers_.push_back(&x);
+        }
+
+        void
+        clear()
+        {
+            pointers_.clear();
         }
 
       private:
