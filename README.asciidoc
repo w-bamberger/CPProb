@@ -37,7 +37,7 @@ Build the Library
 . Run CMake. Maybe you need to set the variable +BOOST_ROOT+.
 . Compile the library with your tool chain.
   The process has three main targets. They are different projects in Visual Studio.
-  [horizontal]
+[horizontal]
     cpprob_static:: Builds a static library
 	cpprob_shared:: Builds a shared library
 	INSTALL: Depends on both targets above. It installs both libraries in your system.
@@ -49,5 +49,5 @@ With the tests, you can check, whether the library works. But they are not neede
 
 . Compile the Boost library. This time, you need the binary libraries program_options and unit_test_framework.
 . Create a new build directory (e.g. build-test)
-. Run CMake. Maybe you need to set the variable +BOOST_ROOT*.
+. Run CMake. Maybe you need to set the variable +BOOST_ROOT+.
 . Compile the program with your tool chain.
