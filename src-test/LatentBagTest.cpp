@@ -44,23 +44,38 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
   ConditionalDirichletNode& hole_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
     { &bag_v }, hole_params_v);
+#else
+  cont::RefVector<DiscreteNode> parents(1, bag_v);
+  ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
+    parents, hole_params_v);
+#endif
   hole_v.is_evidence(true);
 
   ConditionalDirichletNode& wrapper_params_v =
       bn.at<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
-      wrapper,
-        { &bag_v }, wrapper_params_v);
+      wrapper, { &bag_v }, wrapper_params_v);
+#else
+  ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
+      wrapper, parents, wrapper_params_v);
+#endif
   wrapper_v.is_evidence(true);
 
   ConditionalDirichletNode& flavor_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
     { &bag_v }, flavor_params_v);
+#else
+  ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
+    parents, flavor_params_v);
+#endif
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();

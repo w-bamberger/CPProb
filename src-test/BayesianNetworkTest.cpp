@@ -46,22 +46,49 @@ protected:
     RandomConditionalProbabilities wrapper_params(wrapper, bag);
     auto* wrapper_params_node = &test_network_.add_conditional_dirichlet(
         wrapper_params, alpha);
+#ifdef __GNUC__
     auto* wrapper_node1 = &test_network_.add_conditional_categorical(wrapper,
       { bag_node1 }, *wrapper_params_node);
+#else
+    cont::RefVector<DiscreteNode> parents(1, *bag_node1);
+    auto* wrapper_node1 = &test_network_.add_conditional_categorical(wrapper,
+      parents, *wrapper_params_node);
+#endif
     wrapper_node1->is_evidence(true);
+#ifdef __GNUC__
     auto* wrapper_node2 = &test_network_.add_conditional_categorical(wrapper,
       { bag_node2 }, *wrapper_params_node);
+#else
+    parents.clear();
+    parents.push_back(*bag_node2);
+    auto* wrapper_node2 = &test_network_.add_conditional_categorical(wrapper,
+      parents, *wrapper_params_node);
+#endif
     wrapper_node2->is_evidence(true);
 
     RandomBoolean hole("Hole", true);
     RandomConditionalProbabilities hole_params(hole, bag);
     auto* hole_params_node = &test_network_.add_conditional_dirichlet(
         hole_params, alpha);
+#ifdef __GNUC__
     auto* hole_node1 = &test_network_.add_conditional_categorical(hole,
       { bag_node1 }, *hole_params_node);
+#else
+    parents.clear();
+    parents.push_back(*bag_node1);
+    auto* hole_node1 = &test_network_.add_conditional_categorical(hole,
+      parents, *hole_params_node);
+#endif
     hole_node1->is_evidence(true);
+#ifdef __GNUC__
     auto* hole_node2 = &test_network_.add_conditional_categorical(hole,
       { bag_node2 }, *hole_params_node);
+#else
+    parents.clear();
+    parents.push_back(*bag_node2);
+    auto* hole_node2 = &test_network_.add_conditional_categorical(hole,
+      parents, *hole_params_node);
+#endif
     hole_node2->is_evidence(true);
   }
 

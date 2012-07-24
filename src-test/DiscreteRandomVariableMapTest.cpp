@@ -5,6 +5,10 @@
  *      Author: wbam
  */
 
+// For MS Visual C++: Do not warn because of an unchecked iterator function. 
+// std::equal is unchecked in the MS Visual C++ implementation.
+#define _SCL_SECURE_NO_WARNINGS
+
 #include "../src-lib/DiscreteRandomVariableMap.hpp"
 #include "../src-lib/RandomInteger.hpp"
 #include <boost/test/unit_test.hpp>
@@ -38,10 +42,11 @@ protected:
 
   static const size_t array_size_ = 5;
   RandomInteger var;
-  DiscreteRandomVariableMap<float> map_;
+  MapType map_;
   ValueType array_[array_size_];
 
   DiscreteRandomVariableMapFixture()
+#ifdef __GNUC__
       : var("Var", 7, 0), map_(
         { //
           ValueType(var.observation(1), 1.5), //
@@ -51,6 +56,15 @@ protected:
           ValueType(var.observation(6), 6.5) //
           })
   {
+#else
+            : var("Var", 7, 0), map_()
+  {
+      map_.insert(ValueType(var.observation(1), 1.5f));
+      map_.insert(ValueType(var.observation(2), 2.5f));
+      map_.insert(ValueType(var.observation(3), 3.5f));
+      map_.insert(ValueType(var.observation(5), 5.5f));
+      map_.insert(ValueType(var.observation(6), 6.5f));
+#endif
     cpprob_check_debug(array_size_ == map_.size(), "DiscreteRandomVariableMapFixture: Inconsistent test data (array size: " << array_size_ << ", map size: " << map_.size() << ")");
     copy(map_.begin(), map_.end(), array_);
   }
@@ -70,6 +84,7 @@ BOOST_AUTO_TEST_CASE(Construct)
   BOOST_CHECK(m1.empty());
   BOOST_CHECK(m1.begin() == m1.end());
 
+#ifdef __GNUC__
   /* Construction from initializer list. */
   BOOST_TEST_CHECKPOINT("Construction from initializer list.");
   MapType m2(
@@ -83,6 +98,7 @@ BOOST_AUTO_TEST_CASE(Construct)
   BOOST_CHECK(m2.begin() == --(--m2.end()));
   BOOST_CHECK_EQUAL(m2.at(var.observation(1)), 1.5);
   BOOST_CHECK_EQUAL(m2.at(var.value_range().end()), -0.5);
+#endif
 
   /* Construction from iterators. */
   BOOST_TEST_CHECKPOINT("Construction from iterators.");
@@ -104,10 +120,8 @@ BOOST_AUTO_TEST_CASE(Construct)
   /* Elements with value_range.size() == 1. */
   BOOST_TEST_CHECKPOINT("Elements with value_range.size() == 1.");
   RandomInteger var1("Var1", 1, 0);
-  MapType m6(
-      {
-        { var1, 0.5}
-      });
+  MapType m6;
+  m6.insert(ValueType(var1, 0.5f));
   BOOST_CHECK_EQUAL(m6.size(), 1);
   BOOST_CHECK(!m6.empty());
   BOOST_CHECK(++m6.begin() == m6.end());
@@ -118,10 +132,8 @@ BOOST_AUTO_TEST_CASE(Construct)
   /* Element with value_range.size() == 0. */
   BOOST_TEST_CHECKPOINT("Element with value_range.size() == 0.");
   RandomInteger var0("Var0", 0, 0);
-  MapType m7(
-      {
-        { var0.value_range().end(), 0.5}
-      });
+  MapType m7;
+  m7.insert(ValueType(var0.value_range().end(), 0.5f));
   BOOST_CHECK_EQUAL(m7.size(), 1);
   BOOST_CHECK(!m7.empty());
   BOOST_CHECK(++m7.begin() == m7.end());
@@ -194,6 +206,7 @@ BOOST_AUTO_TEST_CASE(Assign)
   m1 = m2;
   BOOST_CHECK(equal(m1.begin(), m1.end(), map_.begin()));
 
+#ifdef __GNUC__
   /* Assignment from initializer list. */
   BOOST_TEST_CHECKPOINT("Assignment from initializer list.");
   m1 =
@@ -201,11 +214,11 @@ BOOST_AUTO_TEST_CASE(Assign)
     { var, 0.4},
     { var.observation(true), 0.6}
   };
-
   BOOST_CHECK_EQUAL(m1.size(), 2);
   BOOST_CHECK(!m1.empty());
   BOOST_CHECK(++(++m1.begin()) == m1.end());
   BOOST_CHECK(m1.begin() == --(--m1.end()));
+#endif
 
   /* Copy assignment (from fill or empty state). */
   BOOST_TEST_CHECKPOINT("Copy assignment (from filled or empty state).");
@@ -233,11 +246,8 @@ BOOST_AUTO_TEST_CASE(Capacity)
   BOOST_CHECK(m.begin() == m.end());
   BOOST_CHECK_NE(m.max_size(), 0);
 
-  m =
-  {
-    { var.observation(3), 0.4},
-    { var.observation(5), 0.6}
-  };
+  m.insert(ValueType(var.observation(3), 0.4f));
+  m.insert(ValueType(var.observation(5), 0.6f));
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK(!m.empty());
   BOOST_CHECK_NE(m.max_size(), 0);
@@ -294,7 +304,7 @@ BOOST_AUTO_TEST_CASE(Insert)
 
   /* Insert value by moving. */
   var.observation(1);
-  auto result_pair = m.insert(make_pair(var, 1.25));
+  auto result_pair = m.insert(make_pair(var, 1.25f));
   BOOST_CHECK(result_pair.second);
   BOOST_CHECK_EQUAL(m.size(), 1);
   BOOST_CHECK_EQUAL(m.at(var), 1.25);
@@ -302,7 +312,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   BOOST_CHECK_EQUAL(result_pair.first->first, var);
 
   --var;
-  result_pair = m.insert(make_pair(var, 0.25));
+  result_pair = m.insert(make_pair(var, 0.25f));
   BOOST_CHECK(result_pair.second);
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK_EQUAL(m.at(var), 0.25);
@@ -310,7 +320,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   BOOST_CHECK_EQUAL(result_pair.first->first, var);
 
   auto prev_position = result_pair.first;
-  result_pair = m.insert(make_pair(var, -1.0));
+  result_pair = m.insert(make_pair(var, -1.0f));
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK(!result_pair.second);
   BOOST_CHECK(result_pair.first == prev_position);
@@ -321,21 +331,21 @@ BOOST_AUTO_TEST_CASE(Insert)
   /* Insert value by moving with position hint. */
   m.clear();
   var.observation(1);
-  auto result_position = m.insert(m.begin(), make_pair(var, 1.25));
+  auto result_position = m.insert(m.begin(), make_pair(var, 1.25f));
   BOOST_CHECK_EQUAL(m.size(), 1);
   BOOST_CHECK_EQUAL(m.at(var), 1.25);
   BOOST_CHECK_EQUAL(result_position->second, 1.25);
   BOOST_CHECK_EQUAL(result_position->first, var);
 
   --var;
-  result_position = m.insert(m.begin(), make_pair(var, 0.25));
+  result_position = m.insert(m.begin(), make_pair(var, 0.25f));
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK_EQUAL(m.at(var), 0.25);
   BOOST_CHECK_EQUAL(result_position->second, 0.25);
   BOOST_CHECK_EQUAL(result_position->first, var);
 
   prev_position = result_position;
-  result_position = m.insert(m.end(), make_pair(var, -1.0));
+  result_position = m.insert(m.end(), make_pair(var, -1.0f));
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK(result_position == prev_position);
   BOOST_CHECK_EQUAL(m.at(var), 0.25);
@@ -345,7 +355,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   /* Insert value by copying. */
   m.clear();
   var.observation(1);
-  const MapType::value_type v1(var, 1.25);
+  const ValueType v1(var, 1.25f);
   result_pair = m.insert(v1);
   BOOST_CHECK(result_pair.second);
   BOOST_CHECK_EQUAL(m.size(), 1);
@@ -354,7 +364,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   BOOST_CHECK_EQUAL(result_pair.first->first, var);
 
   --var;
-  const MapType::value_type v2(var, 0.25);
+  const ValueType v2(var, 0.25f);
   result_pair = m.insert(v2);
   BOOST_CHECK(result_pair.second);
   BOOST_CHECK_EQUAL(m.size(), 2);
@@ -363,7 +373,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   BOOST_CHECK_EQUAL(result_pair.first->first, var);
 
   prev_position = result_pair.first;
-  const MapType::value_type v3(var, -1.0);
+  const ValueType v3(var, -1.0f);
   result_pair = m.insert(v3);
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK(!result_pair.second);
@@ -375,7 +385,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   /* Insert value by copying with position hint. */
   m.clear();
   var.observation(1);
-  const MapType::value_type v11(var, 1.25);
+  const ValueType v11(var, 1.25f);
   result_position = m.insert(m.begin(), v11);
   BOOST_CHECK_EQUAL(m.size(), 1);
   BOOST_CHECK_EQUAL(m.at(var), 1.25);
@@ -383,7 +393,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   BOOST_CHECK_EQUAL(result_position->first, var);
 
   --var;
-  const MapType::value_type v12(var, 0.25);
+  const ValueType v12(var, 0.25f);
   result_position = m.insert(m.end(), v12);
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK_EQUAL(m.at(var), 0.25);
@@ -391,7 +401,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   BOOST_CHECK_EQUAL(result_position->first, var);
 
   prev_position = result_position;
-  const MapType::value_type v13(var, -1.0);
+  const ValueType v13(var, -1.0f);
   result_position = m.insert(m.begin(), v13);
   BOOST_CHECK_EQUAL(m.size(), 2);
   BOOST_CHECK(result_position == prev_position);
@@ -409,13 +419,14 @@ BOOST_AUTO_TEST_CASE(Insert)
 
   // Only copy keys that were not yet in the map. So the new value should not
   // appear in the map.
-  array_[0] = make_pair(var.observation(1), -1.0);
+  array_[0] = make_pair(var.observation(1), -1.0f);
   m.insert(array_, array_ + array_size_);
   // Need to compare with map_, because array_ has element with a different type
   // (non-const key).
   BOOST_CHECK(equal(m.begin(), m.end(), map_.begin()));
   BOOST_CHECK_EQUAL(m.size(), array_size_);
 
+#ifdef __GNUC__
   /* Insert from initializer list. */
   m.clear();
   m.insert(
@@ -444,6 +455,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   var.observation(6);
   BOOST_CHECK_EQUAL(m.at(var), -6.75);
   BOOST_CHECK_EQUAL((--m.end())->second, -6.75);
+#endif
 }
 
 BOOST_AUTO_TEST_CASE(Find)
@@ -669,11 +681,9 @@ BOOST_AUTO_TEST_CASE(Swap)
   }
 
   {
-    MapType m1 =
-    {
-      { var.observation(0), -0.5},
-      { ++var, -1.5}
-    };
+    MapType m1;
+    m1.insert(ValueType(var.observation(0), -0.5f));
+    m1.insert(ValueType(++var, -1.5f));
     MapType m2 = map_;
     MapType m1_save = m1;
     MapType m2_save = m2;

@@ -99,8 +99,14 @@ gen_bag_net(float alpha, bool fully_observed, size_t lines_of_evidence =
       if (a->first != "Bag")
       {
         RandomBoolean var(a->first, a->second);
+#ifdef __GNUC__
         ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
           { &bag_evidence_node }, *params_table[a->first]);
+#else
+        cont::RefVector<DiscreteNode> parents(1, bag_evidence_node);
+        ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
+          parents, *params_table[a->first]);
+#endif
         node.is_evidence(true);
       }
     }
@@ -179,25 +185,42 @@ BOOST_AUTO_TEST_CASE( bag_test )
   ConditionalDirichletNode& hole_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& hole_v = bn_map_full.add_conditional_categorical(
-      hole,
-        { &bag_v }, hole_params_v);
+      hole, { &bag_v }, hole_params_v);
+#else
+  cont::RefVector<DiscreteNode> parents(1, bag_v);
+  ConditionalCategoricalNode& hole_v = bn_map_full.add_conditional_categorical(
+      hole, parents, hole_params_v);
+#endif
   hole_v.is_evidence(true);
 
   ConditionalDirichletNode& wrapper_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& wrapper_v =
       bn_map_full.add_conditional_categorical(wrapper,
         { &bag_v }, wrapper_params_v);
+#else
+  ConditionalCategoricalNode& wrapper_v =
+      bn_map_full.add_conditional_categorical(wrapper,
+        parents, wrapper_params_v);
+#endif
   wrapper_v.is_evidence(true);
 
   ConditionalDirichletNode& flavor_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& flavor_v =
       bn_map_full.add_conditional_categorical(flavor,
         { &bag_v }, flavor_params_v);
+#else
+  ConditionalCategoricalNode& flavor_v =
+      bn_map_full.add_conditional_categorical(flavor,
+        parents, flavor_params_v);
+#endif
 
   if (options_map["with-debug-output"].as<bool>())
     cout << bn_map_full << endl;

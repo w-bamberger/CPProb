@@ -71,31 +71,55 @@ protected:
     const RandomBoolean flavor_true("Flavor", true);
 
     if (data_file_ == "latent-bag-short.csv")
+    {
+#ifdef __GNUC__
       return CategoricalDistribution(
         {
           { flavor_false, 6.0 },
           { flavor_true, 2.0 } //
         });
-
+#else
+        CategoricalDistribution counts;
+        counts.insert(make_pair(flavor_false, 6.0f));
+        counts.insert(make_pair(flavor_true, 2.0f));
+        return counts;
+#endif
+    }
     else if (data_file_ == "latent-bag.csv")
+    {
       /*
        * The counts in latent-bag.csv are
        *   C(F=0 | H=1, W=1): 52 (grep -e ",false,true,true" latent-bag.csv | wc)
        *   C(F=1 | H=1, W=1): 20 (grep -e ",true,true,true" latent-bag.csv | wc)
        */
+#ifdef __GNUC__
       return CategoricalDistribution(
         {
           { flavor_false, 52.0 },
           { flavor_true, 20.0 } //
         });
-
+#else
+      CategoricalDistribution counts;
+      counts.insert(make_pair(flavor_false, 52.0f));
+      counts.insert(make_pair(flavor_true, 20.0f));
+      return counts;
+#endif
+    }
     else if (data_file_ == "latent-bag-long.csv")
+    {
+#ifdef __GNUC__
       return CategoricalDistribution(
         {
           { flavor_false, 2534.0 },
           { flavor_true, 1280.0 } //
         });
-
+#else
+        CategoricalDistribution counts;
+        counts.insert(make_pair(flavor_false, 2534.0f));
+        counts.insert(make_pair(flavor_true, 1280.0f));
+        return counts;
+#endif
+    }
     else
       return CategoricalDistribution();
   }
@@ -147,8 +171,14 @@ protected:
         if (a->first != "Bag")
         {
           RandomBoolean var(a->first, a->second);
+#ifdef __GNUC__
           ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
             { &bag_evidence_node }, *params_table[a->first]);
+#else
+          cont::RefVector<DiscreteNode> parents(1, bag_evidence_node);
+          ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
+            parents, *params_table[a->first]);
+#endif
           node.is_evidence(true);
         }
       }
@@ -207,23 +237,42 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
   ConditionalDirichletNode& hole_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
     { &bag_v }, hole_params_v);
+#else
+  cont::RefVector<DiscreteNode> parents(1, bag_v);
+  ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
+    parents, hole_params_v);
+#endif
   hole_v.is_evidence(true);
 
   ConditionalDirichletNode& wrapper_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
-      wrapper,
-        { &bag_v }, wrapper_params_v);
+      wrapper, { &bag_v }, wrapper_params_v);
+#else
+  parents.clear();
+  parents.push_back(bag_v);
+  ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
+      wrapper, parents, wrapper_params_v);
+#endif
   wrapper_v.is_evidence(true);
 
   ConditionalDirichletNode& flavor_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
     { &bag_v }, flavor_params_v);
+#else
+  parents.clear();
+  parents.push_back(bag_v);
+  ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
+    parents, flavor_params_v);
+#endif
 
   /*
    * Predict the unknown flavor node by sampling.

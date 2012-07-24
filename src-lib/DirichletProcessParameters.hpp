@@ -14,8 +14,8 @@
 namespace DirichletProcessTest
 {
 
-  class Parameters;
-  class Node;
+  struct Parameters;
+  struct Node;
 
 }
 
@@ -87,8 +87,8 @@ namespace cpprob
   private:
 
     friend class DirichletProcessNode;
-    friend class ::DirichletProcessTest::Parameters;
-    friend class ::DirichletProcessTest::Node;
+    friend struct ::DirichletProcessTest::Parameters;
+    friend struct ::DirichletProcessTest::Node;
     typedef cont::RefVector<ConditionalCategoricalNode> Children;
     typedef cont::map<DiscreteRandomVariable, Children,
         DiscreteRandomVariable::NameLess> ChildrenOfComponent;

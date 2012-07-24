@@ -69,45 +69,108 @@ BOOST_AUTO_TEST_CASE(Parameters)
   auto probabilities_node1 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value1, condition1), 1);
   auto probabilities_node2 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value2, condition12), 1);
 
+#ifdef __GNUC__
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
           { &probabilities_node1, &probabilities_node2});
   auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
           { &probabilities_node2});
+#else
+  cont::vector<ConditionalDirichletNode*> managed_nodes;
+  managed_nodes.push_back(&probabilities_node1);
+  managed_nodes.push_back(&probabilities_node2);
+  auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
+          managed_nodes);
+  managed_nodes.clear();
+  managed_nodes.push_back(&probabilities_node2);
+  auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
+          managed_nodes);
+#endif
 
   auto infinite_mixture_node11 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node12 = bn.add_dirichlet_process(dp_parameters_node2);
+#ifdef __GNUC__
   auto child1_node1 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node11}, probabilities_node1);
+#else
+  cont::RefVector<DiscreteNode> parents(1, infinite_mixture_node11);
+  auto child1_node1 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+#endif
   child_lists1[infinite_mixture_node11.value()].push_back(child1_node1);
+#ifdef __GNUC__
   auto child2_node1 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node11, &infinite_mixture_node12}, probabilities_node2);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node11);
+  parents.push_back(infinite_mixture_node12);
+  auto child2_node1 = bn.add_conditional_categorical(value2,
+      parents, probabilities_node2);
+#endif
   child_lists2[infinite_mixture_node11.value()].push_back(child2_node1);
   child_lists2[infinite_mixture_node12.value()].push_back(child2_node1);
 
   auto infinite_mixture_node21 = bn.add_dirichlet_process(dp_parameters_node1);
+#ifdef __GNUC__
   auto child1_node2 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node21}, probabilities_node1);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node21);
+  auto child1_node2 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+#endif
   child_lists1[infinite_mixture_node21.value()].push_back(child1_node2);
 
   ++value1;
   ++(++value2);
   auto infinite_mixture_node31 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node32 = bn.add_dirichlet_process(dp_parameters_node2);
+#ifdef __GNUC__
   auto child1_node3 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node31}, probabilities_node1);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node31);
+  auto child1_node3 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+#endif
   child_lists1[infinite_mixture_node31.value()].push_back(child1_node3);
+#ifdef __GNUC__
   auto child2_node3 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node31, &infinite_mixture_node32}, probabilities_node2);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node31);
+  parents.push_back(infinite_mixture_node32);
+  auto child2_node3 = bn.add_conditional_categorical(value2,
+      parents, probabilities_node2);
+#endif
   child_lists2[infinite_mixture_node31.value()].push_back(child2_node3);
   child_lists2[infinite_mixture_node32.value()].push_back(child2_node3);
 
   auto infinite_mixture_node41 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node42 = bn.add_dirichlet_process(dp_parameters_node2);
+#ifdef __GNUC__
   auto child1_node4 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node41}, probabilities_node1);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node41);
+  auto child1_node4 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+#endif
   child_lists1[infinite_mixture_node41.value()].push_back(child1_node4);
+#ifdef __GNUC__
   auto child2_node4 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node41, &infinite_mixture_node42}, probabilities_node2);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node41);
+  parents.push_back(infinite_mixture_node42);
+  auto child2_node4 = bn.add_conditional_categorical(value2,
+      parents, probabilities_node2);
+#endif
   child_lists2[infinite_mixture_node41.value()].push_back(child2_node4);
   child_lists2[infinite_mixture_node42.value()].push_back(child2_node4);
 
@@ -136,13 +199,23 @@ BOOST_AUTO_TEST_CASE(Parameters)
   cout << "probabilities_node2 afterwards: " << probabilities_node2.value() << endl;
 
   cout << "\nCreate new component of parent 1" << endl;
-  dp_parameters1.create_component(
-      { &child1_node4});
+#ifdef __GNUC__
+  dp_parameters1.create_component({ &child1_node4});
+#else
+  cont::RefVector<ConditionalCategoricalNode> children(1, child1_node4);
+  dp_parameters1.create_component(children);
+#endif
   cout << "probabilities_node1 afterwards: " << probabilities_node1.value() << endl;
 
   cout << "\nCreate new component of parent 2" << endl;
+#ifdef __GNUC__
   dp_parameters2.create_component(
       { &child2_node4});
+#else
+  children.clear();
+  children.push_back(child2_node4);
+  dp_parameters2.create_component(children);
+#endif
   cout << "probabilities_node2 afterwards: " << probabilities_node2.value() << endl;
 }
 
@@ -165,39 +238,87 @@ BOOST_AUTO_TEST_CASE(Node)
   auto probabilities_node1 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value1, condition1), 1);
   auto probabilities_node2 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value2, condition12), 1);
 
+#ifdef __GNUC__
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 2,
       cont::vector<ConditionalDirichletNode*>(
           { &probabilities_node1, &probabilities_node2}));
   auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 1,
       cont::vector<ConditionalDirichletNode*>(
           { &probabilities_node2}));
+#else
+  cont::vector<ConditionalDirichletNode*> managed_nodes;
+  managed_nodes.push_back(&probabilities_node1);
+  managed_nodes.push_back(&probabilities_node2);
+  auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
+          managed_nodes);
+  managed_nodes.clear();
+  managed_nodes.push_back(&probabilities_node2);
+  auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
+          managed_nodes);
+#endif
 
   auto infinite_mixture_node11 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node12 = bn.add_dirichlet_process(dp_parameters_node2);
+#ifdef __GNUC__
   auto child1_node1 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node11}, probabilities_node1);
   auto child2_node1 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node11, &infinite_mixture_node12}, probabilities_node2);
+#else
+  cont::RefVector<DiscreteNode> parents(1, infinite_mixture_node11);
+  auto child1_node1 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+  parents.push_back(infinite_mixture_node12);
+  auto child2_node1 = bn.add_conditional_categorical(value2,
+      parents, probabilities_node2);
+#endif
 
   auto infinite_mixture_node21 = bn.add_dirichlet_process(dp_parameters_node1);
+#ifdef __GNUC__
   auto child1_node2 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node21}, probabilities_node1);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node21);
+  auto child1_node2 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+#endif
 
   ++value1;
   ++(++value2);
   auto infinite_mixture_node31 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node32 = bn.add_dirichlet_process(dp_parameters_node2);
+#ifdef __GNUC__
   auto child1_node3 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node31}, probabilities_node1);
   auto child2_node3 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node31, &infinite_mixture_node32}, probabilities_node2);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node31);
+  auto child1_node3 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+  parents.push_back(infinite_mixture_node32);
+  auto child2_node3 = bn.add_conditional_categorical(value2,
+      parents, probabilities_node2);
+#endif
 
   auto infinite_mixture_node41 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node42 = bn.add_dirichlet_process(dp_parameters_node2);
+#ifdef __GNUC__
   auto child1_node4 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node41}, probabilities_node1);
   auto child2_node4 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node41, &infinite_mixture_node42}, probabilities_node2);
+#else
+  parents.clear();
+  parents.push_back(infinite_mixture_node41);
+  auto child1_node4 = bn.add_conditional_categorical(value1,
+      parents, probabilities_node1);
+  parents.push_back(infinite_mixture_node42);
+  auto child2_node4 = bn.add_conditional_categorical(value2,
+      parents, probabilities_node2);
+#endif
 
   cout << bn;
 

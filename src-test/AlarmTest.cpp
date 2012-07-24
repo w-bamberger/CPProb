@@ -66,13 +66,28 @@ gen_alarm_net()
   ConstantRandomConditionalProbabilitiesNode& alarm_params_node =
       bn.add_constant(alarm_params);
 
+#ifdef __GNUC__
   ConditionalCategoricalNode& alarm_node = bn.add_conditional_categorical(
       alarm,
         { &burglary_node, &earthquake_node }, alarm_params_node);
+#else
+  cont::RefVector<DiscreteNode> parents;
+  parents.push_back(burglary_node);
+  parents.push_back(earthquake_node);
+  ConditionalCategoricalNode& alarm_node = bn.add_conditional_categorical(
+      alarm, parents, alarm_params_node);
+#endif
 
   RandomBoolean john_calls("JohnCalls", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& john_calls_node =
       bn.add_conditional_categorical(john_calls, {&alarm_node});
+#else
+  parents.clear();
+  parents.push_back(alarm_node);
+  ConditionalCategoricalNode& john_calls_node =
+      bn.add_conditional_categorical(john_calls, parents);
+#endif
   john_calls_node.is_evidence(true);
   RandomConditionalProbabilities& john_calls_probs =
       john_calls_node.probabilities();
@@ -84,8 +99,13 @@ gen_alarm_net()
   john_calls_probs.set(john_calls.observation(false), alarm, 0.95f);
 
   RandomBoolean mary_calls("MaryCalls", true);
+#ifdef __GNUC__
   ConditionalCategoricalNode& mary_calls_node =
       bn.add_conditional_categorical(mary_calls, {&alarm_node});
+#else
+  ConditionalCategoricalNode& mary_calls_node =
+      bn.add_conditional_categorical(mary_calls, parents);
+#endif
   mary_calls_node.is_evidence(true);
   RandomConditionalProbabilities& mary_calls_probs =
       mary_calls_node.probabilities();

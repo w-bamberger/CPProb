@@ -57,28 +57,62 @@ BOOST_AUTO_TEST_CASE(sampling)
       RandomConditionalProbabilities(child_value_true, parent_value1), 1);
 
   auto parent_node1 = bn.add_categorical(parent_value1);
+#ifdef __GNUC__
   auto child_node1 = bn.add_conditional_categorical(child_value_true,
       { &parent_node1}, probabilities_node);
+#else
+  cont::RefVector<DiscreteNode> parents(1, parent_node1);
+  auto child_node1 = bn.add_conditional_categorical(child_value_true,
+      parents, probabilities_node);
+#endif
   child_lists[parent_node1.value()].push_back(child_node1);
 
   auto parent_node2 = bn.add_categorical(parent_value2);
+#ifdef __GNUC__
   auto child_node2 = bn.add_conditional_categorical(child_value_false,
       { &parent_node2}, probabilities_node);
+#else
+  parents.clear();
+  parents.push_back(parent_node2);
+  auto child_node2 = bn.add_conditional_categorical(child_value_false,
+      parents, probabilities_node);
+#endif
   child_lists[parent_node2.value()].push_back(child_node2);
 
   auto parent_node3 = bn.add_categorical(parent_value2);
+#ifdef __GNUC__
   auto child_node3 = bn.add_conditional_categorical(child_value_false,
       { &parent_node3}, probabilities_node);
+#else
+  parents.clear();
+  parents.push_back(parent_node3);
+  auto child_node3 = bn.add_conditional_categorical(child_value_false,
+      parents, probabilities_node);
+#endif
   child_lists[parent_node3.value()].push_back(child_node3);
 
   auto parent_node4 = bn.add_categorical(parent_value1);
+#ifdef __GNUC__
   auto child_node4 = bn.add_conditional_categorical(child_value_false,
       { &parent_node4}, probabilities_node);
+#else
+  parents.clear();
+  parents.push_back(parent_node4);
+  auto child_node4 = bn.add_conditional_categorical(child_value_false,
+      parents, probabilities_node);
+#endif
   child_lists[parent_node4.value()].push_back(child_node4);
 
   auto parent_node5 = bn.add_categorical(parent_value1);
+#ifdef __GNUC__
   auto child_node5 = bn.add_conditional_categorical(child_value_true,
       { &parent_node5}, probabilities_node);
+#else
+  parents.clear();
+  parents.push_back(parent_node5);
+  auto child_node5 = bn.add_conditional_categorical(child_value_true,
+      parents, probabilities_node);
+#endif
   child_lists[parent_node5.value()].push_back(child_node5);
 
   /* Sample the regular probability table with the three possible conditions. */
