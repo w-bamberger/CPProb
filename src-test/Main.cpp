@@ -6,12 +6,13 @@
  */
 
 #include <boost/program_options.hpp>
-#define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
+#ifdef __GNUC__
 extern "C" void
 __libc_freeres(void);
+#endif
 
 using namespace boost;
 using namespace std;
@@ -50,7 +51,9 @@ init_unit_test_suite(int, char*[])
 int
 main(int argc, char **argv)
 {
+#ifdef __GNUC__
   atexit(__libc_freeres);
+#endif
 
   options_desc.add_options() //
   ("burn-in-iterations",
