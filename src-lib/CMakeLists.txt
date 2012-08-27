@@ -14,31 +14,39 @@ file(GLOB cont_header_files cont/*.hpp)
 file(GLOB pkgconfig_files *.pc)
 
 # Target
-add_library(cpprob_shared SHARED ${source_files})
 add_library(cpprob_static STATIC ${source_files})
-set_target_properties(cpprob_shared cpprob_static PROPERTIES
+set_target_properties(cpprob_static PROPERTIES
     OUTPUT_NAME "cpprob"
     VERSION ${CPProb_VERSION_MAJOR}.${CPProb_VERSION_MINOR}
     SOVERSION ${CPProb_VERSION_MAJOR})
+if(WIN32)
+  set_target_properties(cpprob_static PROPERTIES PREFIX "lib")
+endif(WIN32)
+
+if(NOT WIN32)
+  add_library(cpprob_shared SHARED ${source_files})
+  set_target_properties(cpprob_shared PROPERTIES
+      OUTPUT_NAME "cpprob"
+      VERSION ${CPProb_VERSION_MAJOR}.${CPProb_VERSION_MINOR}
+      SOVERSION ${CPProb_VERSION_MAJOR})
+endif(NOT WIN32)
+
 if(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-std=c++0x -Wall -Wextra)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCPPROB_DEBUG_MODE")
         
 # Installation
-if(WIN32)
-  set(shared_lib_destination "lib-shared")
-  set(static_lib_destination "lib-static")
-else(WIN32)
-  set(shared_lib_destination "lib")
-  set(static_lib_destination "lib")
-endif(WIN32)
-install(TARGETS cpprob_shared
-        LIBRARY DESTINATION ${shared_lib_destination}
-        ARCHIVE DESTINATION ${shared_lib_destination})
+set(static_lib_destination "lib")
 install(TARGETS cpprob_static
         LIBRARY DESTINATION ${static_lib_destination}
         ARCHIVE DESTINATION ${static_lib_destination})
+if(NOT WIN32)
+  set(shared_lib_destination "lib")
+  install(TARGETS cpprob_shared
+          LIBRARY DESTINATION ${shared_lib_destination}
+          ARCHIVE DESTINATION ${shared_lib_destination})
+endif(NOT WIN32)
 install(FILES ${main_header_files} DESTINATION include/cpprob)
 install(FILES ${cont_header_files} DESTINATION include/cpprob/cont)
 install(FILES ${pkgconfig_files} DESTINATION lib/pkgconfig)
