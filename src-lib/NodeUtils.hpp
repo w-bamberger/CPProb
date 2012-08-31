@@ -11,6 +11,7 @@
 #include "ConstantNode.hpp"
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
+#include <sstream>
 #include <typeinfo>
 
 namespace cpprob
@@ -209,6 +210,22 @@ namespace cpprob
       {
         if (!node.is_evidence())
           node.sample();
+      }
+
+  };
+
+  class StreamOutPointerValueToString : public boost::static_visitor<std::string>
+  {
+
+  public:
+
+    template<class T>
+      std::string
+      operator()(const T* ptr) const
+      {
+        std::ostringstream oss;
+        oss << *ptr;
+        return oss.str();
       }
 
   };

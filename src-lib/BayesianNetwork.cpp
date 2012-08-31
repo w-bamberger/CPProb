@@ -4,6 +4,9 @@
  *  Created on: 07.07.2011
  *      Author: wbam
  */
+#ifdef _MSC_VER
+#pragma warning(disable:4503)
+#endif
 
 #include "BayesianNetwork.hpp"
 
@@ -50,7 +53,8 @@ namespace cpprob
           old_probabilities);
       if (new_probabilities_node == value_node_table.end())
         cpprob_throw_logic_error(
-            "BayesianNetwork: Could not copy the network because of an inconsistent structure.");
+          "BayesianNetwork: Could not copy the network because of an inconsistent structure. New probabilities could not be found. Old probabilities: "
+          << apply_visitor(StreamOutPointerValueToString(), old_probabilities));
 
       if (DirichletNode** new_dirichlet = get<DirichletNode*>(
           &new_probabilities_node->second))
@@ -80,7 +84,8 @@ namespace cpprob
           old_probabilities);
       if (new_probabilities_node == value_node_table.end())
         cpprob_throw_logic_error(
-            "BayesianNetwork: Could not copy the network because of an inconsistent structure.");
+          "BayesianNetwork: Could not copy the network because of an inconsistent structure. New pobabilities could not be found. Old probabilities: "
+          << apply_visitor(StreamOutPointerValueToString(), old_probabilities));
 
       cont::RefVector<DiscreteNode> new_condition_nodes;
       for (DiscreteRandomReferences::const_iterator c =
@@ -90,7 +95,8 @@ namespace cpprob
             &(*c));
         if (new_condition_node == value_node_table.end())
           cpprob_throw_logic_error(
-              "BayesianNetwork: Could not copy the network because of an inconsistent structure.");
+            "BayesianNetwork: Could not copy the network because of an inconsistent structure. New condition node could not be found. Old node: "
+            << *c);
 
         if (CategoricalNode** new_categorical = get<CategoricalNode*>(&new_condition_node->second))
           new_condition_nodes.push_back(**new_categorical);
@@ -98,9 +104,13 @@ namespace cpprob
         else if (ConditionalCategoricalNode** new_conditional_categorical = get<ConditionalCategoricalNode*>(&new_condition_node->second))
           new_condition_nodes.push_back(**new_conditional_categorical);
 
+        else if (DirichletProcessNode** new_dirichlet_process = get<DirichletProcessNode*>(&new_condition_node->second))
+          new_condition_nodes.push_back(**new_dirichlet_process);
+
         else
           cpprob_throw_logic_error(
-              "BayesianNetwork: Could not copy the network because of an inconsistent structure.");
+						"BayesianNetwork: Could not copy the network because of an inconsistent structure. Invalid type of the condition node. New condition node: "
+						<< apply_visitor(StreamOutPointerValueToString(), new_condition_node->second));
       }
 
       if (ConditionalDirichletNode** new_dirichlet = get<ConditionalDirichletNode*>(&new_probabilities_node->second))
