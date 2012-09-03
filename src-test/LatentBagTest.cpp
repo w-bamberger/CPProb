@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
   ConditionalDirichletNode& hole_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
     { &bag_v }, hole_params_v);
 #else
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
   ConditionalDirichletNode& wrapper_params_v =
       bn.at<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
       wrapper, { &bag_v }, wrapper_params_v);
 #else
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
   ConditionalDirichletNode& flavor_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
     { &bag_v }, flavor_params_v);
 #else

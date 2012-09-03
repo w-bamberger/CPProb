@@ -250,7 +250,7 @@ namespace cpprob
         copy(first, last);
       }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
       DiscreteRandomVariableMap(std::initializer_list<value_type> init_list)
       : values_(1), node_count_(0)
       {
@@ -285,7 +285,7 @@ namespace cpprob
         return *this;
       }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
       DiscreteRandomVariableMap&
       operator=(std::initializer_list<value_type> right)
       {
@@ -471,7 +471,7 @@ namespace cpprob
         copy(first, last);
       }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
       void
       insert(std::initializer_list<value_type> init_list)
       {

@@ -46,7 +46,7 @@ protected:
     RandomConditionalProbabilities wrapper_params(wrapper, bag);
     auto* wrapper_params_node = &test_network_.add_conditional_dirichlet(
         wrapper_params, alpha);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     auto* wrapper_node1 = &test_network_.add_conditional_categorical(wrapper,
       { bag_node1 }, *wrapper_params_node);
 #else
@@ -55,7 +55,7 @@ protected:
       parents, *wrapper_params_node);
 #endif
     wrapper_node1->is_evidence(true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     auto* wrapper_node2 = &test_network_.add_conditional_categorical(wrapper,
       { bag_node2 }, *wrapper_params_node);
 #else
@@ -70,7 +70,7 @@ protected:
     RandomConditionalProbabilities hole_params(hole, bag);
     auto* hole_params_node = &test_network_.add_conditional_dirichlet(
         hole_params, alpha);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     auto* hole_node1 = &test_network_.add_conditional_categorical(hole,
       { bag_node1 }, *hole_params_node);
 #else
@@ -80,7 +80,7 @@ protected:
       parents, *hole_params_node);
 #endif
     hole_node1->is_evidence(true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     auto* hole_node2 = &test_network_.add_conditional_categorical(hole,
       { bag_node2 }, *hole_params_node);
 #else

@@ -38,7 +38,7 @@ namespace cpprob
     typedef DiscreteRandomVariableMap<std::size_t> ComponentCounters;
     typedef cont::RefVector<ConditionalDirichletNode> ManagedNodes;
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     DirichletProcessParameters(const std::string& name, float concentration,
         std::initializer_list<ConditionalDirichletNode*> managed_nodes);
 #endif

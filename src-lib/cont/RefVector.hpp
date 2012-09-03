@@ -52,7 +52,7 @@ namespace cpprob
         {
         }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
         RefVector(std::initializer_list<pointer> init_list)
             : pointers_(init_list)
         {

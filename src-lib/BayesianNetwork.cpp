@@ -433,7 +433,7 @@ namespace cpprob
     return get<DirichletProcessNode>(*new_node);
   }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConstantDirichletProcessParametersNode&
   BayesianNetwork::add_dirichlet_process_parameters(const std::string& name,
       float concentration,

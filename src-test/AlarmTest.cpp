@@ -66,7 +66,7 @@ gen_alarm_net()
   ConstantRandomConditionalProbabilitiesNode& alarm_params_node =
       bn.add_constant(alarm_params);
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& alarm_node = bn.add_conditional_categorical(
       alarm,
         { &burglary_node, &earthquake_node }, alarm_params_node);
@@ -79,7 +79,7 @@ gen_alarm_net()
 #endif
 
   RandomBoolean john_calls("JohnCalls", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& john_calls_node =
       bn.add_conditional_categorical(john_calls, {&alarm_node});
 #else
@@ -99,7 +99,7 @@ gen_alarm_net()
   john_calls_probs.set(john_calls.observation(false), alarm, 0.95f);
 
   RandomBoolean mary_calls("MaryCalls", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& mary_calls_node =
       bn.add_conditional_categorical(mary_calls, {&alarm_node});
 #else

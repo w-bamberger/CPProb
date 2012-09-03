@@ -33,6 +33,8 @@ endif(NOT WIN32)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-std=c++0x -Wall -Wextra)
+elseif(MSVC)
+  add_definitions(-DWITHOUT_INITIALIZER_LIST)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCPPROB_DEBUG_MODE")
         

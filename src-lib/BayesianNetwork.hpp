@@ -104,7 +104,7 @@ namespace cpprob
     DirichletProcessNode&
     add_dirichlet_process(ConstantDirichletProcessParametersNode& parent);
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     ConstantDirichletProcessParametersNode&
     add_dirichlet_process_parameters(const std::string& name,
         float concentration,

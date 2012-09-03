@@ -72,7 +72,7 @@ protected:
 
     if (data_file_ == "latent-bag-short.csv")
     {
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
       return CategoricalDistribution(
         {
           { flavor_false, 6.0 },
@@ -92,7 +92,7 @@ protected:
        *   C(F=0 | H=1, W=1): 52 (grep -e ",false,true,true" latent-bag.csv | wc)
        *   C(F=1 | H=1, W=1): 20 (grep -e ",true,true,true" latent-bag.csv | wc)
        */
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
       return CategoricalDistribution(
         {
           { flavor_false, 52.0 },
@@ -107,7 +107,7 @@ protected:
     }
     else if (data_file_ == "latent-bag-long.csv")
     {
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
       return CategoricalDistribution(
         {
           { flavor_false, 2534.0 },
@@ -171,7 +171,7 @@ protected:
         if (a->first != "Bag")
         {
           RandomBoolean var(a->first, a->second);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
           ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
             { &bag_evidence_node }, *params_table[a->first]);
 #else
@@ -237,7 +237,7 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
   ConditionalDirichletNode& hole_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
     { &bag_v }, hole_params_v);
 #else
@@ -250,7 +250,7 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
   ConditionalDirichletNode& wrapper_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
       wrapper, { &bag_v }, wrapper_params_v);
 #else
@@ -264,7 +264,7 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
   ConditionalDirichletNode& flavor_params_v = bn.at<ConditionalDirichletNode>(
       "ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
     { &bag_v }, flavor_params_v);
 #else

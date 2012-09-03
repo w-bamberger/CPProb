@@ -17,6 +17,8 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-std=c++0x -Wall -Wextra)
+elseif(MSVC)
+  add_definitions(-DWITHOUT_INITIALIZER_LIST)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # Target

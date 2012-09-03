@@ -23,7 +23,7 @@ namespace cpprob
     return os << parameters.name() << ":" << parameters.concentration();
   }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   DirichletProcessParameters::DirichletProcessParameters(
       const std::string& name, float concentration,
       std::initializer_list<ConditionalDirichletNode*> managed_nodes)

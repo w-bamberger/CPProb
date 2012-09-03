@@ -39,7 +39,7 @@ namespace cpprob
     {
     }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     CategoricalDistribution(std::initializer_list<value_type> entries)
         : pt_(entries)
     {
@@ -137,7 +137,7 @@ namespace cpprob
       return pt_[r];
     }
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
     CategoricalDistribution&
     operator=(std::initializer_list<value_type>& entries)
     {

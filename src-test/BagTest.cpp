@@ -99,7 +99,7 @@ gen_bag_net(float alpha, bool fully_observed, size_t lines_of_evidence =
       if (a->first != "Bag")
       {
         RandomBoolean var(a->first, a->second);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
         ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
           { &bag_evidence_node }, *params_table[a->first]);
 #else
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   ConditionalDirichletNode& hole_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesHoleBag");
   RandomBoolean hole("Hole", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& hole_v = bn_map_full.add_conditional_categorical(
       hole, { &bag_v }, hole_params_v);
 #else
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   ConditionalDirichletNode& wrapper_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& wrapper_v =
       bn_map_full.add_conditional_categorical(wrapper,
         { &bag_v }, wrapper_params_v);
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   ConditionalDirichletNode& flavor_params_v = bn_map_full.at<
       ConditionalDirichletNode>("ProbabilitiesFlavorBag");
   RandomBoolean flavor("Flavor", true);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& flavor_v =
       bn_map_full.add_conditional_categorical(flavor,
         { &bag_v }, flavor_params_v);

@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
   auto probabilities_node1 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value1, condition1), 1);
   auto probabilities_node2 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value2, condition12), 1);
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
           { &probabilities_node1, &probabilities_node2});
   auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
 
   auto infinite_mixture_node11 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node12 = bn.add_dirichlet_process(dp_parameters_node2);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node1 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node11}, probabilities_node1);
 #else
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
       parents, probabilities_node1);
 #endif
   child_lists1[infinite_mixture_node11.value()].push_back(child1_node1);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child2_node1 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node11, &infinite_mixture_node12}, probabilities_node2);
 #else
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
   child_lists2[infinite_mixture_node12.value()].push_back(child2_node1);
 
   auto infinite_mixture_node21 = bn.add_dirichlet_process(dp_parameters_node1);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node2 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node21}, probabilities_node1);
 #else
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
   ++(++value2);
   auto infinite_mixture_node31 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node32 = bn.add_dirichlet_process(dp_parameters_node2);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node3 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node31}, probabilities_node1);
 #else
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
       parents, probabilities_node1);
 #endif
   child_lists1[infinite_mixture_node31.value()].push_back(child1_node3);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child2_node3 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node31, &infinite_mixture_node32}, probabilities_node2);
 #else
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
 
   auto infinite_mixture_node41 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node42 = bn.add_dirichlet_process(dp_parameters_node2);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node4 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node41}, probabilities_node1);
 #else
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
       parents, probabilities_node1);
 #endif
   child_lists1[infinite_mixture_node41.value()].push_back(child1_node4);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child2_node4 = bn.add_conditional_categorical(value2,
       { &infinite_mixture_node41, &infinite_mixture_node42}, probabilities_node2);
 #else
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
   cout << "probabilities_node2 afterwards: " << probabilities_node2.value() << endl;
 
   cout << "\nCreate new component of parent 1" << endl;
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   dp_parameters1.create_component({ &child1_node4});
 #else
   cont::RefVector<ConditionalCategoricalNode> children(1, child1_node4);
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
   cout << "probabilities_node1 afterwards: " << probabilities_node1.value() << endl;
 
   cout << "\nCreate new component of parent 2" << endl;
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   dp_parameters2.create_component(
       { &child2_node4});
 #else
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(Node)
   auto probabilities_node1 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value1, condition1), 1);
   auto probabilities_node2 = bn.add_conditional_dirichlet(RandomConditionalProbabilities(value2, condition12), 1);
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 2,
       cont::vector<ConditionalDirichletNode*>(
           { &probabilities_node1, &probabilities_node2}));
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE(Node)
 
   auto infinite_mixture_node11 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node12 = bn.add_dirichlet_process(dp_parameters_node2);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node1 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node11}, probabilities_node1);
   auto child2_node1 = bn.add_conditional_categorical(value2,
@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_CASE(Node)
 #endif
 
   auto infinite_mixture_node21 = bn.add_dirichlet_process(dp_parameters_node1);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node2 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node21}, probabilities_node1);
 #else
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(Node)
   ++(++value2);
   auto infinite_mixture_node31 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node32 = bn.add_dirichlet_process(dp_parameters_node2);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node3 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node31}, probabilities_node1);
   auto child2_node3 = bn.add_conditional_categorical(value2,
@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE(Node)
 
   auto infinite_mixture_node41 = bn.add_dirichlet_process(dp_parameters_node1);
   auto infinite_mixture_node42 = bn.add_dirichlet_process(dp_parameters_node2);
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   auto child1_node4 = bn.add_conditional_categorical(value1,
       { &infinite_mixture_node41}, probabilities_node1);
   auto child2_node4 = bn.add_conditional_categorical(value2,

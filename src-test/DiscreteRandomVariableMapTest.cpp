@@ -46,7 +46,7 @@ protected:
   ValueType array_[array_size_];
 
   DiscreteRandomVariableMapFixture()
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
       : var("Var", 7, 0), map_(
         { //
           ValueType(var.observation(1), 1.5), //
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(Construct)
   BOOST_CHECK(m1.empty());
   BOOST_CHECK(m1.begin() == m1.end());
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   /* Construction from initializer list. */
   BOOST_TEST_CHECKPOINT("Construction from initializer list.");
   MapType m2(
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE(Assign)
   m1 = m2;
   BOOST_CHECK(equal(m1.begin(), m1.end(), map_.begin()));
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   /* Assignment from initializer list. */
   BOOST_TEST_CHECKPOINT("Assignment from initializer list.");
   m1 =
@@ -426,7 +426,7 @@ BOOST_AUTO_TEST_CASE(Insert)
   BOOST_CHECK(equal(m.begin(), m.end(), map_.begin()));
   BOOST_CHECK_EQUAL(m.size(), array_size_);
 
-#ifdef __GNUC__
+#ifndef WITHOUT_INITIALIZER_LIST
   /* Insert from initializer list. */
   m.clear();
   m.insert(
