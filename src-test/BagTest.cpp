@@ -9,6 +9,7 @@
 #include "../src-lib/RandomBoolean.hpp"
 #include "CsvMapReader.hpp"
 #include <boost/program_options.hpp>
+#include <boost/test/floating_point_comparison.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/timer.hpp>
 #include <iostream>
@@ -237,19 +238,22 @@ BOOST_AUTO_TEST_CASE( bag_test )
       burn_in_iterations, collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
+  {
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive distribution with sampling:\n";
-  cout << prediction;
-  /*
-   * The counts in bag.csv are
-   *   C(F=0 | H=1, W=1):  79 (grep -e "false,true,true" bag.csv | wc)
-   *   C(F=1 | H=1, W=1): 272 (grep -e "true,true,true" bag.csv | wc)
-   *
-   * With prior parameters (5, 5) the counts are 84/277. This results in
-   * the probabilities 0.2327/0.7673.
-   */
-  cout << "Correct values (bag.csv):\n";
-  cout << "      (Flavor:0,0.2327)  (Flavor:1,0.7673)\n" << endl;
+    cout << "Predictive distribution with sampling:\n";
+    cout << prediction;
+    /*
+     * The counts in bag.csv are
+     *   C(F=0 | H=1, W=1):  79 (grep -e "false,true,true" bag.csv | wc)
+     *   C(F=1 | H=1, W=1): 272 (grep -e "true,true,true" bag.csv | wc)
+     *
+     * With prior parameters (5, 5) the counts are 84/277. This results in
+     * the probabilities 0.2327/0.7673.
+     */
+    cout << "Correct values (bag.csv):\n";
+    cout << "      (Flavor:0,0.2327)  (Flavor:1,0.7673)\n" << endl;
+  }
+  BOOST_CHECK_SMALL(prediction.begin()->second - 84.0 / (84.0 + 277.0), 0.03);
 
   random_number_engine.seed(); // Reset in a well-defined state.
   cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
@@ -259,17 +263,20 @@ BOOST_AUTO_TEST_CASE( bag_test )
       collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
+  {
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive distribution with sampling:\n";
-  cout << prediction;
-  /*
-   * The counts in bag.csv are
-   *   C(B=0 | H=1, W=1): 302 (grep -e "false,.*,true,true" bag.csv | wc)
-   *   C(B=1 | H=1, W=1):  50 (grep -e "true,.*,true,true" bag.csv | wc)
-   *
-   * With prior parameters (5, 5) the counts are 307/55. This results in
-   * the probabilities 0.8481/0.1519.
-   */
-  cout << "Correct values (bag.csv):\n";
-  cout << "      (Bag:0,0.8481)  (Bag:1,0.1519)" << endl;
+    cout << "Predictive distribution with sampling:\n";
+    cout << prediction;
+    /*
+     * The counts in bag.csv are
+     *   C(B=0 | H=1, W=1): 302 (grep -e "false,.*,true,true" bag.csv | wc)
+     *   C(B=1 | H=1, W=1):  50 (grep -e "true,.*,true,true" bag.csv | wc)
+     *
+     * With prior parameters (5, 5) the counts are 307/55. This results in
+     * the probabilities 0.8481/0.1519.
+     */
+    cout << "Correct values (bag.csv):\n";
+    cout << "      (Bag:0,0.8481)  (Bag:1,0.1519)" << endl;
+  }
+  BOOST_CHECK_SMALL(prediction.begin()->second - 307.0 / (307.0 + 55.0), 0.02);
 }

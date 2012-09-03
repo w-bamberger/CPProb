@@ -3,9 +3,6 @@ Generate the bag network with infinite mixtures
 CSV header: Bag Flavor Wrapper Hole 
 
 Sample with 5 burn-in iterations and 500 collect iterations.
-Predictive distribution with sampling:
-      (Flavor:0,0.692)  (Flavor:1,0.308) 
-
 Correct values (latent-bag.csv):
       (Flavor:0,0.695122)  (Flavor:1,0.304878) 
 

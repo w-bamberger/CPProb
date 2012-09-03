@@ -289,17 +289,19 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
       collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
+  {
     cout << "Duration: " << duration << "\n";
-  cout << "Predictive distribution with sampling:\n";
-  cout << prediction << endl;
+    cout << "Predictive distribution with sampling:\n";
+    cout << prediction << endl;
+  }
 
   if (correct_flavor_distribution_.size() != 0)
   {
     cout << "Correct values (" << data_file_ << "):\n";
     cout << correct_flavor_distribution_ << endl;
-    BOOST_CHECK_LT(
-        fabs( prediction.begin()->second - correct_flavor_distribution_.begin()->second),
-        0.06);
+    BOOST_CHECK_SMALL(
+        prediction.begin()->second - correct_flavor_distribution_.begin()->second,
+        0.06f);
   }
 
   if (options_map["with-debug-output"].as<bool>())

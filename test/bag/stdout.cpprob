@@ -55,13 +55,4 @@ ProbabilitiesHoleBag:
 
 Extend the network for prediction
 Sample with 5 burn-in iterations and 500 collect iterations.
-Predictive distribution with sampling:
-      (Flavor:0,0.256)  (Flavor:1,0.744) 
-Correct values (bag.csv):
-      (Flavor:0,0.2327)  (Flavor:1,0.7673)
-
 Sample with 5 burn-in iterations and 500 collect iterations.
-Predictive distribution with sampling:
-      (Bag:0,0.858)  (Bag:1,0.142) 
-Correct values (bag.csv):
-      (Bag:0,0.8481)  (Bag:1,0.1519)
