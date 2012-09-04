@@ -39,12 +39,12 @@ namespace cpprob
 
           // Copy the list content.
           CppRefListType* v = static_cast<CppRefListType*>(storage);
-          int l = PySequence_Size(obj_ptr);
+          Py_ssize_t l = PySequence_Size(obj_ptr);
           if (l < 0)
             throw std::runtime_error(
                 "Proby: Cannot convert Python list to C++ RefVector.");
           v->reserve(l);
-          for (int i = 0; i < l; i++)
+          for (Py_ssize_t i = 0; i < l; i++)
             v->push_back(
                 boost::python::extract<T&>(PySequence_GetItem(obj_ptr, i)));
 

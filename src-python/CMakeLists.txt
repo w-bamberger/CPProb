@@ -6,9 +6,10 @@ set(CPProb_VERSION_MINOR 0)
 # Dependencies
 find_package(Boost 1.40.0 REQUIRED python)
 include_directories(${Boost_INCLUDE_DIRS})
-find_package(PythonInterp)
-find_package(PythonLibs)
+find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_PATH})
+find_package(CPProb REQUIRED)
+include_directories(${CPPROB_INCLUDE_DIRS})
 
 # Sources
 file(GLOB cpp_source_files *.?pp)
@@ -16,15 +17,18 @@ file(GLOB python_source_files *.py)
 
 # Target
 add_library(proby SHARED ${cpp_source_files})
-target_link_libraries(proby cpprob)
+target_link_libraries(proby ${CPPROB_LIBRARIES})
 target_link_libraries(proby ${Boost_LIBRARIES})
+target_link_libraries(proby ${PYTHON_LIBRARIES})
 set_target_properties(proby PROPERTIES PREFIX "_")
 if(CMAKE_COMPILER_IS_GNUCXX)
   add_definitions(-Wall -std=c++0x)
+elseif(MSVC)
+  add_definitions(-DWITHOUT_INITIALIZER_LIST)
 endif(CMAKE_COMPILER_IS_GNUCXX)
         
 # Installation
-set(destination_path lib/python2.6/dist-packages/proby)
+set(destination_path "lib/python${PYTHONLIBS_VERSION_STRING}/dist-packages/proby")
 install(FILES ${python_source_files} DESTINATION ${destination_path})
 install(TARGETS proby 
         LIBRARY DESTINATION ${destination_path} 

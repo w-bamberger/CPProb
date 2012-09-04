@@ -38,11 +38,11 @@ namespace cpprob
 
           // Copy the list content.
           CppListType* v = static_cast<CppListType*>(storage);
-          int l = PySequence_Size(obj_ptr);
+          Py_ssize_t l = PySequence_Size(obj_ptr);
           if (l < 0)
             throw std::runtime_error(
                 "Proby: Cannot convert Python list to C++ list.");
-          for (int i = 0; i < l; i++)
+          for (Py_ssize_t i = 0; i < l; i++)
             v->push_back(
                 boost::python::extract < T > (PySequence_GetItem(obj_ptr, i)));
 
