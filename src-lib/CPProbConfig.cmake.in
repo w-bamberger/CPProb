@@ -1,0 +1,22 @@
+# - Config file for the CPProb package
+# It defines the following variables
+#  CPPROB_INCLUDE_DIRS - include directories for CPProb
+#  CPPROB_LIBRARIES    - libraries to link against
+#  CPPROB_EXECUTABLE   - the bar executable
+ 
+# Compute paths
+get_filename_component(CPPROB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+if(EXISTS "${CPPROB_CMAKE_DIR}/CMakeCache.txt")
+   # In build tree
+   include("${CPPROB_CMAKE_DIR}/CPProbBuildTreeSettings.cmake")
+else()
+   set(CPPROB_INCLUDE_DIRS "${CPPROB_CMAKE_DIR}/@CONF_REL_INCLUDE_DIR@")
+endif()
+ 
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${CPPROB_CMAKE_DIR}/CPProbLibraryDepends.cmake")
+ 
+# These are IMPORTED targets created by CPProbLibraryDepends.cmake
+set(CPPROB_LIBRARIES cpprob_static)
+
+message(STATUS "Found CPProb: include dirs \"${CPPROB_INCLUDE_DIRS}\" and libraries \"${CPPROB_LIBRARIES}\"")
