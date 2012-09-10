@@ -164,5 +164,5 @@ BOOST_AUTO_TEST_CASE( alarm_test )
     cout << burglary_distribution;
     cout << endl;
   }
-  BOOST_CHECK_SMALL(burglary_distribution.begin()->second - correct_false_probability, 0.06f);
+  BOOST_CHECK_SMALL(burglary_distribution.begin()->second - correct_false_probability, 0.02f);
 }
