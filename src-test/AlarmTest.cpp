@@ -9,6 +9,7 @@
 #include "../src-lib/DiscreteJointRandomVariable.hpp"
 #include "../src-lib/RandomBoolean.hpp"
 #include <boost/program_options.hpp>
+#include <boost/test/floating_point_comparison.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/timer.hpp>
 #include <iostream>
@@ -144,6 +145,8 @@ BOOST_AUTO_TEST_CASE( alarm_test )
   cout << burglary_distribution;
   cout << endl;
 
+  float correct_false_probability = burglary_distribution.begin()->second;
+
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();
   unsigned int collect_iterations = options_map["collect-iterations"].as<
@@ -155,8 +158,11 @@ BOOST_AUTO_TEST_CASE( alarm_test )
       collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
+  {
     cout << "Duration: " << duration << "\n";
-  cout << "Burglary distribution with Gibbs sampling:\n";
-  cout << burglary_distribution;
-  cout << endl;
+    cout << "Burglary distribution with Gibbs sampling:\n";
+    cout << burglary_distribution;
+    cout << endl;
+  }
+  BOOST_CHECK_SMALL(burglary_distribution.begin()->second - correct_false_probability, 0.06f);
 }
