@@ -604,12 +604,10 @@ namespace cpprob
         iteration++)
     {
       SampleNode sample_visitor;
-
       for (iterator vertex_it = begin(); vertex_it != end(); ++vertex_it)
-      {
         apply_visitor(sample_visitor, *vertex_it);
-        X_distribution[x] += 1.0f;
-      }
+
+      X_distribution[x] += 1.0f;
     }
 
     X_distribution.normalize();
