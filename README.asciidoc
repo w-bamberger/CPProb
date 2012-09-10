@@ -1,4 +1,4 @@
-CPProb � Algorithms for Probabilistic Reasoning
+﻿CPProb – Algorithms for Probabilistic Reasoning
 ===============================================
 
 Introduction
@@ -36,11 +36,17 @@ Build the Library
 . Create a new build directory (e.g. build-lib).
 . Run CMake. Maybe you need to set the variable +BOOST_ROOT+.
 . Compile the library with your tool chain.
-  The process has three main targets. They are different projects in Visual Studio.
++
+--
+The process has three main targets.
 [horizontal]
-    cpprob_static:: Builds a static library
-	cpprob_shared:: Builds a shared library
-	INSTALL: Depends on both targets above. It installs both libraries in your system.
+cpprob_static:: Builds a static library
+cpprob_shared:: Builds a shared library
+INSTALL:: Depends on both targets above. It installs both libraries in your system.
+
+In Visual Studio, only the targets cpprob_static and INSTALL are available. They are
+projects within the CPProb solution.
+--
 
 Build the Tests
 ~~~~~~~~~~~~~~~
