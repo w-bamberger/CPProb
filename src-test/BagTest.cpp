@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE( bag_test )
   cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
       << collect_iterations << " collect iterations.\n";
   t.restart();
-  CategoricalDistribution prediction = bn_map_full.sample(flavor_v,
+  CategoricalDistribution prediction = bn_map_full.sample(bag_v,
       burn_in_iterations, collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
@@ -244,23 +244,66 @@ BOOST_AUTO_TEST_CASE( bag_test )
     cout << prediction;
     /*
      * The counts in bag.csv are
-     *   C(F=0 | H=1, W=1):  79 (grep -e "false,true,true" bag.csv | wc)
-     *   C(F=1 | H=1, W=1): 272 (grep -e "true,true,true" bag.csv | wc)
      *
-     * With prior parameters (5, 5) the counts are 84/277. This results in
-     * the probabilities 0.2327/0.7673.
+     *   NBf = C(B=f):         496 (grep "^false" bag.csv | wc)
+     *   NBt = C(B=t):         504 (grep "^true" bag.csv | wc)
+     *   NBfWf = C(W=f | B=f): 119 (grep "^false,.*,false," bag.csv | wc)
+     *   NBfWt = C(W=t | B=f): 377 (grep "^false,.*,true," bag.csv | wc)
+     *   NBtWf = C(W=f | B=t): 336 (grep "^true,.*,false," bag.csv | wc)
+     *   NBtWt = C(W=t | B=t): 168 (grep "^true,.*,true," bag.csv | wc)
+     *   NBfHf = C(H=f | B=f):  95 (grep "^false,.*,false$" bag.csv | wc)
+     *   NBfHt = C(H=t | B=f): 401 (grep "^false,.*,true$" bag.csv | wc)
+     *   NBtHf = C(H=f | B=t): 355 (grep "^true,.*,false$" bag.csv | wc)
+     *   NBtHt = C(H=t | B=t): 149 (grep "^true,.*,true$" bag.csv | wc)
+     *
+     * The hyper parameters (a, a) = (5, 5). The aim is to find
+     * the probabilities
+     *
+     *   P(B=s | W=t, H=t, B_, W_, H_) \propto
+     *     (a + NBs) L(W=t | B=s) L(H=t | B=s),
+     *
+     * where s is either t or f. The first term is the prior probability
+     * of B=s for the collapsed Dirichlet-categorical distribution.
+     *
+     * The likelihood L(W=t | B=s) corresponds to the probability
+     * P(W=t | B=s) in the component B=s of the mixture model for W. These
+     * components again are collapsed Dirichlet-categorical distributions.
+     * The same holds for H=t. Thus their probabilities are
+     *
+     *   P(W=t | B=f) = (a + NBfWt) / (a + NBfWt + a + NBfWf) =
+     *     (5 + 377) / (5 + 377 + 5 + 119) = 382 / 506 = 0.7549
+     *   P(W=t | B=t) = (a + NBtWt) / (a + NBtWt + a + NBtWf) =
+     *     (5 + 168) / (5 + 168 + 5 + 336) = 173 / 514 = 0.3366
+     *   P(H=t | B=f) = (a + NBfHt) / (a + NBfHt + a + NBfHf) =
+     *     (5 + 401) / (5 + 401 + 5 + 95) = 406 / 506 = 0.8024
+     *   P(H=t | B=t) = (a + NBtHt) / (a + NBtHt + a + NBtHf) =
+     *     (5 + 149) / (5 + 149 + 5 + 355) = 154 / 514 = 0.2996
+     *
+     * Filling these likelihoods in the equation at the beginning results in
+     * the unnormalised probabilities
+     *
+     *   P(B=f | W=t, H=t, B_, W_, H_) \propto
+     *     (5 + 496) * 0.7549 * 0.8024 = 303.5
+     *   P(B=t | W=t, H=t, B_, W_, H_) \propto
+     *     (5 + 504) * 0.3366 * 0.2996 = 51.33
+     *
+     * After normalisation, the probabilities are
+     *
+     *   P(B=f | W=t, H=t, B_, W_, H_) = 0.85533356
+     *   P(B=t | W=t, H=t, B_, W_, H_) = 0.14466644
+     *
      */
     cout << "Correct values (bag.csv):\n";
-    cout << "      (Flavor:0,0.2327)  (Flavor:1,0.7673)\n" << endl;
+    cout << "      (Bag:0,0.8553)  (Bag:1,0.1447)" << endl;
   }
-  BOOST_CHECK_SMALL(prediction.begin()->second - 84.0 / (84.0 + 277.0), 0.03);
+  BOOST_CHECK_SMALL(prediction.begin()->second - 0.85533356f, 0.01f);
 
   random_number_engine.seed(); // Reset in a well-defined state.
   cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
       << collect_iterations << " collect iterations.\n";
   t.restart();
-  prediction = bn_map_full.sample(bag_v, burn_in_iterations,
-      collect_iterations);
+  prediction = bn_map_full.sample(flavor_v,
+      burn_in_iterations, collect_iterations);
   duration = t.elapsed();
   if (!options_map["test-mode"].as<bool>())
   {
@@ -268,15 +311,33 @@ BOOST_AUTO_TEST_CASE( bag_test )
     cout << "Predictive distribution with sampling:\n";
     cout << prediction;
     /*
-     * The counts in bag.csv are
-     *   C(B=0 | H=1, W=1): 302 (grep -e "false,.*,true,true" bag.csv | wc)
-     *   C(B=1 | H=1, W=1):  50 (grep -e "true,.*,true,true" bag.csv | wc)
-     *
-     * With prior parameters (5, 5) the counts are 307/55. This results in
-     * the probabilities 0.8481/0.1519.
-     */
+    * The counts in bag.csv are
+    *
+    *   NBfFf = C(F=f | B=f):  89 (grep "^false,false" bag.csv | wc)
+    *   NBfFt = C(F=t | B=f): 407 (grep "^false,true" bag.csv | wc)
+    *   NBtFf = C(F=f | B=t): 351 (grep "^true,false" bag.csv | wc)
+    *   NBtFt = C(F=t | B=t): 153 (grep "^true,true" bag.csv | wc)
+    *
+    * The hyper parameters are (a, a) = (5, 5).
+    * This leads to the unnormalised probabilities
+    *
+    * P(F=f | H=T, W=T, F_, B_, W_, H_) \propto
+    *   (a + NBfFf) P(B=f | H=T, W=T, B_, , W_, H_) +
+    *     (a + NBtFf) P(B=t | H=T, W=T, B_, W_, H_) =
+    *   131.9
+    *
+    * P(F=t | H=T, W=T, F_, B_, W_, H_) \propto
+    *   (a + NBfFt) P(B=f | H=T, W=T, B_, W_, H_) +
+    *     (a + NBtFt) P(B=t | H=T, W=T, B_, W_, H_) =
+    *  375.3
+    *
+    * Normalising them results in
+    *
+    * P(F=f | H=T, W=T, F_, B_, W_, H_) = 0.26008222
+    * P(F=t | H=T, W=T, F_, B_, W_, H_) = 0.73991778
+    */
     cout << "Correct values (bag.csv):\n";
-    cout << "      (Bag:0,0.8481)  (Bag:1,0.1519)" << endl;
+    cout << "      (Flavor:0,0.2601)  (Flavor:1,0.7399)\n" << endl;
   }
-  BOOST_CHECK_SMALL(prediction.begin()->second - 307.0 / (307.0 + 55.0), 0.02);
+  BOOST_CHECK_SMALL(prediction.begin()->second - 0.26008222f, 0.01f);
 }
