@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE( alarm_test )
   cout << burglary_distribution;
   cout << endl;
 
-  float correct_false_probability = burglary_distribution.begin()->second;
+  float enumeration_false_probability = burglary_distribution.begin()->second;
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();
@@ -164,5 +164,7 @@ BOOST_AUTO_TEST_CASE( alarm_test )
     cout << burglary_distribution;
     cout << endl;
   }
-  BOOST_CHECK_SMALL(burglary_distribution.begin()->second - correct_false_probability, 0.02f);
+  float sampling_false_probability = burglary_distribution.begin()->second;
+  BOOST_CHECK_SMALL(sampling_false_probability - 
+                    enumeration_false_probability, 0.01f);
 }
