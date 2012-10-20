@@ -106,7 +106,7 @@ gen_bag_net(float alpha, bool fully_observed, size_t lines_of_evidence =
 #else
         cont::RefVector<DiscreteNode> parents(1, bag_evidence_node);
         ConditionalCategoricalNode& node = bn.add_conditional_categorical(var,
-          parents, *params_table[a->first]);
+            parents, *params_table[a->first]);
 #endif
         node.is_evidence(true);
       }

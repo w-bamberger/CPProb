@@ -68,9 +68,8 @@ gen_alarm_net()
       bn.add_constant(alarm_params);
 
 #ifndef WITHOUT_INITIALIZER_LIST
-  ConditionalCategoricalNode& alarm_node = bn.add_conditional_categorical(
-      alarm,
-        { &burglary_node, &earthquake_node }, alarm_params_node);
+  ConditionalCategoricalNode& alarm_node = bn.add_conditional_categorical(alarm,
+    { &burglary_node, &earthquake_node }, alarm_params_node);
 #else
   cont::RefVector<DiscreteNode> parents;
   parents.push_back(burglary_node);
@@ -162,7 +161,7 @@ BOOST_AUTO_TEST_CASE( alarm_test )
     cout << "Duration: " << duration << "\n";
     cout << "Burglary distribution with Gibbs sampling:\n";
     cout << burglary_distribution;
-    cout << endl;
   }
-  BOOST_CHECK_SMALL(burglary_distribution.begin()->second - correct_false_probability, 0.02f);
+  BOOST_CHECK_SMALL(
+      burglary_distribution.begin()->second - correct_false_probability, 0.02f);
 }

@@ -51,12 +51,12 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
 #else
   cont::RefVector<DiscreteNode> parents(1, bag_v);
   ConditionalCategoricalNode& hole_v = bn.add_conditional_categorical(hole,
-    parents, hole_params_v);
+      parents, hole_params_v);
 #endif
   hole_v.is_evidence(true);
 
-  ConditionalDirichletNode& wrapper_params_v =
-      bn.at<ConditionalDirichletNode>("ProbabilitiesWrapperBag");
+  ConditionalDirichletNode& wrapper_params_v = bn.at<ConditionalDirichletNode>(
+      "ProbabilitiesWrapperBag");
   RandomBoolean wrapper("Wrapper", true);
 #ifndef WITHOUT_INITIALIZER_LIST
   ConditionalCategoricalNode& wrapper_v = bn.add_conditional_categorical(
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
     { &bag_v }, flavor_params_v);
 #else
   ConditionalCategoricalNode& flavor_v = bn.add_conditional_categorical(flavor,
-    parents, flavor_params_v);
+      parents, flavor_params_v);
 #endif
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
