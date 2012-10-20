@@ -583,6 +583,23 @@ namespace cpprob
     for_each(begin(), end(), make_apply_visitor_delayed(LearnParameters()));
   }
 
+  template<class It>
+    CategoricalDistribution
+    BayesianNetwork::mix_distributions_additively(It distributions_begin,
+        It distributions_end)
+    {
+      CategoricalDistribution result;
+
+      for (auto d = distributions_begin; d != distributions_end; ++d)
+      {
+        for (auto d_entry = d->begin(); d_entry != d->end(); ++d_entry)
+          result[d_entry->first] += d_entry->second;
+      }
+      result.normalize();
+
+      return result;
+    }
+
   CategoricalDistribution
   BayesianNetwork::sample(const DiscreteNode& X,
       unsigned int burn_in_iterations, unsigned int collect_iterations)
@@ -612,6 +629,65 @@ namespace cpprob
 
     X_distribution.normalize();
     return X_distribution;
+  }
+
+  /*
+   * Run several partial samplings. Then divide the list of partial samplings
+   * in three blocks and compare the combined samplings result between the
+   * three blocks. If the maximum deviation in one of the probabilities is
+   * higher than max_deviation, proceed sampling. Only if all three
+   * distribution are very similiar (deviation < max_deviation), all partial
+   * samplings are combined to one result, which is returned.
+   */
+  CategoricalDistribution
+  BayesianNetwork::sample(const DiscreteNode& X, float max_deviation,
+      unsigned int* iterations)
+  {
+    static const unsigned int partial_iterations = 500;
+    vector<CategoricalDistribution> partial_distributions;
+    float overall_deviation = 0.0f;
+    float single_deviation = 1.0f;
+
+    partial_distributions.push_back(sample(X, 0, 500));
+    partial_distributions.push_back(sample(X, 0, 500));
+    do
+    {
+      overall_deviation = 0.0f;
+
+      partial_distributions.push_back(sample(X, 0, 500));
+
+      // Divide the list in three parts
+      auto first_third_it = partial_distributions.begin()
+          + std::ceil(partial_distributions.size() / 3.0);
+      auto second_third_it = partial_distributions.begin()
+          + std::ceil(partial_distributions.size() * 2.0 / 3.0);
+
+      // Compute a combined distribution for every part
+      auto first_third_distribution = mix_distributions_additively(
+          partial_distributions.begin(), first_third_it);
+      auto second_third_distribution = mix_distributions_additively(
+          first_third_it, second_third_it);
+      auto third_third_distribution = mix_distributions_additively(
+          second_third_it, partial_distributions.end());
+
+      // Compare the distributions
+      single_deviation = maximum_norm(
+          difference(first_third_distribution, second_third_distribution));
+      overall_deviation = std::max(overall_deviation, single_deviation);
+      single_deviation = maximum_norm(
+          difference(first_third_distribution, third_third_distribution));
+      overall_deviation = std::max(overall_deviation, single_deviation);
+      single_deviation = maximum_norm(
+          difference(second_third_distribution, third_third_distribution));
+      overall_deviation = std::max(overall_deviation, single_deviation);
+    }
+    while (overall_deviation > max_deviation);
+
+    if (iterations != 0)
+      *iterations = partial_distributions.size() * partial_iterations;
+
+    return mix_distributions_additively(partial_distributions.begin(),
+        partial_distributions.end());
   }
 
 }

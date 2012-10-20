@@ -216,6 +216,10 @@ namespace cpprob
     sample(const DiscreteNode& X, unsigned int burn_in_iterations,
         unsigned int collect_iterations);
 
+    CategoricalDistribution
+    sample(const DiscreteNode& x, float max_deviation,
+        unsigned int* iterations = 0);
+
     /**
      * Fills the values of parameter vertices from the data in the network.
      * This method looks for the non-evidence vertices with random variables of
@@ -372,6 +376,10 @@ namespace cpprob
     insert_conditional_categorical(const DiscreteRandomVariable& value,
         const DiscreteRandomReferences& condition_nodes,
         RandomConditionalProbabilities& parameters);
+
+    template<class It>
+      CategoricalDistribution
+      mix_distributions_additively(It begin, It end);
 
   };
 
