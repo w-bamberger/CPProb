@@ -28,6 +28,7 @@
 								<option id="gnu.cpp.compiler.option.warnings.pedantic.910218777" name="Pedantic (-pedantic)" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.2126354059" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__=1"/>
+									<listOptionValue builtIn="false" value="BOOST_TEST_DYN_LINK"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.1897246134" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++0x -Wextra" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1707314775" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -89,8 +90,9 @@
 								<option id="gnu.cpp.compiler.option.other.other.2126121264" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++0x -Wextra" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1369546115" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__=1"/>
+									<listOptionValue builtIn="false" value="BOOST_TEST_DYN_LINK"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.warnings.pedantic.869631876" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.pedantic.869631876" name="Pedantic (-pedantic)" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.810548394" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.release.1447234351" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.release">
@@ -98,7 +100,7 @@
 								<option id="gnu.c.compiler.exe.release.option.debugging.level.307844500" name="Debug Level" superClass="gnu.c.compiler.exe.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.misc.ansi.1453849701" name="Support ANSI programs (-ansi)" superClass="gnu.c.compiler.option.misc.ansi" value="true" valueType="boolean"/>
 								<option id="gnu.c.compiler.option.misc.other.16295623" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -Wextra" valueType="string"/>
-								<option id="gnu.c.compiler.option.warnings.pedantic.1364537126" superClass="gnu.c.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.warnings.pedantic.1364537126" name="Pedantic (-pedantic)" superClass="gnu.c.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.820495861" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.release.2001262227" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.release"/>
@@ -150,6 +152,7 @@
 								<option id="gnu.cpp.compiler.option.warnings.pedantic.620396489" name="Pedantic (-pedantic)" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.2100775764" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CPPROB_DEBUG_MODE"/>
+									<listOptionValue builtIn="false" value="BOOST_TEST_DYN_LINK"/>
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__=1"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.1639995535" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++0x -Wextra" valueType="string"/>
@@ -209,11 +212,11 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1607655284;cdt.managedbuild.config.gnu.exe.debug.1607655284.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.1816164970;cdt.managedbuild.tool.gnu.cpp.compiler.input.1707314775">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1607655284.1680006234;cdt.managedbuild.config.gnu.exe.debug.1607655284.1680006234.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.212394711;cdt.managedbuild.tool.gnu.cpp.compiler.input.1556067315">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1607655284;cdt.managedbuild.config.gnu.exe.debug.1607655284.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.540805205;cdt.managedbuild.tool.gnu.c.compiler.input.1227471491">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1607655284.1680006234;cdt.managedbuild.config.gnu.exe.debug.1607655284.1680006234.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.212394711;cdt.managedbuild.tool.gnu.cpp.compiler.input.1556067315">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>
