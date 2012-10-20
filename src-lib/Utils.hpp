@@ -9,6 +9,7 @@
 #define UTILS_HPP_
 
 #include <algorithm>
+#include <cmath>
 #include <numeric>
 
 namespace cpprob
@@ -62,6 +63,22 @@ namespace cpprob
       }
 
     };
+
+  template<class Range>
+    typename Range::value_type
+    maximum_norm(const Range& range)
+    {
+      typename Range::value_type result(0);
+
+      for (auto it = range.begin(); it != range.end(); ++it)
+      {
+        auto abs_value = std::abs(*it);
+        if (result < abs_value)
+          result = abs_value;
+      }
+
+      return result;
+    }
 
   template<class Iterator, class T>
     void
