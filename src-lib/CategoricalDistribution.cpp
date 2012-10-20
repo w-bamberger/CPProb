@@ -7,18 +7,24 @@
 
 #include "CategoricalDistribution.hpp"
 
+using namespace std;
+
 namespace cpprob
 {
 
-  std::ostream&
-  operator<<(std::ostream& os, const CategoricalDistribution& d)
+  vector<float>
+  difference(const CategoricalDistribution& minuend,
+      const CategoricalDistribution& subtrahend)
   {
-    os << "     ";
-    for (CategoricalDistribution::const_iterator p = d.begin(); p != d.end();
-        ++p)
-      os << " (" << p->first << "," << p->second << ") ";
-    os << "\n";
-    return os;
+    vector<float> result;
+
+    auto minuend_it = minuend.begin();
+    auto subtrahend_it = subtrahend.begin();
+    for (; minuend_it != minuend.end() && subtrahend_it != subtrahend.end();
+        ++minuend_it, ++subtrahend_it)
+      result.push_back(minuend_it->second - subtrahend_it->second);
+
+    return result;
   }
 
   float
@@ -33,6 +39,23 @@ namespace cpprob
     return m;
   }
 
+  ostream&
+  operator<<(ostream& os, const CategoricalDistribution& d)
+  {
+    os << "     ";
+    for (CategoricalDistribution::const_iterator p = d.begin(); p != d.end();
+        ++p)
+      os << " (" << p->first << "," << p->second << ") ";
+    os << "\n";
+    return os;
+  }
+
+  float
+  standard_deviation(const CategoricalDistribution& d)
+  {
+    return sqrt(variance(d));
+  }
+
   float
   variance(const CategoricalDistribution& d)
   {
@@ -43,12 +66,6 @@ namespace cpprob
       v += diff * diff * it->second;
 
     return v;
-  }
-
-  float
-  standard_deviation(const CategoricalDistribution& d)
-  {
-    return sqrt(variance(d));
   }
 
   void

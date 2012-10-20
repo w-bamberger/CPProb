@@ -158,6 +158,10 @@ namespace cpprob
 
   };
 
+  std::vector<float>
+  difference(const CategoricalDistribution& minuend,
+      const CategoricalDistribution& subtrahend);
+
   float
   mean(const CategoricalDistribution& d);
 
