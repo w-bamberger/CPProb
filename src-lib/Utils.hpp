@@ -25,8 +25,8 @@ namespace cpprob
       typedef typename OuterOperator::result_type result_type;
 
       ChainFunctors(const OuterOperator& outer_op,
-          const InnerOperator& inner_op) :
-          outer_op_(outer_op), inner_op_(inner_op)
+          const InnerOperator& inner_op)
+          : outer_op_(outer_op), inner_op_(inner_op)
       {
       }
 

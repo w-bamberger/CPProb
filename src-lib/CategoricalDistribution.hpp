@@ -110,7 +110,9 @@ namespace cpprob
       result_type
       operator()(_RandomNumberGenerator& rng)
       {
-        cpprob_check_debug(pt_.size() != 0, "CategoricalDistribution: Cannot sample from an empty probability table.");
+        cpprob_check_debug(
+            pt_.size() != 0,
+            "CategoricalDistribution: Cannot sample from an empty probability table.");
         input_type cum(0);
         const input_type r = rng();
         iterator it = pt_.begin();
