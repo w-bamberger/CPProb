@@ -3,4 +3,6 @@ Generate the bag network with all data but no bag observations
 CSV header: Bag Flavor Wrapper Hole 
 
 Sample with 5 burn-in iterations and 500 collect iterations.
+Sample with automatic convergence at a precision of 0.02
 Sample with 5 burn-in iterations and 500 collect iterations.
+Sample with automatic convergence at a precision of 0.02

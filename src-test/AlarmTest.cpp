@@ -160,6 +160,23 @@ BOOST_AUTO_TEST_CASE( alarm_test )
   {
     cout << "Duration: " << duration << "\n";
     cout << "Burglary distribution with Gibbs sampling:\n";
+    cout << burglary_distribution << endl;
+  } //
+  BOOST_CHECK_SMALL(
+      burglary_distribution.begin()->second - correct_false_probability, 0.02f);
+
+  random_number_engine.seed(); // Reset in a well-defined state.
+  float max_error = 0.02f;
+  unsigned int iterations = 0;
+  cout << "Sample with automatic convergence check at a precision of "
+      << max_error << "\n";
+  t.restart();
+  burglary_distribution = bn.sample(burglary_node, max_error, &iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+  {
+    cout << iterations << " iterations\n";
+    cout << "Burglary distribution with Gibbs sampling:\n";
     cout << burglary_distribution;
   }
   BOOST_CHECK_SMALL(

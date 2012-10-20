@@ -95,6 +95,9 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
     cout << "Predictive distribution with sampling:\n";
     cout << prediction << endl;
     /*
+     * The calculations below are wrong. The distribution should be around
+     * ((Flavor:0, 0.7), (Flavor:1, 0.3)).
+     *
      * The counts in latent-bag.csv are
      *   C(F=0 | H=1, W=1): 52 (grep -e "false,true,true" bag.csv | wc)
      *   C(F=1 | H=1, W=1): 20 (grep -e "true,true,true" bag.csv | wc)
@@ -103,9 +106,26 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
      * the probabilities 0.6951/0.3049.
      */
     cout << "Correct values (latent-bag.csv):\n";
-    cout << "      (Flavor:0,0.6951)  (Flavor:1,0.3049)\n" << endl;
-  }
-  BOOST_CHECK_SMALL(prediction.begin()->second - 57.0 / (57.0 + 25), 0.02);
+    cout << "      (Flavor:0,0.7)  (Flavor:1,0.3)\n" << endl;
+  } //
+  BOOST_CHECK_SMALL(prediction.begin()->second - 0.7, 0.02);
+
+  random_number_engine.seed(); // Reset in a well-defined state.
+  float max_error = 0.02f;
+  unsigned int iterations = 0;
+  cout << "Sample with automatic convergence at a precision of " << max_error
+      << "\n";
+  t.restart();
+  prediction = bn.sample(flavor_v, max_error, &iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+  {
+    cout << "Duration: " << duration << "\n";
+    cout << iterations << " iterations\n";
+    cout << "Predictive distribution with sampling:\n";
+    cout << prediction << endl;
+  } //
+  BOOST_CHECK_SMALL(prediction.begin()->second - 0.7, 0.02);
 
   random_number_engine.seed(); // Reset in a well-defined state.
   cout << "Sample with " << burn_in_iterations << " burn-in iterations and "
@@ -119,6 +139,9 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
     cout << "Predictive distribution with sampling:\n";
     cout << prediction << endl;
     /*
+     * The calculations below are wrong. The distribution should be around
+     * ((Bag:0,0.5), (Bag:1, 0.5)).
+     *
      * The counts in latent-bag.csv are
      *   C(B=0 | H=1, W=1): 48 (grep -e "false,.*,true,true" bag.csv | wc)
      *   C(B=1 | H=1, W=1): 24 (grep -e "true,.*,true,true" bag.csv | wc)
@@ -127,9 +150,9 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
      * the probabilities 0.6463/0.3537.
      */
     cout << "Correct values (latent-bag.csv):\n";
-    cout << "      (Bag:0,0.6463)  (Bag:1,0.3537)" << endl;
-  }
-  BOOST_CHECK_SMALL(prediction.begin()->second - 53.0 / (53.0 + 29.0), 0.08);
+    cout << "      (Bag:0,0.5)  (Bag:1,0.5)" << endl;
+  } //
+  BOOST_CHECK_SMALL(prediction.begin()->second - 0.5, 0.02);
 
 //  for (int i = 1; i <= 10; ++i)
 //  {
@@ -156,4 +179,22 @@ BOOST_AUTO_TEST_CASE( latent_bag_test )
 //    cout << "Duration: " << duration << "\n";
 //    cout << "Predictive distribution with sampling:" << prediction << endl;
 //  }
+
+  random_number_engine.seed(); // Reset in a well-defined state.
+  max_error = 0.02f;
+  iterations = 0;
+  cout << "Sample with automatic convergence at a precision of " << max_error
+      << "\n";
+  t.restart();
+  prediction = bn.sample(bag_v, max_error, &iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+  {
+    cout << "Duration: " << duration << "\n";
+    cout << iterations << " iterations\n";
+    cout << "Predictive distribution with sampling:\n";
+    cout << prediction << endl;
+  }
+  BOOST_CHECK_SMALL(prediction.begin()->second - 0.5, 0.02);
+
 }

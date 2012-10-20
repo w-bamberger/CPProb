@@ -55,4 +55,6 @@ ProbabilitiesHoleBag:
 
 Extend the network for prediction
 Sample with 5 burn-in iterations and 500 collect iterations.
+Sample with automatic convergence at a precision of 0.03
 Sample with 5 burn-in iterations and 500 collect iterations.
+Sample with automatic convergence at a precision of 0.02

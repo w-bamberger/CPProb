@@ -252,7 +252,24 @@ BOOST_AUTO_TEST_CASE( bag_test )
      */
     cout << "Correct values (bag.csv):\n";
     cout << "      (Flavor:0,0.2327)  (Flavor:1,0.7673)\n" << endl;
-  }
+  } //
+  BOOST_CHECK_SMALL(prediction.begin()->second - 84.0 / (84.0 + 277.0), 0.03);
+
+  random_number_engine.seed(); // Reset in a well-defined state.
+  float max_error = 0.03f;
+  unsigned int iterations = 0;
+  cout << "Sample with automatic convergence at a precision of " << max_error
+      << "\n";
+  t.restart();
+  prediction = bn_map_full.sample(flavor_v, 0.03f, &iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+  {
+    cout << "Duration: " << duration << "\n";
+    cout << iterations << " iterations\n";
+    cout << "Predictive distribution with sampling:\n";
+    cout << prediction << endl;
+  } //
   BOOST_CHECK_SMALL(prediction.begin()->second - 84.0 / (84.0 + 277.0), 0.03);
 
   random_number_engine.seed(); // Reset in a well-defined state.
@@ -276,7 +293,23 @@ BOOST_AUTO_TEST_CASE( bag_test )
      * the probabilities 0.8481/0.1519.
      */
     cout << "Correct values (bag.csv):\n";
-    cout << "      (Bag:0,0.8481)  (Bag:1,0.1519)" << endl;
+    cout << "      (Bag:0,0.8481)  (Bag:1,0.1519)\n" << endl;
+  } //
+  BOOST_CHECK_SMALL(prediction.begin()->second - 307.0 / (307.0 + 55.0), 0.02);
+
+  random_number_engine.seed(); // Reset in a well-defined state.
+  max_error = 0.02f;
+  cout << "Sample with automatic convergence at a precision of " << max_error
+      << "\n";
+  t.restart();
+  prediction = bn_map_full.sample(bag_v, 0.02f, &iterations);
+  duration = t.elapsed();
+  if (!options_map["test-mode"].as<bool>())
+  {
+    cout << "Duration: " << duration << "\n";
+    cout << iterations << " iterations\n";
+    cout << "Predictive distribution with sampling:\n";
+    cout << prediction;
   }
   BOOST_CHECK_SMALL(prediction.begin()->second - 307.0 / (307.0 + 55.0), 0.02);
 }
