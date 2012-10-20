@@ -1,1 +1,1 @@
---test-mode --run_test=alarm_test --collect-iterations=2000
+--test-mode --run_test=alarm_test --burn-in-iterations=0 --collect-iterations=5000

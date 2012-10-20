@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE( alarm_test )
   cout << burglary_distribution;
   cout << endl;
 
-  float correct_false_probability = burglary_distribution.begin()->second;
+  float enumeration_false_probability = burglary_distribution.begin()->second;
 
   unsigned int burn_in_iterations = options_map["burn-in-iterations"].as<
       unsigned int>();
@@ -161,9 +161,10 @@ BOOST_AUTO_TEST_CASE( alarm_test )
     cout << "Duration: " << duration << "\n";
     cout << "Burglary distribution with Gibbs sampling:\n";
     cout << burglary_distribution << endl;
-  } //
-  BOOST_CHECK_SMALL(
-      burglary_distribution.begin()->second - correct_false_probability, 0.02f);
+  }
+  float sampling_false_probability = burglary_distribution.begin()->second;
+  BOOST_CHECK_SMALL(sampling_false_probability - enumeration_false_probability,
+      0.01f);
 
   random_number_engine.seed(); // Reset in a well-defined state.
   float max_error = 0.02f;
@@ -179,6 +180,7 @@ BOOST_AUTO_TEST_CASE( alarm_test )
     cout << "Burglary distribution with Gibbs sampling:\n";
     cout << burglary_distribution;
   }
-  BOOST_CHECK_SMALL(
-      burglary_distribution.begin()->second - correct_false_probability, 0.02f);
+  sampling_false_probability = burglary_distribution.begin()->second;
+  BOOST_CHECK_SMALL(sampling_false_probability - enumeration_false_probability,
+      0.01f);
 }

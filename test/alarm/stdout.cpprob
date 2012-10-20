@@ -4,5 +4,5 @@ Enumerate
 Burglary distribution with enumeration:
       (Burglary:0,0.715828)  (Burglary:1,0.284172) 
 
-Sample with 5 burn-in iterations and 2000 collect iterations.
+Sample with 0 burn-in iterations and 5000 collect iterations.
 Sample with automatic convergence check at a precision of 0.02

@@ -1,1 +1,1 @@
---test-mode --run_test=bag_test --data-file bag.csv
+--test-mode --run_test=bag_test --data-file bag.csv --burn-in-iterations=0 --collect-iterations=2500
