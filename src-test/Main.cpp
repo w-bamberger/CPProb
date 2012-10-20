@@ -20,15 +20,8 @@ using namespace std;
 program_options::options_description options_desc("Usage of the tests");
 program_options::variables_map options_map;
 
-#ifdef BOOST_TEST_ALTERNATIVE_INIT_API
 bool init_unit_test()
 {
-#else
-::boost::unit_test::test_suite*
-init_unit_test_suite(int, char*[])
-{
-#endif
-
   assign_op(unit_test::framework::master_test_suite().p_name.value,
       BOOST_TEST_STRINGIZE( CPProb ).trim("\""), 0);
 
@@ -40,13 +33,8 @@ init_unit_test_suite(int, char*[])
       options_map);
   program_options::notify(options_map);
 
-#ifdef BOOST_TEST_ALTERNATIVE_INIT_API
   return true;
 }
-#else
-  return 0;
-}
-#endif
 
 int
 main(int argc, char **argv)
