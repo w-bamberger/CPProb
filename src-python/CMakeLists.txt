@@ -32,6 +32,8 @@ set_target_properties(_proby PROPERTIES
 if(WIN32)
   # On Windows, a DLL that is a Python module should have the suffix .pyd.
   set_target_properties(_proby PROPERTIES SUFFIX ".pyd")
+else()
+  set_target_properties(_proby PROPERTIES PREFIX "")
 endif(WIN32)
 
 target_link_libraries(_proby ${CPPROB_LIBRARIES})
@@ -60,11 +62,19 @@ if(WIN32)
   install(TARGETS _proby RUNTIME DESTINATION ${INSTALL_LIB_DIR})
 
 else()
+  IF(PYTHON_INCLUDE_DIR AND EXISTS "${PYTHON_INCLUDE_DIR}/patchlevel.h")
+    FILE(STRINGS "${PYTHON_INCLUDE_DIR}/patchlevel.h" python_version_str
+         REGEX "^#define[ \t]+PY_VERSION[ \t]+\"[^\"]+\"")
+    STRING(REGEX REPLACE "^#define[ \t]+PY_VERSION[ \t]+\"([^\"]+)\".*" "\\1"
+                         PYTHONLIBS_VERSION_STRING "${python_version_str}")
+    UNSET(python_version_str)
+  ENDIF(PYTHON_INCLUDE_DIR AND EXISTS "${PYTHON_INCLUDE_DIR}/patchlevel.h")
   string(REGEX REPLACE "^([0-9]*).+$" "\\1" PYTHON_MAJOR_VERSION
          ${PYTHONLIBS_VERSION_STRING})
   string(REGEX REPLACE "^[0-9]*\\.([0-9]*).*$" "\\1" PYTHON_MINOR_VERSION
          ${PYTHONLIBS_VERSION_STRING})
-  set(INSTALL_LIB_DIR "lib/python${major}${minor}/dist-packages/proby")
+  set(INSTALL_LIB_DIR
+      "lib/python${PYTHON_MAJOR_VERSION}.${PYTHON_MINOR_VERSION}/dist-packages/proby")
   set(INSTALL_PY_DIR "${INSTALL_LIB_DIR}")
 
   # Install the Python package "_proby".
