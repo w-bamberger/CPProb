@@ -1,7 +1,3 @@
-#  Copyright Joel de Guzman 2002-2007. Distributed under the Boost
-#  Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt
-#  or copy at http://www.boost.org/LICENSE_1_0.txt)
-#  Hello World Example from the tutorial
 
 import csv
 from proby import *
@@ -54,9 +50,22 @@ burn_in_iterations = 5
 collect_iterations = 500
 print "Sample with", burn_in_iterations, "burn-in iterations and", collect_iterations, "collect iterations."
 start = time.clock()
-prediction = bn.sample(new_flavor_node, 5, 500)
+prediction = bn.sample(new_flavor_node, burn_in_iterations, collect_iterations)
 duration = time.clock() - start
 print "Prediction:",
 # prediction already ends with a line break
 sys.stdout.write(str(prediction))   
 print "Duration:", duration
+
+max_deviation = 0.02
+iterations = 0
+print "Sample with automatic convergence at a maximum deviation of", max_deviation
+start = time.clock()
+(prediction, iterations) = bn.sample(new_flavor_node, max_deviation)
+duration = time.clock() - start
+print "Prediction:",
+# prediction already ends with a line break
+sys.stdout.write(str(prediction))   
+print "Duration:", duration
+print "Iterations:", iterations
+
