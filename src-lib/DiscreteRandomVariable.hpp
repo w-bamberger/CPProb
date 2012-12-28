@@ -220,6 +220,9 @@ namespace cpprob
       typedef DiscreteRandomVariable const_iterator;
       typedef DiscreteRandomVariable iterator;
 
+      Range()
+      {}
+
       const_iterator
       begin() const
       {
@@ -257,7 +260,7 @@ namespace cpprob
       typedef cont::map<std::string, Characteristics> CharacteristicsTable;
       friend class DiscreteRandomVariable;
 
-      const CharacteristicsTable::iterator characteristics_;
+      CharacteristicsTable::iterator characteristics_;
 
       Range(const CharacteristicsTable::iterator& characteristics)
           : characteristics_(characteristics)
