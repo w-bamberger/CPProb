@@ -1,3 +1,5 @@
+#include "ListListConverter.hpp"
+#include "ListRefVectorConverter.hpp"
 #include <boost/python/class.hpp>
 #include <cpprob/ConditionalDirichletNode.hpp>
 
@@ -16,6 +18,9 @@ namespace cpprob
 
       class_ < ConditionalDirichletNode > ("ConditionalDirichletNode", no_init) //
       .def("value", value, return_internal_reference<>());
+
+      ListListConverter<ConditionalDirichletNode>();
+      ListRefVectorConverter<ConditionalDirichletNode>();
     }
 
   }

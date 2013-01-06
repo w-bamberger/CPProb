@@ -16,6 +16,10 @@ namespace cpprob
       (ConstantDiscreteRandomVariableNode::*discrete_random_variable_value)() =
       &ConstantDiscreteRandomVariableNode::value;
 
+      DirichletProcessParameters&
+      (ConstantDirichletProcessParametersNode::*dirichlet_process_parameters_value)() =
+      &ConstantDirichletProcessParametersNode::value;
+
       RandomConditionalProbabilities&
       (ConstantRandomConditionalProbabilitiesNode::*random_conditional_probabilities_value)() =
       &ConstantRandomConditionalProbabilitiesNode::value;
@@ -23,6 +27,11 @@ namespace cpprob
       class_ < ConstantDiscreteRandomVariableNode, bases<DiscreteNode>
           > ("ConstantDiscreteRandomVariableNode", no_init) //
           .def("value", discrete_random_variable_value,
+              return_internal_reference<>());
+
+      class_ < ConstantDirichletProcessParametersNode
+          > ("ConstantDirichletProcessParametersNode", no_init) //
+          .def("value", dirichlet_process_parameters_value,
               return_internal_reference<>());
 
       class_ < ConstantRandomConditionalProbabilitiesNode

@@ -55,6 +55,11 @@ namespace cpprob
           const RandomConditionalProbabilities&) =
           &BayesianNetwork::add_constant;
 
+      ConstantDirichletProcessParametersNode&
+      (BayesianNetwork::*add_dirichlet_process_parameters)(const std::string&,
+          float, const cont::RefVector<ConditionalDirichletNode>&) =
+          &BayesianNetwork::add_dirichlet_process_parameters;
+
       std::size_t
       (BayesianNetwork::*erase_categorical)(
           const CategoricalNode&) = &BayesianNetwork::erase<CategoricalNode>;
@@ -101,6 +106,10 @@ namespace cpprob
               return_internal_reference<>()) //
           .def("add_dirichlet", &BayesianNetwork::add_dirichlet,
               return_internal_reference<>()) //
+          .def("add_dirichlet_process", &BayesianNetwork::add_dirichlet_process,
+              return_internal_reference<>()) //
+          .def("add_dirichlet_process_parameters",
+              add_dirichlet_process_parameters, return_internal_reference<>()) //
           .def("erase", erase_categorical) //
           .def("erase", erase_conditional_categorical) //
           .def("erase", erase_conditional_dirichlet) //

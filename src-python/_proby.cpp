@@ -1,8 +1,4 @@
 #include <boost/python/module.hpp>
-#include <cpprob/BayesianNetwork.hpp>
-#include <cpprob/RandomBoolean.hpp>
-#include <cpprob/RandomInteger.hpp>
-#include <cpprob/RandomProbabilities.hpp>
 
 namespace cpprob
 {
@@ -29,6 +25,12 @@ namespace cpprob
 
     void
     export_dirichlet_node();
+
+    void
+    export_dirichlet_process_node();
+
+    void
+    export_dirichlet_process_parameters();
 
     void
     export_discrete_joint_random_variable();
@@ -74,8 +76,10 @@ BOOST_PYTHON_MODULE (_proby)
   export_categorical_node();
   export_conditional_categorical_node();
   export_conditional_dirichlet_node();
-  export_constant_node();
   export_dirichlet_node();
+  export_dirichlet_process_node();
+  export_dirichlet_process_parameters();
+  export_constant_node();
 
   /* Model. */
   export_bayesian_network();
