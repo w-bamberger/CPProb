@@ -62,6 +62,9 @@ namespace cpprob
     add_conditional_categorical(const DiscreteRandomVariable& value,
         const cont::RefVector<DiscreteNode>& condition_nodes);
 
+    // @TODO: Refactor around add_conditional_categorical and
+    // insert_conditional_categorical. I guess there can be more code
+    // in insert_conditional_categorical.
     template<class N>
       ConditionalCategoricalNode&
       add_conditional_categorical(const DiscreteRandomVariable& value,
