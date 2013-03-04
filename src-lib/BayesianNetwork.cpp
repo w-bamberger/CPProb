@@ -428,9 +428,11 @@ namespace cpprob
   BayesianNetwork::add_dirichlet_process(
       ConstantDirichletProcessParametersNode& parent)
   {
-    iterator new_node = vertices_.insert(end(),
+    iterator new_node_it = vertices_.insert(end(),
         DirichletProcessNode(parent.value()));
-    return get<DirichletProcessNode>(*new_node);
+    DirichletProcessNode& new_node = get<DirichletProcessNode>(*new_node_it);
+    parent.children().push_back(new_node);
+    return new_node;
   }
 
 #ifndef WITHOUT_INITIALIZER_LIST
