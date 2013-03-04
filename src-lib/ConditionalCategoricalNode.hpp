@@ -52,7 +52,7 @@ namespace cpprob
     float
     at_references() const
     {
-      return probabilities_.at(condition_.joint_value()).at(value_);
+      return probabilities_.at(condition_.joint_value()).at(value());
     }
 
     const DiscreteRandomReferences&

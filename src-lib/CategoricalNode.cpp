@@ -31,7 +31,7 @@ namespace cpprob
         << &node.probabilities() << ")\n";
     os << "  Children: ";
     string prefix;
-    for (auto c = node.children_.begin(); c != node.children_.end(); ++c)
+    for (auto c = node.children().begin(); c != node.children().end(); ++c)
     {
       os << prefix << c->value().name() << "(at " << &(*c) << ")";
       prefix = ", ";
@@ -66,7 +66,7 @@ namespace cpprob
     for (auto p_it = probabilities_.begin(); p_it != probabilities_.end();
         ++p_it)
       sampling_distribution[p_it->first] = p_it->second;
-    value_ = sampling_variate_();
+    value() = sampling_variate_();
   }
 
   void
@@ -91,11 +91,11 @@ namespace cpprob
       d_it->second = p_it->second;
 
     /* Update the sampling distribution with the likelihoods. */
-    for (auto c = children_.begin(); c != children_.end(); ++c)
+    for (auto c = children().begin(); c != children().end(); ++c)
     {
       auto c_value = c->value();
       auto& c_probabilities = c->probabilities();
-      auto c_condition = c->condition().sub_range(value_).begin();
+      auto c_condition = c->condition().sub_range(value()).begin();
       d_it = sampling_distribution.begin();
 
       for (; d_it != d_end; ++d_it, ++c_condition)
@@ -105,7 +105,7 @@ namespace cpprob
     sampling_distribution.normalize();
 
     /* Draw from the distribution. */
-    value_ = sampling_variate_();
+    value() = sampling_variate_();
   }
 
 } /* namespace cpprob */

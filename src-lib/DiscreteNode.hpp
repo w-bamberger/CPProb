@@ -42,11 +42,9 @@ namespace cpprob
   class DiscreteNode
   {
 
-  protected:
+  public:
 
     typedef cont::RefVector<ConditionalCategoricalNode> Children;
-
-  public:
 
     DiscreteNode(const DiscreteRandomVariable& value)
         : children_(), value_(value)
@@ -80,7 +78,7 @@ namespace cpprob
       return value_;
     }
 
-  protected:
+  private:
 
     Children children_;
     DiscreteRandomVariable value_;

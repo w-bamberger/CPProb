@@ -51,7 +51,7 @@ namespace cpprob
     float
     at_references() const
     {
-      return probabilities_.at(value_);
+      return probabilities_.at(value());
     }
 
     void

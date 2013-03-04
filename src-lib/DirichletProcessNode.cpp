@@ -19,7 +19,7 @@ namespace cpprob
   operator<<(std::ostream& os, const DirichletProcessNode& node)
   {
     os << "Dirichlet process node " << node.value().name() << " (at " << &node
-        << ")" << " with current value " << node.value_ << " (at "
+        << ")" << " with current value " << node.value() << " (at "
         << &node.value() << ")\n";
 
     os << "  Parameter node: " << node.parameters().name() << " (at "
@@ -27,7 +27,7 @@ namespace cpprob
 
     os << "  Children: ";
     string prefix;
-    for (auto c = node.children_.begin(); c != node.children_.end(); ++c)
+    for (auto c = node.children().begin(); c != node.children().end(); ++c)
     {
       os << prefix << c->value().name() << " (at " << &(*c) << ")";
       prefix = ", ";
@@ -47,7 +47,7 @@ namespace cpprob
   void
   DirichletProcessNode::init_sampling()
   {
-    parameters_.component_counters_[value_] += 1;
+    parameters_.component_counters_[value()] += 1;
     sample();
   }
 
@@ -56,7 +56,7 @@ namespace cpprob
   {
     DirichletProcessParameters::ComponentCounters& counters =
         parameters_.component_counters_;
-    counters[value_] -= 1;
+    counters[value()] -= 1;
 
     /* Compile the posterior distribution for the used components. */
     CategoricalDistribution distribution;
@@ -67,8 +67,8 @@ namespace cpprob
       p = static_cast<float>(count->second);
 
       // The factors of the posterior update
-      value_ = count->first;
-      for (auto c = children_.begin(); c != children_.end(); ++c)
+      value() = count->first;
+      for (auto c = children().begin(); c != children().end(); ++c)
       {
         p *= c->at_references();
       }
@@ -83,7 +83,7 @@ namespace cpprob
     // The prior
     p = parameters_.concentration();
     // The posterior update
-    p *= parameters_.prior_probability_of_managed_nodes(children_);
+    p *= parameters_.prior_probability_of_managed_nodes(children());
     auto value_range_end = counters.begin()->first.value_range().end();
     distribution[value_range_end] = p;
 
@@ -95,11 +95,11 @@ namespace cpprob
     DiscreteRandomVariable sample = sampling_variate();
 
     if (sample != value_range_end)
-      value_ = sample;
+      value() = sample;
     else
-      value_ = parameters_.next_component(children_);
+      value() = parameters_.next_component(children());
 
-    counters[value_] += 1;
+    counters[value()] += 1;
   }
 
 } /* namespace cpprob */
