@@ -48,7 +48,7 @@ namespace cpprob
         }
 
         RefVector(size_type count, reference value)
-            :pointers_(count, &value)
+            : pointers_(count, &value)
         {
         }
 
@@ -164,6 +164,57 @@ namespace cpprob
         }
 
         /*
+         * Element access
+         */
+        reference
+        operator[](size_type n)
+        {
+          return *pointers_[n];
+        }
+
+        const_reference
+        operator[](size_type n) const
+        {
+          return *pointers_[n];
+        }
+
+        const_reference
+        at(size_type n) const
+        {
+          return *pointers_.at(n);
+        }
+
+        reference
+        at(size_type n)
+        {
+          return *pointers_.at(n);
+        }
+
+        reference
+        front()
+        {
+          return *pointers_.front();
+        }
+
+        const_reference
+        front() const
+        {
+          return *pointers_.front();
+        }
+
+        reference
+        back()
+        {
+          return *pointers_.back();
+        }
+
+        const_reference
+        back() const
+        {
+          return *pointers_.back();
+        }
+
+        /*
          * Modifiers.
          */
 
@@ -190,7 +241,7 @@ namespace cpprob
         void
         clear()
         {
-            pointers_.clear();
+          pointers_.clear();
         }
 
       private:
@@ -198,18 +249,18 @@ namespace cpprob
         Pointers pointers_;
 
         template<class BaseIterator>
-        pointer
-        to_pointer(boost::indirect_iterator<BaseIterator> indirect_it)
-        {
-          return &(*indirect_it);
-        }
+          pointer
+          to_pointer(boost::indirect_iterator<BaseIterator> indirect_it)
+          {
+            return &(*indirect_it);
+          }
 
         template<class Iterator>
-        pointer
-        to_pointer(Iterator it)
-        {
-          return *it;
-        }
+          pointer
+          to_pointer(Iterator it)
+          {
+            return *it;
+          }
 
       };
 
