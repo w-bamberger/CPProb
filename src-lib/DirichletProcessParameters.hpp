@@ -45,8 +45,9 @@ namespace cpprob
     template<class NodeList>
       DirichletProcessParameters(const std::string& name, float concentration,
           NodeList& managed_nodes)
-          : component_counters_(), concentration_(concentration), managed_nodes_(
-              managed_nodes.begin(), managed_nodes.end()), name_(name)
+          : component_counters_(), component_name_(name), concentration_(
+              concentration), managed_nodes_(managed_nodes.begin(),
+              managed_nodes.end()), parameters_name_(name + "Parameters")
       {
       }
 
@@ -80,7 +81,7 @@ namespace cpprob
     const std::string&
     name() const
     {
-      return name_;
+      return parameters_name_;
     }
 
   private:
@@ -93,9 +94,10 @@ namespace cpprob
         DiscreteRandomVariable::NameLess> ChildrenOfComponent;
 
     ComponentCounters component_counters_;
+    std::string component_name_;
     float concentration_;
     ManagedNodes managed_nodes_;
-    std::string name_;
+    std::string parameters_name_;
 
     DiscreteRandomVariable
     create_component(const Children& children_of_component);

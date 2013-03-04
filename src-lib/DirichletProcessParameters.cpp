@@ -27,8 +27,9 @@ namespace cpprob
   DirichletProcessParameters::DirichletProcessParameters(
       const std::string& name, float concentration,
       std::initializer_list<ConditionalDirichletNode*> managed_nodes)
-      : component_counters_(), concentration_(concentration), managed_nodes_(
-          managed_nodes.begin(), managed_nodes.end()), name_(name)
+      : component_counters_(), component_name_(name), concentration_(
+          concentration), managed_nodes_(managed_nodes.begin(),
+          managed_nodes.end()), parameters_name_(name + "Parameters")
   {
   }
 #endif
@@ -37,11 +38,11 @@ namespace cpprob
   DirichletProcessParameters::create_component(
       const Children& children_of_component)
   {
-    auto old_range = RandomInteger(name_ + "_old", component_counters_.size(),
-        0).value_range();
+    auto old_range = RandomInteger(component_name_ + "_old",
+        component_counters_.size(), 0).value_range();
     // Creates the component and also sets the size in the characteristics
     // structure to the new value.
-    RandomInteger new_component(name_, component_counters_.size() + 1,
+    RandomInteger new_component(component_name_, component_counters_.size() + 1,
         component_counters_.size());
     auto new_range = new_component.value_range();
     component_counters_[new_component] = 0;
@@ -110,7 +111,7 @@ namespace cpprob
        * So it only comes in the container of the new condition. The container
        * of the old condition already contains a variable for the own node
        * with the old value range. It has been inserted above. */
-      if (var->name() == name_)
+      if (var->name() == component_name_)
       {
         // This condition variable comes only in the new condition container.
         // It is the extended variable.
@@ -205,8 +206,7 @@ namespace cpprob
 
   float
   DirichletProcessParameters::prior_probability_of_managed_node(
-      const ConditionalDirichletNode& node,
-      ComponentCounters counters) const
+      const ConditionalDirichletNode& node, ComponentCounters counters) const
   {
     float sum_parameters = 0.0;
     size_t sum_counters = 0;
@@ -265,7 +265,7 @@ namespace cpprob
       cpprob_check_debug(
           insert_result.second,
           "DirichletProcessParameters: Could not insert the variable " << var->value_range().begin() << " in the condition set " << condition_var << ".");
-      if (var->name() == name_)
+      if (var->name() == component_name_)
         condition_self_it = insert_result.first;
     }
 

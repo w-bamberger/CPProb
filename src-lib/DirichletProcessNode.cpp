@@ -39,7 +39,7 @@ namespace cpprob
 
   DirichletProcessNode::DirichletProcessNode(
       DirichletProcessParameters& parameters)
-      : DiscreteNode(RandomInteger(parameters.name(), 1, 0)), parameters_(
+      : DiscreteNode(RandomInteger(parameters.component_name_, 1, 0)), parameters_(
           parameters)
   {
   }
