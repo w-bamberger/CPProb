@@ -32,7 +32,6 @@ namespace cpprob
   class DirichletProcessParameters
   {
 
-
   public:
 
     typedef DiscreteRandomVariableMap<std::size_t> ComponentCounters;
@@ -109,9 +108,6 @@ namespace cpprob
 
     DiscreteRandomVariable
     next_component(const Children& children_of_component);
-
-    DiscreteRandomVariable
-    init_from_prior();
 
     friend std::ostream&
     operator<<(std::ostream& os, const DirichletProcessParameters& parameters);

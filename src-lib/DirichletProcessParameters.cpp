@@ -167,32 +167,6 @@ namespace cpprob
   }
 
   DiscreteRandomVariable
-  DirichletProcessParameters::init_from_prior()
-  {
-    /* Compile the prior distribution. */
-    CategoricalDistribution distribution;
-    auto value_range =
-        RandomInteger(name_, component_counters_.size(), 0).value_range();
-    for (auto v = value_range.begin(); v != value_range.end(); ++v)
-      distribution[v] = static_cast<float>(component_counters_[v]);
-    distribution[value_range.end()] = concentration();
-    distribution.normalize();
-
-    /* Draw from the prior distribution. */
-    variate_generator<RandomNumberEngine&, CategoricalDistribution> sampling_variate(
-        random_number_engine, distribution);
-    DiscreteRandomVariable sample = sampling_variate();
-    if (sample != value_range.end())
-      return sample;
-
-    else
-      // Creates the component and also sets the size in the characteristics
-      // structure to the new value.
-      return RandomInteger(name_, component_counters_.size() + 1,
-          component_counters_.size());
-  }
-
-  DiscreteRandomVariable
   DirichletProcessParameters::next_component(
       const Children& children_of_component)
   {
