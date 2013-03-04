@@ -1,6 +1,12 @@
 /*
  * DiscreteRandomVariable.hpp
  *
+ * @TODO Examine whether the sub-classes of DiscreteRandomVariable
+ * (RandomInteger, RandomBoolean, ...) should be templates. The name strings
+ * I currently use actually make up a type system. This way, it would be
+ * easier to instantiate variables with the same name. Currently the
+ * disadvantage seems to be that templates cannot be exported to Python.
+ *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
