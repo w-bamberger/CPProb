@@ -16,35 +16,98 @@
 using namespace cpprob;
 using namespace std;
 
-class DirichletProcessFixture
+class SimpleDirichletProcessFixture
 {
 
 public:
 
-  DirichletProcessFixture()
-  {
+  const double concentration;
+  BayesianNetwork bn;
+  ConstantDirichletProcessParametersNode* dp_parameters_node;
+  DirichletProcessNode* mixture_node1;
+  DirichletProcessNode* mixture_node2;
+  DirichletProcessNode* mixture_node3;
+  ConditionalCategoricalNode* observation_node1;
+  ConditionalCategoricalNode* observation_node2;
+  ConditionalCategoricalNode* observation_node3;
+  ConditionalDirichletNode* observation_probabilities_node;
 
+  SimpleDirichletProcessFixture()
+      : concentration(1.0)
+  {
+    RandomInteger mixture_component("MixtureComponent", 1, 0);
+    RandomInteger observation("Observation", 5, 0);
+    observation_probabilities_node = &bn.add_conditional_dirichlet(
+        RandomConditionalProbabilities(observation, mixture_component),
+        concentration);
+    dp_parameters_node = &bn.add_dirichlet_process_parameters(
+        mixture_component.name(), concentration,
+          { observation_probabilities_node });
+
+    mixture_node1 = &bn.add_dirichlet_process(*dp_parameters_node);
+    observation_node1 = &bn.add_conditional_categorical(observation,
+      { mixture_node1 }, *observation_probabilities_node);
+    observation_node1->is_evidence(true);
+
+    mixture_node2 = &bn.add_dirichlet_process(*dp_parameters_node);
+    observation_node2 = &bn.add_conditional_categorical(observation,
+      { mixture_node2 }, *observation_probabilities_node);
+    observation_node2->is_evidence(true);
+
+    ++observation;
+    mixture_node3 = &bn.add_dirichlet_process(*dp_parameters_node);
+    observation_node3 = &bn.add_conditional_categorical(observation,
+      { mixture_node3 }, *observation_probabilities_node);
+    observation_node3->is_evidence(true);
   }
 
 };
 
-BOOST_AUTO_TEST_SUITE(DirichletProcessTest)
+BOOST_FIXTURE_TEST_SUITE(SimpleDirichletProcessTest, SimpleDirichletProcessFixture)
 
-template<class K, class V>
-ostream&
-put_out_map(ostream& os, const cont::map<K, V>& m)
+BOOST_AUTO_TEST_CASE(Construction)
 {
-  for (auto it = m.begin(); it != m.end(); ++it)
-    os << it->first << ", " << it->second << "\n";
-  return os;
+  cout << bn << endl;
+
+  BOOST_REQUIRE_EQUAL(dp_parameters_node->value().managed_nodes().size(), 1);
+  BOOST_REQUIRE_EQUAL(&dp_parameters_node->value().managed_nodes().front(), observation_probabilities_node);
+  BOOST_REQUIRE_EQUAL(dp_parameters_node->value().concentration(), concentration);
+  BOOST_REQUIRE_EQUAL(dp_parameters_node->value().component_counters().size(), 0);
+  BOOST_REQUIRE_EQUAL(dp_parameters_node->value().name(), "MixtureComponentParameters");
+  BOOST_REQUIRE_EQUAL(dp_parameters_node->children().size(), 3);
+  BOOST_REQUIRE_EQUAL(&dp_parameters_node->children()[0], mixture_node1);
+  BOOST_REQUIRE_EQUAL(&dp_parameters_node->children()[1], mixture_node2);
+  BOOST_REQUIRE_EQUAL(&dp_parameters_node->children()[2], mixture_node3);
+
+  BOOST_CHECK_EQUAL(mixture_node1->children().size(), 1);
+  BOOST_CHECK_EQUAL(&mixture_node1->children()[0], observation_node1);
+  BOOST_CHECK_EQUAL(mixture_node1->is_evidence(), false);
+  BOOST_CHECK_EQUAL(&mixture_node1->parameters(), &dp_parameters_node->value());
+  BOOST_CHECK_EQUAL(mixture_node1->value(), RandomInteger("MixtureComponent", 1, 0));
+
+  BOOST_CHECK_EQUAL(mixture_node2->children().size(), 1);
+  BOOST_CHECK_EQUAL(&mixture_node2->children()[0], observation_node2);
+  BOOST_CHECK_EQUAL(mixture_node2->is_evidence(), false);
+  BOOST_CHECK_EQUAL(&mixture_node2->parameters(), &dp_parameters_node->value());
+  BOOST_CHECK_EQUAL(mixture_node2->value(), RandomInteger("MixtureComponent", 1, 0));
+
+  BOOST_CHECK_EQUAL(mixture_node3->children().size(), 1);
+  BOOST_CHECK_EQUAL(&mixture_node3->children()[0], observation_node3);
+  BOOST_CHECK_EQUAL(mixture_node3->is_evidence(), false);
+  BOOST_CHECK_EQUAL(&mixture_node3->parameters(), &dp_parameters_node->value());
+  BOOST_CHECK_EQUAL(mixture_node3->value(), RandomInteger("MixtureComponent", 1, 0));
 }
 
-template<class V>
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(DirichletProcessTest)
+
+template<class M>
 ostream&
-put_out_map(ostream& os, const DiscreteRandomVariableMap<V>& m)
+put_out_map(ostream& os, const M& m)
 {
   for (auto it = m.begin(); it != m.end(); ++it)
-    os << it->first << ", " << it->second << "\n";
+  os << it->first << ", " << it->second << "\n";
   return os;
 }
 
@@ -53,7 +116,7 @@ BOOST_AUTO_TEST_CASE(Parameters)
   /* Test construction.
    *
    * There are two Dirichlet processes, DpCondition1 and DpCondition2. They
-   * control the latent nodes of 4 observations. An observation consists of to
+   * control the latent nodes of 4 observations. An observation consists of two
    * values: Value1 and Value2. Value1 depends on DpCondition1 and Value2 on
    * both, DpCondition1 and DpCondition2. For the second observation, only
    * Value1 exists (to make the network irregular). */
@@ -71,19 +134,19 @@ BOOST_AUTO_TEST_CASE(Parameters)
 
 #ifndef WITHOUT_INITIALIZER_LIST
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
-          { &probabilities_node1, &probabilities_node2});
+      { &probabilities_node1, &probabilities_node2});
   auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
-          { &probabilities_node2});
+      { &probabilities_node2});
 #else
   cont::vector<ConditionalDirichletNode*> managed_nodes;
   managed_nodes.push_back(&probabilities_node1);
   managed_nodes.push_back(&probabilities_node2);
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
-          managed_nodes);
+      managed_nodes);
   managed_nodes.clear();
   managed_nodes.push_back(&probabilities_node2);
   auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
-          managed_nodes);
+      managed_nodes);
 #endif
 
   auto infinite_mixture_node11 = bn.add_dirichlet_process(dp_parameters_node1);
@@ -200,7 +263,8 @@ BOOST_AUTO_TEST_CASE(Parameters)
 
   cout << "\nCreate new component of parent 1" << endl;
 #ifndef WITHOUT_INITIALIZER_LIST
-  dp_parameters1.create_component({ &child1_node4});
+  dp_parameters1.create_component(
+      { &child1_node4});
 #else
   cont::RefVector<ConditionalCategoricalNode> children(1, child1_node4);
   dp_parameters1.create_component(children);
@@ -250,11 +314,11 @@ BOOST_AUTO_TEST_CASE(Node)
   managed_nodes.push_back(&probabilities_node1);
   managed_nodes.push_back(&probabilities_node2);
   auto dp_parameters_node1 = bn.add_dirichlet_process_parameters("DpCondition1", 5,
-          managed_nodes);
+      managed_nodes);
   managed_nodes.clear();
   managed_nodes.push_back(&probabilities_node2);
   auto dp_parameters_node2 = bn.add_dirichlet_process_parameters("DpCondition2", 3,
-          managed_nodes);
+      managed_nodes);
 #endif
 
   auto infinite_mixture_node11 = bn.add_dirichlet_process(dp_parameters_node1);
