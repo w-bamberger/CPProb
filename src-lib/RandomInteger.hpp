@@ -55,7 +55,7 @@ namespace cpprob
         value_ = new_value;
       else
         cpprob_throw_out_of_range(
-            "RandomInteger: The new value " << new_value << " is greater than the size " << characteristics_->second.size_);
+            "RandomInteger: The new value " << new_value << " is greater than or equal to the size " << characteristics_->second.size_);
 
       return *this;
     }
