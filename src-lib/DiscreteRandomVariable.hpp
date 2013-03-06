@@ -7,6 +7,10 @@
  * easier to instantiate variables with the same name. Currently the
  * disadvantage seems to be that templates cannot be exported to Python.
  *
+ * @TODO Another problem is that for a random integer ri, ri.value_range().end()
+ * returns a DiscreteRandomVariable and not a RandomInteger. So you cannot
+ * write ri = ri.value_range().end().
+ *
  *  Created on: 14.05.2011
  *      Author: wbam
  */
