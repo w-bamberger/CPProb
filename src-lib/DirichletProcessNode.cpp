@@ -39,7 +39,7 @@ namespace cpprob
 
   DirichletProcessNode::DirichletProcessNode(
       DirichletProcessParameters& parameters)
-      : DiscreteNode(RandomInteger(parameters.component_name_, 1, 0)), parameters_(
+      : DiscreteNode(RandomInteger(parameters.component_name_, 0, 0)), parameters_(
           parameters)
   {
   }
@@ -47,8 +47,31 @@ namespace cpprob
   void
   DirichletProcessNode::init_sampling()
   {
-    parameters_.component_counters_[value()] += 1;
-    sample();
+    DirichletProcessParameters::ComponentCounters& counters =
+        parameters_.component_counters_;
+    auto value_range_end = value().value_range().end();
+
+    /* Set up the prior distribution of the node */
+    CategoricalDistribution prior_distribution;
+    copy(counters.begin(), counters.end(),
+        inserter(prior_distribution, prior_distribution.begin()));
+    prior_distribution[value_range_end] = parameters_.concentration();
+    prior_distribution.normalize();
+
+    /* Draw from the prior distribution. */
+    variate_generator<RandomNumberEngine&, CategoricalDistribution> sampling_variate(
+        random_number_engine, prior_distribution);
+    DiscreteRandomVariable sample = sampling_variate();
+
+    /* Create a new mixture component if necessary */
+    if (sample != value_range_end)
+      value() = sample;
+    else
+      value() = parameters_.create_component(children());
+
+    /* Adjust the counters */
+    counters[value()] += 1;
+
   }
 
   void
