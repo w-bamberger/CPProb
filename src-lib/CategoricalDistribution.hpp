@@ -117,6 +117,17 @@ namespace cpprob
         const input_type r = rng();
         iterator it = pt_.begin();
 
+        /* @TODO When assuming that the operator() is called more often than
+         * the parameters change, the cumulative distribution could be
+         * pre-computed and stored in a member variable. Then a simple call
+         * to something like std::lower_bound finds the right value.
+         *
+         * @TODO To make the code compatible with C++11, this method has to
+         * accept any URNG. Use generate_canonical to achieve this. See the
+         * implementation of discrete_distribution in random.tcc (GCC 4.8) and
+         * http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1933.pdf.
+         */
+
         /* This loop is necessary in the case that r == 0 and
          * the first row(s) in the probability table have probability 0. */
         for (; it->second == 0 && it != pt_.end(); ++it)

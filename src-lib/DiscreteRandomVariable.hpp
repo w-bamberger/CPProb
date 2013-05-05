@@ -771,7 +771,7 @@ namespace cpprob
 
       /**
        * Defines DiscreteRandomVariable as an arithmetic type.
-       * std::variate_generator expects that the type of an distribution
+       * std::variate_generator expects that the type of a distribution
        * sample is an arithmetic type (integral or floating). This restricts
        * the sample type to the built-in types. To let DiscreteRandomVariable
        * be the result of a sampling operation, this hack is necessary. It defines
