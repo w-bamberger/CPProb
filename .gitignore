@@ -2,7 +2,10 @@ build-lib
 build-python
 build-test
 cpprob?1.0*
-Debug
-Enhanced Debug
 README.html
-Release
+Performance Test – Enhanced Debug
+Performance Test – Debug
+Performance Test – Release
+Unit Test – Debug
+Unit Test – Enhanced Debug
+Unit Test – Release

@@ -5,13 +5,13 @@
  *      Author: wbam
  */
 
-#include "Test.hpp"
 #include "../src-lib/BayesianNetwork.hpp"
 #include "../src-lib/DiscreteJointRandomVariable.hpp"
 #include "../src-lib/RandomBoolean.hpp"
 #include "../src-lib/RandomInteger.hpp"
 #include <boost/range/adaptor/map.hpp>
 #include <boost/range/numeric.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_monitor.hpp>
 #include <iostream>
 
@@ -133,6 +133,19 @@ public:
     observation_node3->is_evidence(true);
   }
 
+  void
+  init_sampling()
+  {
+    random_number_engine.seed(0);
+    observation_probabilities_node->init_sampling();
+    random_number_engine.seed(0);
+    mixture_node1->init_sampling();
+    random_number_engine.seed(7);
+    mixture_node2->init_sampling();
+    random_number_engine.seed(4);
+    mixture_node3->init_sampling();
+  }
+
 };
 
 BOOST_FIXTURE_TEST_SUITE(SimpleDirichletProcessTest, SimpleDirichletProcessFixture)
@@ -185,13 +198,18 @@ BOOST_AUTO_TEST_CASE(InitSampling)
   auto& observation_probabilities = observation_probabilities_node->value();
   BOOST_REQUIRE_EQUAL(mixture_component.value_range().size(), 0);
 
+  /* @TODO Because I cannot check whether the computed distribution is correct,
+   * it would be better to use a random value that is exactly at the border
+   * between two values in the distribution. Maybe a mock object would be
+   * good, which allows to set the next random value.
+   */
   /* Create the first component */
   random_number_engine.seed(0);
   mixture_node1->init_sampling();
   BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component);
   BOOST_CHECK_EQUAL(mixture_node1->value().value_range().size(), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 1);
   BOOST_CHECK_EQUAL(component_counters.size(), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 1);
   BOOST_CHECK_EQUAL(boost::accumulate(component_counters | map_values, 0), 1);
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 1);
   auto saved_probabilities_of_0 = observation_probabilities.at(mixture_component);
@@ -201,8 +219,8 @@ BOOST_AUTO_TEST_CASE(InitSampling)
   mixture_node2->init_sampling();
   BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component);
   BOOST_CHECK_EQUAL(mixture_node2->value().value_range().size(), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 2);
   BOOST_CHECK_EQUAL(component_counters.size(), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 2);
   BOOST_CHECK_EQUAL(boost::accumulate(component_counters | map_values, 0), 2);
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 1);
   BOOST_CHECK_EQUAL(observation_probabilities.at(mixture_component), saved_probabilities_of_0);
@@ -213,11 +231,133 @@ BOOST_AUTO_TEST_CASE(InitSampling)
   mixture_component.observation(1);
   BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component);
   BOOST_CHECK_EQUAL(mixture_node3->value().value_range().size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 1);
   BOOST_CHECK_EQUAL(component_counters.size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 1);
   BOOST_CHECK_EQUAL(boost::accumulate(component_counters | map_values, 0), 3);
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
   BOOST_CHECK_EQUAL(observation_probabilities.at(mixture_component.observation(0)), saved_probabilities_of_0);
+}
+
+BOOST_AUTO_TEST_CASE(Sampling)
+{
+  auto& component_counters = dp_parameters_node->value().component_counters();
+  auto& observation_probabilities = observation_probabilities_node->value();
+
+  /* Precondition are initialised nodes */
+  init_sampling();
+  BOOST_REQUIRE_EQUAL(mixture_component.value_range().size(), 2);
+
+  auto mixture_component_0 = mixture_component.observation(0);
+  auto mixture_component_1 = mixture_component.observation(1);
+
+  BOOST_REQUIRE_EQUAL(component_counters.size(), 2);
+  BOOST_REQUIRE_EQUAL(component_counters.at(mixture_component_0), 2);
+  BOOST_REQUIRE_EQUAL(component_counters.at(mixture_component_1), 1);
+  BOOST_REQUIRE_EQUAL(observation_probabilities.size(), 2);
+  put_out_map(cout, observation_probabilities);
+
+  random_number_engine.seed(0);
+  mixture_node1->sample();
+  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_1);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
+
+  mixture_node2->sample();
+  BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component_1);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 3);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
+
+  mixture_node3->sample();
+  BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component_1);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 3);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
+
+  cout << "\n" << "Next sampling round" << endl;
+
+  random_number_engine.seed(4);
+  mixture_node1->sample();
+  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_0);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.size(), 2);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
+
+  random_number_engine.seed(4);
+  mixture_node2->sample();
+  auto mixture_component_2 = mixture_component.observation(2);
+  BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component_2);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
+
+  random_number_engine.seed(4);
+  mixture_node3->sample();
+  BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component_1);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
+
+  cout << "\n" << "Next sampling round" << endl;
+
+  random_number_engine.seed(7);
+  mixture_node1->sample();
+  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_1);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
+
+  random_number_engine.seed(7);
+  mixture_node2->sample();
+  BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component_1);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 3);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 0);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
+
+  random_number_engine.seed(4);
+  mixture_node3->sample();
+  BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component_0);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 0);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
+
+  cout << "\n" << "Next sampling round" << endl;
+
+  random_number_engine.seed(4);
+  mixture_node1->sample();
+  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_2);
+  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.size(), 3);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 1);
+  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
+  BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
+
+  print_rng_values();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
