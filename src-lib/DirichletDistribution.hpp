@@ -55,24 +55,25 @@ namespace cpprob
         Parameters::const_iterator param = parameters_.begin();
 
         for (; i != result.end(); ++i, ++param)
-          {
-          std::gamma_distribution<float> gd = std::gamma_distribution<
-              float>(param->second);
+        {
+          std::gamma_distribution<float> gd = std::gamma_distribution<float>(
+              param->second);
           i->second = gd(rne);
           sum += i->second;
         }
-      for (i = result.begin(); i != result.end(); ++i)
-        i->second /= sum;
 
-      return result;
-    }
+        for (i = result.begin(); i != result.end(); ++i)
+          i->second /= sum;
 
-  friend std::ostream&
-  operator<<(std::ostream& os, const DirichletDistribution& dd);
+        return result;
+      }
 
-private:
+    friend std::ostream&
+    operator<<(std::ostream& os, const DirichletDistribution& dd);
 
-  Parameters parameters_;
+  private:
+
+    Parameters parameters_;
 
   };
 
