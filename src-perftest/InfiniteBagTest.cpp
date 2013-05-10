@@ -231,7 +231,7 @@ BOOST_FIXTURE_TEST_CASE(InfiniteBagTest, InfiniteBagFixture)
    * flavor node.
    */
   ConstantDirichletProcessParametersNode& bag_params = bn.at<
-      ConstantDirichletProcessParametersNode>("Bag");
+      ConstantDirichletProcessParametersNode>("BagParameters");
   DirichletProcessNode& bag_v = bn.add_dirichlet_process(bag_params);
 
   ConditionalDirichletNode& hole_params_v = bn.at<ConditionalDirichletNode>(
