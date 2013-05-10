@@ -6,7 +6,7 @@
  */
 
 #include "../src-lib/ConditionalDirichletNode.hpp"
-#include "Test.hpp"
+#include "../src-lib/Test.hpp"
 #include "../src-lib/BayesianNetwork.hpp"
 #include "../src-lib/RandomBoolean.hpp"
 #include "../src-lib/RandomInteger.hpp"

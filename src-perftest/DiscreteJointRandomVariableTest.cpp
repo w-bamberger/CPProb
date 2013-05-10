@@ -6,7 +6,7 @@
  */
 
 #include "../src-lib/DiscreteJointRandomVariable.hpp"
-#include "Test.hpp"
+#include "../src-lib/Test.hpp"
 #include "../src-lib/RandomInteger.hpp"
 
 using namespace cpprob;
