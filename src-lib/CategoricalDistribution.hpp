@@ -152,7 +152,7 @@ namespace cpprob
 
 #ifndef WITHOUT_INITIALIZER_LIST
     CategoricalDistribution&
-    operator=(std::initializer_list<value_type>& entries)
+    operator=(std::initializer_list<value_type> entries)
     {
       pt_ = entries;
       return *this;
