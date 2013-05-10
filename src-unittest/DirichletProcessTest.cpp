@@ -7,8 +7,10 @@
 
 #include "../src-lib/BayesianNetwork.hpp"
 #include "../src-lib/DiscreteJointRandomVariable.hpp"
+#include "../src-lib/IoUtils.hpp"
 #include "../src-lib/RandomBoolean.hpp"
 #include "../src-lib/RandomInteger.hpp"
+#include "../src-lib/Test.hpp"
 #include <boost/range/adaptor/map.hpp>
 #include <boost/range/numeric.hpp>
 #include <boost/test/unit_test.hpp>
@@ -18,66 +20,6 @@
 using namespace boost::adaptors;
 using namespace cpprob;
 using namespace std;
-
-void
-print_rng_values()
-{
-  random_number_engine.seed(0);
-  cout
-      << "0: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(1);
-  cout
-      << "1: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(2);
-  cout
-      << "2: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(3);
-  cout
-      << "3: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(4);
-  cout
-      << "4: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(5);
-  cout
-      << "5: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(6);
-  cout
-      << "6: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(7);
-  cout
-      << "7: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(8);
-  cout
-      << "8: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(9);
-  cout
-      << "9: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-  random_number_engine.seed(10);
-  cout
-      << "10: "
-      << random_number_engine()
-          / static_cast<double>(random_number_engine.max()) << endl;
-}
 
 template<class M>
   ostream&
@@ -100,15 +42,16 @@ public:
   DirichletProcessNode* mixture_node2;
   DirichletProcessNode* mixture_node3;
   RandomInteger mixture_component;
+  RandomInteger observation;
   ConditionalCategoricalNode* observation_node1;
   ConditionalCategoricalNode* observation_node2;
   ConditionalCategoricalNode* observation_node3;
   ConditionalDirichletNode* observation_probabilities_node;
 
   SimpleDirichletProcessFixture()
-      : concentration(1.0), mixture_component("MixtureComponent", 0, 0)
+      : concentration(1.0), mixture_component("MixtureComponent", 0, 0), observation(
+          "Observation", 5, 0)
   {
-    RandomInteger observation("Observation", 5, 0);
     observation_probabilities_node = &bn.add_conditional_dirichlet(
         RandomConditionalProbabilities(observation, mixture_component),
         concentration);
@@ -134,27 +77,162 @@ public:
   }
 
   void
+  init_mixture_node1()
+  {
+
+    /* Creates a new component
+     *
+     * Mixture component:    The categorical distribution needs one random value.
+     * Component parameters: Per observation value one Gamma distribution and
+     *                       per Gamma distribution two random values. */
+    random_number_engine.seed_from_canonical(
+      { 0.99f, 0.6f, 0.7f, 0.1f, 0.2f, 0.05f, 0.1f, 0.4f, 0.5f, 0.6f, 0.7f });
+    mixture_node1->init_sampling();
+  }
+
+  void
+  init_mixture_node2()
+  {
+    /* Reuses an existing component
+     *
+     * Mixture component:    The categorical distribution needs one random value.
+     * Component parameters: No sampling. */
+    random_number_engine.seed_from_canonical(0.49f);
+    mixture_node2->init_sampling();
+  }
+
+  void
+  init_mixture_node3()
+  {
+    /* Create a new component
+     *
+     * Mixture component:    The categorical distribution needs one random value.
+     * Component parameters: Per observation value one Gamma distribution and
+     *                       per Gamma distribution two random values. */
+    random_number_engine.seed_from_canonical(
+      { 0.67f, 0.1f, 0.2f, 0.05f, 0.1f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.4f });
+    mixture_node3->init_sampling();
+  }
+
+  void
   init_sampling()
   {
-    random_number_engine.seed(0);
     observation_probabilities_node->init_sampling();
-    random_number_engine.seed(0);
-    mixture_node1->init_sampling();
-    random_number_engine.seed(7);
-    mixture_node2->init_sampling();
-    random_number_engine.seed(4);
-    mixture_node3->init_sampling();
+    init_mixture_node1();
+    init_mixture_node2();
+    init_mixture_node3();
+    BOOST_REQUIRE_EQUAL(mixture_component.value_range().size(), 2);
+
+    set_observation_probabilities_component_0();
+    set_observation_probabilities_component_1();
+
+    observation_node1->value() = observation.observation(1);
+    observation_node2->value() = observation.observation(2);
+    observation_node3->value() = observation.observation(3);
+  }
+
+  void
+  set_observation_probabilities_component_0()
+  {
+    mixture_component.observation(0);
+
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(0)) = 0.125;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(1)) = 0.125;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(2)) = 0.25;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(3)) = 0.25;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(4)) = 0.25;
+  }
+
+  void
+  set_observation_probabilities_component_1()
+  {
+    mixture_component.observation(1);
+
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(0)) = 0.25;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(1)) = 0.25;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(2)) = 0.25;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(3)) = 0.125;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(4)) = 0.125;
+  }
+
+  void
+  set_observation_probabilities_component_2()
+  {
+    mixture_component.observation(2);
+
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(0)) = 0.25;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(1)) = 0.25;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(2)) = 0.125;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(3)) = 0.125;
+    observation_probabilities_node->value().at(mixture_component).at(
+        observation.observation(4)) = 0.25;
   }
 
 };
 
 BOOST_FIXTURE_TEST_SUITE(SimpleDirichletProcessTest, SimpleDirichletProcessFixture)
 
+void check_categorical_distribution(const CategoricalDistribution& actual,
+    initializer_list<pair<const DiscreteRandomVariable, float> > unnormalised_target)
+{
+  auto& actual_distribution = actual;
+  CategoricalDistribution target_distribution = unnormalised_target;
+  target_distribution.normalize();
+  CPPROB_CHECK_EQUAL_RANGES(actual_distribution, target_distribution);
+}
+
+void check_mixture(const ConstantDirichletProcessParametersNode& parameters_node,
+    const DirichletProcessNode& mixture_node,
+    const RandomInteger& component_value,
+    initializer_list<size_t> component_counters)
+{
+  CPPROB_CHECK_EQUAL(mixture_node.value(), component_value);
+  CPPROB_CHECK_EQUAL(mixture_node.value().value_range().size(), component_counters.size());
+
+  auto actual_it = parameters_node.value().component_counters().begin();
+  auto actual_end = parameters_node.value().component_counters().end();
+  auto target_it = component_counters.begin();
+  auto target_end = component_counters.end();
+  auto mixture_component = component_value.value_range().begin();
+  auto mixture_component_end = component_value.value_range().end();
+
+  for (; actual_it != actual_end && target_it != target_end && mixture_component != mixture_component_end;
+      ++actual_it, ++target_it, ++mixture_component)
+  {
+    BOOST_CHECK_MESSAGE(actual_it->first == mixture_component,
+        "Mixture component continuous (" << actual_it->first << " == " << mixture_component << ")");
+
+    BOOST_CHECK_MESSAGE(actual_it->second == *target_it,
+        "Component counter correct (" << actual_it->second << " == " << *target_it << ")");
+  }
+
+  BOOST_CHECK_MESSAGE(actual_it == actual_end, "Reached end of actual component counters table");
+  BOOST_CHECK_MESSAGE(mixture_component == mixture_component_end, "Reached end of mixture component range");
+  BOOST_CHECK_MESSAGE(target_it == target_end, "Reached end of target component counters list");
+}
+
+void
+check_number_generator_empty()
+{
+  BOOST_CHECK_EQUAL(random_number_engine.size(), 0);
+}
+
 BOOST_AUTO_TEST_CASE(Construction)
 {
-  cout << bn << endl;
-  cout << mixture_component << endl;
-
   BOOST_REQUIRE_EQUAL(mixture_component.value_range().size(), 0);
   mixture_component = RandomInteger(mixture_component.value_range().end());
 
@@ -194,46 +272,48 @@ BOOST_AUTO_TEST_CASE(Construction)
 
 BOOST_AUTO_TEST_CASE(InitSampling)
 {
-  auto& component_counters = dp_parameters_node->value().component_counters();
   auto& observation_probabilities = observation_probabilities_node->value();
   BOOST_REQUIRE_EQUAL(mixture_component.value_range().size(), 0);
 
-  /* @TODO Because I cannot check whether the computed distribution is correct,
-   * it would be better to use a random value that is exactly at the border
-   * between two values in the distribution. Maybe a mock object would be
-   * good, which allows to set the next random value.
-   */
-  /* Create the first component */
-  random_number_engine.seed(0);
-  mixture_node1->init_sampling();
-  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component);
-  BOOST_CHECK_EQUAL(mixture_node1->value().value_range().size(), 1);
-  BOOST_CHECK_EQUAL(component_counters.size(), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 1);
-  BOOST_CHECK_EQUAL(boost::accumulate(component_counters | map_values, 0), 1);
+  CPPROB_CHECKPOINT("Create the first component");
+
+  check_categorical_distribution(mixture_node1->prior_distribution(),
+      {
+        { mixture_component, 1.0f}});
+
+  init_mixture_node1();
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node1, mixture_component,
+      { 1});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 1);
   auto saved_probabilities_of_0 = observation_probabilities.at(mixture_component);
 
-  /* Reuse an existing component */
-  random_number_engine.seed(7);
-  mixture_node2->init_sampling();
-  BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component);
-  BOOST_CHECK_EQUAL(mixture_node2->value().value_range().size(), 1);
-  BOOST_CHECK_EQUAL(component_counters.size(), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 2);
-  BOOST_CHECK_EQUAL(boost::accumulate(component_counters | map_values, 0), 2);
+  CPPROB_CHECKPOINT("Reuse an existing component");
+
+  check_categorical_distribution(mixture_node2->prior_distribution(),
+      {
+        { mixture_component, 0.5f},
+        { RandomInteger(mixture_component.value_range().end()), 0.5f}});
+
+  init_mixture_node2();
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node2, mixture_component,
+      { 2});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 1);
   BOOST_CHECK_EQUAL(observation_probabilities.at(mixture_component), saved_probabilities_of_0);
 
-  /* Take a new component */
-  random_number_engine.seed(4);
-  mixture_node3->init_sampling();
+  CPPROB_CHECKPOINT("Take a new component");
+
+  check_categorical_distribution(mixture_node3->prior_distribution(),
+      {
+        { mixture_component, 2.0f/3.0f},
+        { mixture_component.value_range().end(), 1.0f/3.0f}});
+
+  init_mixture_node3();
   mixture_component.observation(1);
-  BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component);
-  BOOST_CHECK_EQUAL(mixture_node3->value().value_range().size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component), 1);
-  BOOST_CHECK_EQUAL(boost::accumulate(component_counters | map_values, 0), 3);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node3, mixture_component,
+      { 2, 1});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
   BOOST_CHECK_EQUAL(observation_probabilities.at(mixture_component.observation(0)), saved_probabilities_of_0);
 }
@@ -245,10 +325,10 @@ BOOST_AUTO_TEST_CASE(Sampling)
 
   /* Precondition are initialised nodes */
   init_sampling();
-  BOOST_REQUIRE_EQUAL(mixture_component.value_range().size(), 2);
 
   auto mixture_component_0 = mixture_component.observation(0);
   auto mixture_component_1 = mixture_component.observation(1);
+  auto mixture_component_end = mixture_component.value_range().end();
 
   BOOST_REQUIRE_EQUAL(component_counters.size(), 2);
   BOOST_REQUIRE_EQUAL(component_counters.at(mixture_component_0), 2);
@@ -256,99 +336,226 @@ BOOST_AUTO_TEST_CASE(Sampling)
   BOOST_REQUIRE_EQUAL(observation_probabilities.size(), 2);
   put_out_map(cout, observation_probabilities);
 
-  random_number_engine.seed(0);
+  CPPROB_CHECKPOINT("Reuse component");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   1 |   1 | 0.125
+   *    1 |   1 |   1 | 0.250
+   *    ∞ |   1 |     | 0.200 (α = 1; β = 1 with 5 observation values: 1/(5*1))
+   */
+  check_categorical_distribution(mixture_node1->posterior_distribution(),
+      {
+        { mixture_component_0, 1.0 * 0.125},
+        { mixture_component_1, 1.0 * 0.25},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(0.44);
   mixture_node1->sample();
-  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_1);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node1, mixture_component_1,
+      { 1, 2});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
 
+  CPPROB_CHECKPOINT("Clear component 0 and reuse component 1");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   0 |   2 | 0.250
+   *    1 |   2 |   2 | 0.250
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node2->posterior_distribution(),
+      {
+        { mixture_component_0, 0.0 * 0.25},
+        { mixture_component_1, 2.0 * 0.25},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(0.00);
   mixture_node2->sample();
-  BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component_1);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 3);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node2, mixture_component_1,
+      { 0, 3});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
 
+  CPPROB_CHECKPOINT("Reuse component");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   0 |   3 | 0.250
+   *    1 |   2 |   3 | 0.125
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node3->posterior_distribution(),
+      {
+        { mixture_component_0, 0.0 * 0.25},
+        { mixture_component_1, 2.0 * 0.125},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(0.55);
   mixture_node3->sample();
-  BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component_1);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 3);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node3, mixture_component_1,
+      { 0, 3});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
 
-  cout << "\n" << "Next sampling round" << endl;
+  BOOST_TEST_MESSAGE("\nNext sampling round\n");
 
-  random_number_engine.seed(4);
+  CPPROB_CHECKPOINT("Reactivate component 0");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   0 |   1 | 0.125
+   *    1 |   2 |   1 | 0.250
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node1->posterior_distribution(),
+      {
+        { mixture_component_0, 0.0 * 0.125},
+        { mixture_component_1, 2.0 * 0.25},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(
+      { 0.72, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.3, 0.4, 0.2});
   mixture_node1->sample();
-  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_0);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.size(), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node1, mixture_component_0,
+      { 1, 2});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 2);
 
-  random_number_engine.seed(4);
+  set_observation_probabilities_component_0();
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   1 |   2 | 0.250
+   *    1 |   1 |   2 | 0.250
+   *    ∞ |   1 |     | 0.200  */
+  CPPROB_CHECKPOINT("Create component 2");
+
+  check_categorical_distribution(mixture_node2->posterior_distribution(),
+      {
+        { mixture_component_0, 1.0 * 0.25},
+        { mixture_component_1, 1.0 * 0.25},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(
+      { 0.9, 0.1, 0.2, 0.3, 0.4, 0.5, 0.5, 0.4, 0.3, 0.2, 0.1});
   mixture_node2->sample();
   auto mixture_component_2 = mixture_component.observation(2);
-  BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component_2);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
+  mixture_component_end = mixture_component.value_range().end();
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node2, mixture_component_2,
+      { 1, 1, 1});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
 
-  random_number_engine.seed(4);
+  set_observation_probabilities_component_2();
+
+  CPPROB_CHECKPOINT("Clear and reactivate component 1");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   1 |   3 | 0.250
+   *    1 |   0 |   3 | 0.125
+   *    2 |   1 |   3 | 0.125
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node3->posterior_distribution(),
+      {
+        { mixture_component_0, 1.0 * 0.25},
+        { mixture_component_1, 0.0 * 0.125},
+        { mixture_component_2, 1.0 * 0.125},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(
+      { 0.66, 0.1, 0.2, 0.3, 0.4, 0.5, 0.5, 0.4, 0.3, 0.2, 0.1});
   mixture_node3->sample();
-  BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component_1);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node3, mixture_component_1,
+      { 1, 1, 1});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
 
-  cout << "\n" << "Next sampling round" << endl;
+  set_observation_probabilities_component_1();
 
-  random_number_engine.seed(7);
+  BOOST_TEST_MESSAGE("\nNext sampling round\n");
+
+  CPPROB_CHECKPOINT("Clear component 0 and reuse component 1");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   0 |   1 | 0.125
+   *    1 |   1 |   1 | 0.250
+   *    2 |   1 |   1 | 0.250
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node1->posterior_distribution(),
+      {
+        { mixture_component_0, 0.0 * 0.125},
+        { mixture_component_1, 1.0 * 0.25},
+        { mixture_component_2, 1.0 * 0.25},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(0.35);
   mixture_node1->sample();
-  BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_1);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node1, mixture_component_1,
+      { 0, 2, 1});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
 
-  random_number_engine.seed(7);
+  CPPROB_CHECKPOINT("Clear component 2 and reuse component 1");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   0 |   2 | 0.250
+   *    1 |   2 |   2 | 0.250
+   *    2 |   0 |   2 | 0.125
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node2->posterior_distribution(),
+      {
+        { mixture_component_0, 0.0 * 0.25},
+        { mixture_component_1, 2.0 * 0.25},
+        { mixture_component_2, 0.0 * 0.125},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(0.71);
   mixture_node2->sample();
-  BOOST_CHECK_EQUAL(mixture_node2->value(), mixture_component_1);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 0);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 3);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 0);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node2, mixture_component_1,
+      { 0, 3, 0});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
 
-  random_number_engine.seed(4);
+  CPPROB_CHECKPOINT("Reactivate component 0");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   0 |   3 | 0.250
+   *    1 |   2 |   3 | 0.125
+   *    2 |   0 |   3 | 0.125
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node3->posterior_distribution(),
+      {
+        { mixture_component_0, 0.0 * 0.25},
+        { mixture_component_1, 2.0 * 0.125},
+        { mixture_component_2, 0.0 * 0.125},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(
+      { 0.56, 0.1, 0.2, 0.3, 0.4, 0.5, 0.5, 0.4, 0.3, 0.2, 0.1});
   mixture_node3->sample();
-  BOOST_CHECK_EQUAL(mixture_node3->value(), mixture_component_0);
-  BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.size(), 3);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_0), 1);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_1), 2);
-  BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 0);
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node3, mixture_component_0,
+      { 1, 2, 0});
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
 
-  cout << "\n" << "Next sampling round" << endl;
+  set_observation_probabilities_component_0();
 
-  random_number_engine.seed(4);
+  BOOST_TEST_MESSAGE("\nNext sampling round\n");
+
+  CPPROB_CHECKPOINT("Reactivate component 2");
+
+  /*   CV |  CN |  OV |    OP
+   *    0 |   1 |   1 | 0.125
+   *    1 |   1 |   1 | 0.250
+   *    2 |   0 |   1 | 0.250
+   *    ∞ |   1 |     | 0.200  */
+  check_categorical_distribution(mixture_node1->posterior_distribution(),
+      {
+        { mixture_component_0, 1.0 * 0.125},
+        { mixture_component_1, 1.0 * 0.25},
+        { mixture_component_2, 0.0 * 0.25},
+        { mixture_component_end, 1.0 * 1.0 / 5.0}});
+
+  random_number_engine.seed_from_canonical(
+      { 0.66, 0.1, 0.2, 0.3, 0.4, 0.5, 0.5, 0.4, 0.3, 0.2, 0.1});
   mixture_node1->sample();
+  check_number_generator_empty();
+  check_mixture(*dp_parameters_node, *mixture_node1, mixture_component_2,
+      { 1, 1, 1});
   BOOST_CHECK_EQUAL(mixture_node1->value(), mixture_component_2);
   BOOST_CHECK_EQUAL(mixture_component.value_range().size(), 3);
   BOOST_CHECK_EQUAL(component_counters.size(), 3);
@@ -357,7 +564,7 @@ BOOST_AUTO_TEST_CASE(Sampling)
   BOOST_CHECK_EQUAL(component_counters.at(mixture_component_2), 1);
   BOOST_CHECK_EQUAL(observation_probabilities.size(), 3);
 
-  print_rng_values();
+  set_observation_probabilities_component_2();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
