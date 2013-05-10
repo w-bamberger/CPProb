@@ -71,6 +71,12 @@ namespace cpprob
       return parameters_;
     }
 
+    CategoricalDistribution
+    posterior_distribution();
+
+    CategoricalDistribution
+    prior_distribution();
+
     void
     sample();
 
@@ -80,6 +86,12 @@ namespace cpprob
     operator<<(std::ostream& os, const DirichletProcessNode& node);
 
     DirichletProcessParameters& parameters_;
+
+    CategoricalDistribution
+    compile_posterior_distribution();
+
+    CategoricalDistribution
+    compile_prior_distribution();
 
   };
 
